@@ -1,0 +1,106 @@
+package com.mtms.repository;
+
+import com.mtms.domain.Track;
+import com.mtms.util.DbConnectionUtil;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TrackRepository {
+
+    // Saves the valid track to the tracks table
+    public void insert(Track track) {
+        String sql = "INSERT INTO tracks (track_number, latitude, longitude, speed, identity_type, track_status, created_time) " +
+                "VALUES (?, ?, ?, ?, ?, ?, CAST(? AS TIMESTAMP))";
+
+        try (Connection conn = DbConnectionUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            pstmt.setString(1, track.track_number);
+            pstmt.setDouble(2, track.latitude);
+            pstmt.setDouble(3, track.longitude);
+            pstmt.setDouble(4, track.speed);
+            pstmt.setString(5, track.identity_type);
+            pstmt.setString(6, track.track_status);
+            pstmt.setString(7, track.created_time);
+
+            pstmt.executeUpdate();
+
+            try (ResultSet keys = pstmt.getGeneratedKeys()) {
+                if (keys.next()) {
+                    track.track_id = keys.getLong(1);
+                }
+            }
+            System.out.println("Track inserted; no Alert. Database assigned ID: " + track.track_id);
+
+        } catch (SQLException e) {
+            // try-catch block to handle TC-16 (Database unavailable)
+            throw new RuntimeException("Database error during insert operation.", e);
+        }
+    }
+
+    // Fetches all tracks stored in the database
+    public List<Track> selectAll() {
+        return executeQuery("SELECT * FROM tracks ORDER BY created_time, track_id", pstmt -> {});
+    }
+
+    // TC-11 & TC-17: Secure parameterized search to handle text lookup and block SQL Injection
+    public List<Track> search(String trackNumber) {
+        String sql = "SELECT * FROM tracks WHERE track_number = ? ORDER BY created_time DESC, track_id DESC LIMIT 1";
+        return executeQuery(sql, pstmt -> pstmt.setString(1, trackNumber));
+    }
+
+    // TC-13: Filters and pulls records matching HOSTILE
+    public List<Track> findByIdentity(String identity) {
+        String sql = "SELECT * FROM tracks WHERE identity_type = ? ORDER BY created_time";
+        return executeQuery(sql, pstmt -> pstmt.setString(1, identity.toUpperCase()));
+    }
+
+    // TC-14: Filters and pulls a target exceeding a target speed 700
+    public List<Track> findHighSpeedTracks(double thresholdSpeed) {
+        String sql = "SELECT * FROM tracks WHERE speed > ? ORDER BY speed DESC";
+        return executeQuery(sql, pstmt -> pstmt.setDouble(1, thresholdSpeed));
+    }
+
+    // TC-15: Replay data
+    public List<Track> getReplayData() {
+        String sql = "SELECT * FROM tracks ORDER BY created_time, track_id";
+        return executeQuery(sql, pstmt -> {});
+    }
+
+    // Functional interface to bind parameters
+    private interface ParameterBinder {
+        void bind(PreparedStatement pstmt) throws SQLException;
+    }
+
+    // Helper method to keep data execution logic simple
+    private List<Track> executeQuery(String sql, ParameterBinder binder) {
+        List<Track> list = new ArrayList<>();
+
+        try (Connection conn = DbConnectionUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            binder.bind(pstmt);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new Track(
+                            rs.getLong("track_id"),
+                            rs.getString("track_number"),
+                            rs.getDouble("latitude"),
+                            rs.getDouble("longitude"),
+                            rs.getDouble("speed"),
+                            rs.getString("identity_type"),
+                            rs.getString("track_status"),
+                            rs.getString("created_time")
+                    ));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Database connectivity failure encountered during query operation.", e);
+        }
+        return list;
+    }
+}
