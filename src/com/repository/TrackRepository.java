@@ -14,7 +14,7 @@ public class TrackRepository {
     private PreparedStatement preparedStatement = null;
     private List<Track> listOfTracks = null;
 
-    // INSERT
+    // INSERT new tracks
     public void saveTrack(Track track) {
         try {
             preparedStatement = connection.prepareStatement(
@@ -35,7 +35,7 @@ public class TrackRepository {
         }
     }
 
-    // SELECT
+    // SELECT to retrieve all tracks by the created time and the track_id
     public List<Track> getAllTracks() {
         try {
             preparedStatement = connection.prepareStatement(
@@ -62,7 +62,7 @@ public class TrackRepository {
         return null;
     }
 
-    // SELECT
+    // SELECT track based on the track_number
     public Track getTrackByNo(String number) {
         try {
             preparedStatement = connection.prepareStatement(
@@ -91,7 +91,7 @@ public class TrackRepository {
         return null;
     }
 
-    // DELETE
+    // DELETE by the track_number
     public String deleteTrackByNo(String number) {
         try {
             preparedStatement = connection.prepareStatement(
@@ -104,7 +104,7 @@ public class TrackRepository {
         }
     }
 
-    // SELECT
+    // SELECT all tracks where the identity_type is HOSTILE
     public List<Track> getAllHostileTracks() {
         try {
             preparedStatement = connection.prepareStatement(
@@ -131,7 +131,7 @@ public class TrackRepository {
         return null;
     }
 
-    // SELECT
+    // SELECT tracks where speed is greater than certain number
     public List<Track> getTracksBySpeed(Double speed) {
         try {
             preparedStatement = connection.prepareStatement(
@@ -159,7 +159,7 @@ public class TrackRepository {
         return null;
     }
 
-    // SELECT
+    // SELECT the number of tracks in each identity_type
     public void getStatistics() {
         try {
             preparedStatement = connection.prepareStatement(

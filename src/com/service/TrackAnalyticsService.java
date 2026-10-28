@@ -4,21 +4,15 @@ import com.domain.Track;
 import com.repository.TrackRepository;
 
 public class TrackAnalyticsService {
-    public void getAnalytics() {
+    TrackRepository track_repo = new TrackRepository();
 
-        TrackRepository track_repo = new TrackRepository();
-
-
-        System.out.println("\n---------- Print all hostile ----------");
-
+    //printing out the hostile report
+    public void hostileReport() {
         track_repo.getAllHostileTracks().forEach(System.out::println);
+    }
 
-        System.out.println("\n---------- Print all by speed ----------");
-
+    //printing out the high speed report
+    public void highSpeedReport() {
         track_repo.getTracksBySpeed(700.0).forEach(System.out::println);
-
-        System.out.println("\n---------- Print statistics ----------");
-
-        track_repo.getStatistics();
     }
 }

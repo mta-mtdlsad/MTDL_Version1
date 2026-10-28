@@ -23,6 +23,16 @@ public class Track {
         this.created_time = created_time;
     }
 
+    public Track(String track_number, double latitude, double longitude, double speed, String identity_type, String track_status, LocalDateTime created_time) {
+        this.track_number = track_number;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.speed = speed;
+        this.identity_type = identity_type;
+        this.track_status = track_status;
+        this.created_time = created_time;
+    }
+
     public int getTrack_id() {
         return track_id;
     }

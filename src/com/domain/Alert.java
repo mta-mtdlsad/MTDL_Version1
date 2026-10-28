@@ -17,6 +17,13 @@ public class Alert {
         this.alert_time = alert_time;
     }
 
+    public Alert(String track_number, String alert_message, String alert_severity, LocalDateTime alert_time) {
+        this.track_number = track_number;
+        this.alert_message = alert_message;
+        this.alert_severity = alert_severity;
+        this.alert_time = alert_time;
+    }
+
     public int getAlert_id() {
         return alert_id;
     }

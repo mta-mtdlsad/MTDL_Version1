@@ -16,7 +16,7 @@ public class AlertRepository {
     private PreparedStatement preparedStatement = null;
     private List<Alert> listOfAlerts = null;
 
-    //INSERT
+    //INSERT Statement to insert new alerts
     public void saveAlert(Alert alert) {
         try {
             preparedStatement = connection.prepareStatement(
@@ -34,7 +34,7 @@ public class AlertRepository {
         }
     }
 
-    // SELECT
+    // SELECT to retrieve all alerts by the alert_time
     public List<Alert> getAllAlerts() {
         try {
             preparedStatement = connection.prepareStatement(

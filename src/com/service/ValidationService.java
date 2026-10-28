@@ -1,6 +1,7 @@
 package com.service;
 
 import com.domain.Track;
+import com.domain.ValidationResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,48 +9,53 @@ import java.util.Objects;
 
 public class ValidationService {
 
-    public static String validateTrack_number(Track track){
+    //Validating the track_number is not null. not empty, and more than or equal 5 characters
+    public static ValidationResult validateTrack_number(Track track){
 
         if(track.getTrack_number() == null) {
-            return "Invalid track_number: is null";
+            return new ValidationResult("Invalid track_number: is null", "MEDIUM");
         }
         else if(track.getTrack_number().isEmpty()) {
-            return "Invalid track_number: is empty";
+            return new ValidationResult("Invalid track_number: is empty", "MEDIUM");
         }
         else if(track.getTrack_number().length() < 5) {
-            return "Invalid track_number: shorter than five characters";
+            return new ValidationResult("Invalid track_number: shorter than five characters", "MEDIUM");
         }
         return null;
     }
 
-    public static String validateLatitude(Track track){
+    //Validate the latitude is between -90 and 90
+    public static ValidationResult validateLatitude(Track track){
         double latitude = track.getLatitude();
 
         if(latitude>=-90 && latitude<=90) {
             return null;
         }
-        return "Invalid latitude: " + latitude;
+        return new ValidationResult("Invalid latitude: " + latitude, "LOW");
     }
 
-    public static String validateLongitude(Track track){
+    //Validate the longitude is between -180 and 180
+    public static ValidationResult validateLongitude(Track track){
         double longitude = track.getLongitude();
 
         if(longitude>=-180 && longitude<=180) {
             return null;
         }
-        return "Invalid longitude: " + longitude;
+        return new ValidationResult("Invalid longitude: " + longitude, "LOW");
     }
 
-    public static String validateSpeed(Track track){
+    //Validate the speed is between 0 and 2000
+    public static ValidationResult validateSpeed(Track track){
         double speed = track.getSpeed();
 
         if(speed>0 && speed<=2000) {
             return null;
         }
-        return "Invalid speed: " + speed;
+        return new ValidationResult("Invalid speed: " + speed, "LOW");
     }
 
-    public static String validateIdentity_type(Track track){
+    //Validate the identity_type is HOSTILE|FRIEND|NEUTRAL|UNKNOWN
+    public static ValidationResult validateIdentity_type(Track track){
         String identity_type = track.getIdentity_type();
         List<String> validIdentities = List.of(
                 "FRIEND",
@@ -61,10 +67,11 @@ public class ValidationService {
         if(validIdentities.contains(identity_type)) {
             return null;
         }
-        return "Invalid identity type: " + identity_type;
+        return new ValidationResult("Invalid identity type: " + identity_type, "HIGH");
     }
 
-    public static String validateTrack_status(Track track){
+    //Validate the track_status is either ACTIVE or INACTIVE
+    public static ValidationResult validateTrack_status(Track track){
         String track_status = track.getTrack_status();
         List<String> validStatus = List.of(
                 "ACTIVE",
@@ -74,19 +81,21 @@ public class ValidationService {
         if(validStatus.contains(track_status)) {
             return null;
         }
-        return "Invalid track status: " + track_status;
+        return new ValidationResult("Invalid track status: " + track_status, "HIGH");
     }
 
-    public static String validateCreated_time(Track track){
+    //Validate the created_time is not null
+    public static ValidationResult validateCreated_time(Track track){
 
         if(track.getCreated_time() == null) {
-            return "Invalid created_time: is null";
+            return new ValidationResult("Invalid created_time: is null", "MEDIUM");
         }
         return null;
     }
 
-    public static List<String> validateTrack(Track track){
-        List<String> results = new ArrayList<>();
+    //Returning the list of all the errors of a track
+    public static List<ValidationResult> validateTrack(Track track){
+        List<ValidationResult> results = new ArrayList<>();
 
         results.add(validateTrack_number(track));
         results.add(validateLatitude(track));
