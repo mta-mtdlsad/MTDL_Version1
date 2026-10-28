@@ -19,7 +19,7 @@ public class AlertRepository {
     private List<Alert> listOfAlerts = null;
 
     //INSERT Statement to insert new alerts
-    public void saveAlert(Alert alert) {
+    public String saveAlert(Alert alert) {
         try {
             preparedStatement = connection.prepareStatement(
                     "INSERT INTO alerts (track_number,alert_message,alert_severity,alert_time) VALUES (?,?,?,?);");
@@ -30,10 +30,11 @@ public class AlertRepository {
             preparedStatement.setTimestamp(4, Timestamp.valueOf(alert.getAlert_time()));
 
             preparedStatement.executeUpdate();
-            System.out.println("Alert added successfully");
+            return "Alert added successfully";
         }catch (Exception e) {
             System.out.println("Failed to add alert");
         }
+        return null;
     }
 
     // SELECT to retrieve all alerts by the alert_time

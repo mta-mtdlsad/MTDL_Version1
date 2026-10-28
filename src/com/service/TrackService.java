@@ -17,8 +17,7 @@ public class TrackService {
         List<ValidationResult> results;
         for(Track track : tracks) {
             results = val_service.validateTrack(track);
-            System.out.println(results);
-            if(results.isEmpty()) track_repo.saveTrack(track);
+            if(results.isEmpty()) track_repo.saveTrack(track); //returns confirmation string
             else {
                 for(ValidationResult result : results) {
                     alert_service.createAlert(track, result);
@@ -28,23 +27,22 @@ public class TrackService {
     }
 
     //printing out all tracks using track repo
-    public void displayTracks() {
-        track_repo.getAllTracks().forEach(System.out::println);
+    public List<Track> displayTracks() {
+        return track_repo.getAllTracks();
     }
 
     //printing out track given the track number using the track repo
-    public void searchTracks(String number) {
-        Track track = track_repo.getTrackByNo(number);
-        if(track != null) System.out.print(track);
+    public Track searchTracks(String number) {
+        return track_repo.getTrackByNo(number);
     }
 
     //printing statistics report using the track repo
-    public void statistcsReport() {
-        track_repo.getStatistics();
+    public List<String> statistcsReport() {
+        return track_repo.getStatistics();
     }
 
     //deleting a track using track repo
     public void deleteTrack(String number) {
-        System.out.println(track_repo.deleteTrackByNo(number));
+        track_repo.deleteTrackByNo(number); //returns confirmation string
     }
 }

@@ -20,7 +20,7 @@ public class MTMSApplication {
             track_service.processTracks(all_tracks);
 
             //v1.0
-            //Test_V1();
+            Test_V1();
 
             //v1.1
             Test_V1_1();
@@ -47,13 +47,20 @@ public class MTMSApplication {
 
             System.out.println("\n---------- Print by number ----------");
 
-            track_service.searchTracks("TRK001");
-            track_service.searchTracks("TRK00100");
+            String track_number = "TRK001";
+            Track track = track_service.searchTracks(track_number);
+            if(track != null) System.out.println(track);
+            else System.out.println("Track with number " + track_number + " not found");
+
+            track_number = "TRK00100";
+            track = track_service.searchTracks(track_number);
+            if(track != null) System.out.println(track);
+            else System.out.println("Track with number " + track_number + " not found");
 
             System.out.println("\n---------- Print all ----------");
-            track_service.displayTracks();
+            track_service.displayTracks().forEach(System.out::println);
             System.out.println("\n---------- Print statistics ----------");
-            track_service.statistcsReport();
+            track_service.statistcsReport().forEach(System.out::println);
 
             TrackAnalyticsService analytics_service = new TrackAnalyticsService();
             System.out.println("\n---------- Print all hostile ----------");
@@ -63,7 +70,7 @@ public class MTMSApplication {
 
             System.out.println("\n---------- All Alerts ----------");
             AlertService alert_service = new AlertService();
-            alert_service.getAlerts();
+            alert_service.getAlerts().forEach(System.out::println);
 
             //System.out.println("\n---------- Replay ----------");
             //ReplayService replay_service = new ReplayService();

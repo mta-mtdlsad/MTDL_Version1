@@ -16,7 +16,7 @@ public class TrackRepository {
     private List<Track> listOfTracks = null;
 
     // INSERT new tracks
-    public void saveTrack(Track track) {
+    public String saveTrack(Track track) {
         try {
             preparedStatement = connection.prepareStatement(
                     "INSERT INTO tracks (track_number,latitude,longitude,speed,identity_type,track_status,created_time) VALUES (?,?,?,?,?,?,?);");
@@ -30,10 +30,11 @@ public class TrackRepository {
             preparedStatement.setTimestamp(7, Timestamp.valueOf(track.getCreated_time()));
 
             preparedStatement.executeUpdate();
-            //System.out.println("Track added successfully");
+            return "Track added successfully";
         }catch (Exception e) {
             System.out.println("Failed to add track");
         }
+        return null;
     }
 
     // SELECT to retrieve all tracks by the created time and the track_id
@@ -84,8 +85,6 @@ public class TrackRepository {
                         resultSet.getTimestamp(8).toLocalDateTime());
                 return track;
             }
-            System.out.println("Track with number " + number + " not found");
-            return null;
         }catch (Exception e) {
             System.out.println("Unable to fetch track");
         }
@@ -161,20 +160,23 @@ public class TrackRepository {
     }
 
     // SELECT the number of tracks in each identity_type
-    public void getStatistics() {
+    public List<String> getStatistics() {
         try {
             preparedStatement = connection.prepareStatement(
                     "SELECT identity_type, COUNT(*) FROM tracks GROUP BY identity_type;");
             ResultSet resultSet = preparedStatement.executeQuery();
 
+            List<String> trackStatistics = new ArrayList<>();
             while(resultSet.next()) {
                 String identity_type = resultSet.getString(1);
                 int count = resultSet.getInt(2);
-                System.out.println(identity_type + " | " + count);
+                trackStatistics.add(identity_type + " | " + count);
             }
+            return trackStatistics;
         }catch (Exception e) {
             System.out.println("Unable to fetch tracks");
         }
+        return null;
     }
 
     // SELECT track based on status

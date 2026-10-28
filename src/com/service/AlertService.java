@@ -15,11 +15,11 @@ public class AlertService {
     //using the repo creating a new alert
     public void createAlert(Track track, ValidationResult result) {
         Alert alert = new Alert(track.getTrack_number(), result.getMessage(), result.getSeverity(), LocalDateTime.now());
-        alert_repo.saveAlert(alert);
+        alert_repo.saveAlert(alert); // returns confirmation string
     }
 
     //using the repo displaying all alerts
-    public void getAlerts(){
-        alert_repo.getAllAlerts().forEach(System.out::println);
+    public List<Alert> getAlerts(){
+        return alert_repo.getAllAlerts();
     }
 }
