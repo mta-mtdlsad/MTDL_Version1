@@ -6,7 +6,7 @@ import java.util.Map;
 public class AlertAnalyticsService {
     private final AlertRepository alertRepository = new AlertRepository();
 
-    //
+    //This method will display the alert status report for LOW|MEDIUM|High
     public void displayAlertStatusReport() {
         Map<String, Integer> statistics = alertRepository.getAlertStatistics();
 
