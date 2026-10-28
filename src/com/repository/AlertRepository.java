@@ -9,7 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AlertRepository {
     private static Connection connection = DbConnection.getConnection();
@@ -56,5 +58,28 @@ public class AlertRepository {
             System.out.println("Unable to fetch all alerts");
         }
         return null;
+    }
+
+    // FR-1.1-09 :: Select to Count alerts by severity using SQL GROUP BY
+    public Map<String, Integer> getAlertStatistics() {
+        Map<String, Integer> statistics = new LinkedHashMap<>();
+
+        String sql = "SELECT alert_severity, COUNT(*) AS total FROM alerts GROUP BY alert_severity";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                String severity = rs.getString("alert_severity");
+                int count = rs.getInt("total");
+
+                statistics.put(severity, count);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Unable to fetch alert statistics: " + e.getMessage());
+        }
+
+        return statistics;
     }
 }

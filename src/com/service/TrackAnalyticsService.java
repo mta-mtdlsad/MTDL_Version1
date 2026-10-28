@@ -15,4 +15,10 @@ public class TrackAnalyticsService {
     public void highSpeedReport() {
         track_repo.getTracksBySpeed(700.0).forEach(System.out::println);
     }
+
+    //selecting tracks based on the status
+    public void getTracksByStatus(String status){
+        System.out.println("Status Count :: " +  track_repo.getTracksByStatus(status).stream().count());
+        track_repo.getTracksByStatus(status).forEach(System.out::println);
+    }
 }

@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class TrackRepository {
             preparedStatement.setTimestamp(7, Timestamp.valueOf(track.getCreated_time()));
 
             preparedStatement.executeUpdate();
-            System.out.println("Track added successfully");
+            //System.out.println("Track added successfully");
         }catch (Exception e) {
             System.out.println("Failed to add track");
         }
@@ -174,5 +175,62 @@ public class TrackRepository {
         }catch (Exception e) {
             System.out.println("Unable to fetch tracks");
         }
+    }
+
+    // SELECT track based on status
+    public List<Track> getTracksByStatus(String status) {
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks WHERE track_status = ? ORDER BY created_time DESC, track_id DESC;");
+            preparedStatement.setString(1, status);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            listOfTracks = new ArrayList<Track>();
+            while(resultSet.next()) {
+                listOfTracks.add(
+                        new Track(resultSet.getInt(1),
+                                resultSet.getString(2),
+                                resultSet.getDouble(3),
+                                resultSet.getDouble(4),
+                                resultSet.getDouble(5),
+                                resultSet.getString(6),
+                                resultSet.getString(7),
+                                resultSet.getTimestamp(8).toLocalDateTime()));
+            }
+
+            return listOfTracks;
+        }catch (Exception e) {
+            System.out.println("Unable to fetch all tracks");
+        }
+        return null;
+    }
+
+    // SELECT to retrieve all tracks in the supplied timeframe
+    public List<Track> getAllTracksTimeframe(LocalDateTime start_time, LocalDateTime end_time) {
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks WHERE created_time >= ? AND created_time < ? ORDER BY created_time, track_id;");
+            preparedStatement.setTimestamp(1, Timestamp.valueOf(start_time));
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(end_time));
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            listOfTracks = new ArrayList<Track>();
+            while(resultSet.next()) {
+                listOfTracks.add(
+                        new Track(resultSet.getInt(1),
+                                resultSet.getString(2),
+                                resultSet.getDouble(3),
+                                resultSet.getDouble(4),
+                                resultSet.getDouble(5),
+                                resultSet.getString(6),
+                                resultSet.getString(7),
+                                resultSet.getTimestamp(8).toLocalDateTime()));
+            }
+
+            return listOfTracks;
+        }catch (Exception e) {
+            System.out.println("Unable to fetch all tracks");
+        }
+        return null;
     }
 }
