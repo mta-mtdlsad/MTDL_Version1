@@ -27,7 +27,7 @@ public class ReplayService {
         int count = 0;
         for (Track track : replayLogs) {
             count++;
-            System.out.printf("⏳ [%d/%d] %s%n", count, replayLogs.size(), track.toString());
+            System.out.printf("[%d/%d] %s%n", count, replayLogs.size(), track.toString());
 
             // TC-15:  1-second delay (1000 milliseconds) between track displays
             try {

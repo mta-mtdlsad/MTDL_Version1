@@ -1,5 +1,6 @@
 package com.mtms.service;
 
+import com.mtms.constants.MTMSConstants;
 import com.mtms.domain.Track;
 import com.mtms.repository.TrackRepository;
 import java.util.List;
@@ -32,7 +33,7 @@ public class TrackService {
         List<Track> records = trackRepository.selectAll();
         // TC-18: Handle empty database
         if (records.isEmpty()) {
-            System.out.println("Reports show empty result due to empty datastore.");
+            System.out.println("Reports show empty result due to empty database.");
             return;
         }
         // TC-18: Handle not empty database
@@ -51,13 +52,16 @@ public class TrackService {
         }
     }
 
-    // TC-13: Only Hostile
-    public void displayHostileReport() {
-        List<Track> hostiles = trackRepository.findByIdentity("HOSTILE");
-        if (hostiles.isEmpty()) { // If no hostiles
-            System.out.println("No HOSTILE tracks currently documented.");
+    public void removeTrackByNumber(String trackNumber) {
+        System.out.println("\nDeleting Track: " + trackNumber);
+
+        // Triggers repository layer logic to capture total affected count metrics
+        int affectedRows = trackRepository.deleteByTrackNumber(trackNumber);
+
+        if (affectedRows > 0) {
+            System.out.println("Deletion completed! Successfully removed " + affectedRows + " record(s) from the database.");
         } else {
-            hostiles.forEach(System.out::println);
+            System.out.println("Search Not Found. No database rows matched label '" + trackNumber + "'.");
         }
     }
 

@@ -45,6 +45,22 @@ public class TrackRepository {
         return executeQuery("SELECT * FROM tracks ORDER BY created_time, track_id", pstmt -> {});
     }
 
+    public int deleteByTrackNumber(String trackNumber) {
+        String sql = "DELETE FROM tracks WHERE track_number = ?";
+
+        try (Connection conn = DbConnectionUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, trackNumber);
+
+            // executeUpdate() returns the INT count of affected rows
+            return pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error during deletion query.", e);
+        }
+    }
+
     // TC-11 & TC-17: Secure parameterized search to handle text lookup and block SQL Injection
     public List<Track> search(String trackNumber) {
         String sql = "SELECT * FROM tracks WHERE track_number = ? ORDER BY created_time DESC, track_id DESC LIMIT 1";

@@ -13,7 +13,7 @@ public class MTMSApplication {
         try {
             System.out.println("=== MTMS MAIN ===");
 
-            // Dependancy Initializations
+            // Initializations
             TrackRepository trackRepo = new TrackRepository();
             AlertRepository alertRepo = new AlertRepository();
             ValidationService validationService = new ValidationService();
@@ -21,6 +21,8 @@ public class MTMSApplication {
             TrackService trackService = new TrackService(trackRepo, validationService, alertService);
             ReplayService replayService = new ReplayService(trackRepo);
             TrackSimulator simulator = new TrackSimulator();
+            TrackAnalyticsService analyticsService = new TrackAnalyticsService(trackRepo, alertRepo);
+
 
             // TC-18: Check empty database --> Show empty if is.
             System.out.println("\n--- Testing TC-18 (Empty Database State Reports Check) ---");
@@ -44,17 +46,23 @@ public class MTMSApplication {
             System.out.println("\n--- Testing TC-17 (SQL Injection Escape Handling Verification) ---");
             trackService.searchTrack("TRK1' OR '1'='1");
 
-            // TC-13 (Only Hostile)
-            System.out.println("\n--- Testing TC-13 (Hostile Report Filter Check) ---");
-            trackService.displayHostileReport();
-
-            // TC-14 (Only above 700)
-            System.out.println("\n--- Testing TC-14 (High-Speed Report) ---");
-            trackService.displayHighSpeedReport();
 
             // TC-15 (Replay)
             System.out.println("\n--- Testing TC-15 (Replay) ---");
             replayService.runReplay();
+
+            // Reports
+            analyticsService.reportStatistics();
+
+            // Deleting a track
+            trackService.removeTrackByNumber("TRK1001");
+
+            // Verify deletion
+            System.out.println("\nVerifying database after deletion:");
+            trackService.displayAllTracks();
+
+            // Reports
+            analyticsService.reportStatistics();
 
         } catch (Exception dbUnavailableOrFault) {
             // TC-16: Detects failures and reports clear explanations when PostgreSQL falls off the grid

@@ -1,5 +1,6 @@
 package com.mtms.service;
 
+import com.mtms.constants.MTMSConstants;
 import com.mtms.domain.Alert;
 import com.mtms.repository.AlertRepository;
 import java.time.LocalDateTime;
@@ -30,14 +31,14 @@ public class AlertService {
     }
 
     private String chooseSeverity(String message) {
-        if (message == null) return "LOW";
+        if (message == null) return MTMSConstants.alertLOW;
 
         String msgLower = message.toLowerCase();
         if (msgLower.contains("latitude") || msgLower.contains("longitude")) {
-            return "HIGH"; // if lat is not accepted
+            return MTMSConstants.alertHigh; // if lat is not accepted
         } else if (msgLower.contains("speed") || msgLower.contains("allowed-limit")) {
-            return "MEDIUM"; // if speed is not accepted
+            return MTMSConstants.alertMid; // if speed is not accepted
         }
-        return "LOW"; // if identity and tracking status not accepted
+        return MTMSConstants.alertLOW; // if identity and tracking status not accepted
     }
 }

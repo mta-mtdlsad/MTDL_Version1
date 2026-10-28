@@ -1,5 +1,6 @@
 package com.mtms.service;
 
+import com.mtms.constants.MTMSConstants;
 import com.mtms.domain.Track;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,14 +35,15 @@ public class ValidationService {
         }
 
         // TC-08: if identity not accepted
-        List<String> validIdentities = Arrays.asList("FRIEND", "HOSTILE", "NEUTRAL", "UNKNOWN");
+        List<String> validIdentities = Arrays.asList(MTMSConstants.trackFRIEND, MTMSConstants.trackHOSTILE,
+                MTMSConstants.trackNEUTRAL, MTMSConstants.trackUNKNOWN);
         if (track.identity_type == null || !validIdentities.contains(track.identity_type.toUpperCase())) {
             errors.add("identity Alert");
         }
 
         // TC-09: if status not accepted
-        if (track.track_status == null || (!track.track_status.equalsIgnoreCase("ACTIVE") &&
-                !track.track_status.equalsIgnoreCase("INACTIVE"))) {
+        if (track.track_status == null || (!track.track_status.equalsIgnoreCase(MTMSConstants.trackACTIVE) &&
+                !track.track_status.equalsIgnoreCase(MTMSConstants.trackINACTIVE))) {
             errors.add("status Alert");
         }
 
