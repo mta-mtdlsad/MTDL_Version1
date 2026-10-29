@@ -96,6 +96,8 @@ public class MTMSApplication {
             //replay_service.replayTracks(ReplaySpeed.NORMAL, start_time, end_time);
             System.out.println("\n---------- Replay DOUBLE ----------");
             replay_service.replayTracks(ReplaySpeed.DOUBLE, start_time, end_time);
+            System.out.println("\n---------- Replay DOUBLE (No end_time) ----------");
+            replay_service.replayTracks(ReplaySpeed.DOUBLE, start_time);
 
             // E-04 :: Track Status Filter
             TrackAnalyticsService analytics_service = new TrackAnalyticsService();

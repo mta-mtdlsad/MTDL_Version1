@@ -26,4 +26,9 @@ public class ReplayService {
             e.printStackTrace();
         }
     }
+
+    //replaying all tracks and delaying each record by 1 second
+    public void replayTracks(ReplaySpeed speed, LocalDateTime start_time) {
+        replayTracks(speed, start_time, LocalDateTime.now());
+    }
 }
