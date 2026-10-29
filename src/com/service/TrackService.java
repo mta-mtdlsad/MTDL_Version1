@@ -18,7 +18,13 @@ public class TrackService {
         List<ValidationResult> results;
         for(Track track : tracks) {
             results = val_service.validateTrack(track);
-            if(results.isEmpty()) track_repo.saveTrack(track); //returns confirmation string
+            if(results.isEmpty()) {
+                try {
+                    track_repo.saveTrack(track); //returns confirmation string
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+            }
             else {
                 for(ValidationResult result : results) {
                     alert_service.createAlert(track, result);

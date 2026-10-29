@@ -15,7 +15,7 @@ public class TrackSimulator {
             //valid
             new Track("TRK002", 90, 150, 1500, "HOSTILE", "ACTIVE", LocalDateTime.of(2026, 4, 22, 3, 14, 0)),
             //valid
-            new Track("TRK003", 60, 155, 1300, "HOSTILE", "ACTIVE", LocalDateTime.of(2026, 8, 4, 4, 14, 0)),
+            new Track("TRK002", 60, 155, 1300, "HOSTILE", "ACTIVE", LocalDateTime.of(2026, 8, 4, 4, 14, 0)),
             //valid
             new Track("TRK004", 90, 160, 700, "NEUTRAL", "ACTIVE", LocalDateTime.of(2026, 10, 14, 7, 14, 0)),
             //valid

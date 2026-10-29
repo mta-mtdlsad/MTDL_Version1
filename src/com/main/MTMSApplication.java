@@ -13,13 +13,16 @@ public class MTMSApplication {
             TrackSimulator track_sim = new TrackSimulator();
             List<Track> all_tracks = track_sim.getTracks();
 
-            TrackService track_service = new TrackService();
             //System.out.println("\n---------- Validate ----------");
-            track_service.processTracks(all_tracks);
+            TrackService track_service = new TrackService();
+            //track_service.processTracks(all_tracks);
+            BatchTrackService batch_track_service = new BatchTrackService();
+            batch_track_service.processBatch(all_tracks);
 
             //use enhanced simulation function
             List<Track> all_tracks_enhanced = track_sim.getTracksEnhanced();
-            track_service.processTracks(all_tracks_enhanced);
+            //track_service.processTracks(all_tracks_enhanced);
+            batch_track_service.processBatch(all_tracks_enhanced);
 
             //v1.0
             Test_V1();

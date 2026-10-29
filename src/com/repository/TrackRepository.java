@@ -2,10 +2,8 @@ package com.repository;
 
 import com.domain.Track;
 import com.util.DbConnection;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
+
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -18,7 +16,7 @@ public class TrackRepository {
     private List<Track> listOfTracks = null;
 
     // INSERT new tracks
-    public String saveTrack(Track track) {
+    public String saveTrack(Track track) throws Exception{
         try {
             preparedStatement = connection.prepareStatement(
                     "INSERT INTO tracks (track_number,latitude,longitude,speed,identity_type,track_status,created_time) VALUES (?,?,?,?,?,?,?);");
@@ -35,8 +33,9 @@ public class TrackRepository {
             return "Track added successfully";
         }catch (Exception e) {
             System.out.println("Failed to add track");
+            throw e;
         }
-        return null;
+        //return null;
     }
 
     // SELECT to retrieve all tracks by the created time and the track_id
@@ -237,6 +236,24 @@ public class TrackRepository {
             System.out.println("Unable to fetch all tracks");
         }
         return null;
+    }
+
+    //
+    public void saveValidTracksAsTransaction(List<Track> tracks) throws Exception {
+        connection.setAutoCommit(false);
+        try {
+            for(Track track : tracks) {
+                saveTrack(track);
+            }
+            connection.commit();
+            System.out.println("Track batch added successfully");
+        } catch (Exception e) {
+            connection.rollback();
+            throw e;
+        }
+        finally {
+            connection.setAutoCommit(true);
+        }
     }
 
     // DELETE all tracks
