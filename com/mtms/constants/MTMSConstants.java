@@ -16,7 +16,7 @@ public final class MTMSConstants {
     //Track Identity Constants
     public static final String trackFRIEND = "FRIEND"; //MTMSConstants.trackFRIEND
     public static final String trackHOSTILE = "HOSTILE"; //MTMSConstants.trackHOSTILE
-    public static final String trackNEUTRAL = "ACTIVE"; //MTMSConstants.trackNEUTRAL
+    public static final String trackNEUTRAL = "NEUTRAL"; //MTMSConstants.trackNEUTRAL
     public static final String trackUNKNOWN = "UNKNOWN"; //MTMSConstants.trackUNKNOWN
 
     //Replay Speed  Constants

@@ -69,6 +69,17 @@ public class TrackSimulator {
         simulatedFeed.add(new Track(0, "TRK1008", 1.35, 103.81, 280.00, "FRIEND", "ACTIVE", now));
         simulatedFeed.add(new Track(0, "TRK1009", 55.75, 37.61, 710.00, "UNKNOWN", "ACTIVE", now));
         simulatedFeed.add(new Track(0, "TRK1010", -26.20, 28.04, 610.00, "NEUTRAL", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK1011", 25.20, 55.27, 480.00, "FRIEND", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK1012", 39.90, 116.40, 950.00, "HOSTILE", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK1013", -34.60, -58.38, 310.00, "NEUTRAL", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK1014", 28.61, 77.20, 520.00, "UNKNOWN", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK1015", 41.90, 12.49, 150.00, "FRIEND", "INACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK1016", 43.65, -79.38, 880.00, "NEUTRAL", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK1017", -1.29, 36.82, 410.00, "HOSTILE", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK1018", 30.04, 31.23, 620.00, "FRIEND", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK1019", 60.17, 24.94, 210.00, "UNKNOWN", "INACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK1020", -37.81, 144.96, 730.00, "NEUTRAL", "ACTIVE", now));
+
         //Dummy Data (Invalid)
         simulatedFeed.add(new Track(0, "   ", 10.00, 20.00, 400.00, "FRIEND", "ACTIVE", now));      // Empty Name
         simulatedFeed.add(new Track(0, "ABCD", 15.00, 25.00, 300.00, "FRIEND", "ACTIVE", now));      // Name Too Short
@@ -80,6 +91,16 @@ public class TrackSimulator {
         simulatedFeed.add(new Track(0, "TRK994", 45.00, -12.00, 2400.0, "FRIEND", "ACTIVE", now));   // Speed > 2000
         simulatedFeed.add(new Track(0, "TRK993", 8.00, 11.00, 550.00, "ALIEN", "ACTIVE", now));      // Bad Identity
         simulatedFeed.add(new Track(0, "TRK992", 19.00, -85.00, 410.00, "FRIEND", "PAUSED", now));   // Bad Status
+        simulatedFeed.add(new Track(0, null, 20.00, 30.00, 500.00, "FRIEND", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK1021EXTRA", 10.00, 15.00, 450.00, "FRIEND", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK991", 90.01, 10.00, 320.00, "NEUTRAL", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK990", -90.05, -10.00, 220.00, "FRIEND", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK989", 45.00, 180.01, 600.00, "UNKNOWN", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK988", -45.00, -180.05, 110.00, "FRIEND", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK987", 14.00, 41.00, -50.00, "HOSTILE", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK986", 42.00, -10.00, 3500.0, "FRIEND", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK985", 5.00, 12.00, 400.00, "ALLY", "ACTIVE", now));
+        simulatedFeed.add(new Track(0, "TRK984", 21.00, -82.00, 390.00, "FRIEND", "TERMINATED", now));
 
 
         return simulatedFeed;

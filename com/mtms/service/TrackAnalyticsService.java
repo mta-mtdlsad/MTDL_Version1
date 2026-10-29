@@ -32,8 +32,8 @@ public class TrackAnalyticsService {
 
         System.out.println("\n===== Track Reports =====");
         System.out.println("Total Simulation Records Processed: " + totalProcessed);
-        System.out.println("Accepted Tracks (Saved to DB):       " + acceptedCount);
-        System.out.println("Rejected Tracks (Rejected):   " + rejectedCount);
+        System.out.println("Accepted Tracks (Saved to Tracks Table):       " + acceptedCount);
+        System.out.println("Rejected Tracks (Saved to Alerts Table):   " + rejectedCount);
         System.out.println("\n===== REJECTED TRACKS =====");
         if (validationFailures.isEmpty()) {
             System.out.println("No items were rejected.");
@@ -48,7 +48,7 @@ public class TrackAnalyticsService {
         }
         System.out.println("--------------------------------------------------");
 
-        System.out.println("\n===== TRACK CLASSIFICATION (ACCEPTED ONLY) =====");
+        System.out.println("\n===== TRACK CLASSIFICATION =====");
         System.out.println("FRIEND:  " + trackRepository.findByIdentity(MTMSConstants.trackFRIEND).size());
         System.out.println("HOSTILE: " + trackRepository.findByIdentity(MTMSConstants.trackHOSTILE).size());
         System.out.println("NEUTRAL: " + trackRepository.findByIdentity(MTMSConstants.trackNEUTRAL).size());

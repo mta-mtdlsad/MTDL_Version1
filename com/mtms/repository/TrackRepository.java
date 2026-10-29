@@ -11,6 +11,7 @@ public class TrackRepository {
 
     // Saves the valid track to the tracks table
     public void insert(Track track) {
+        //off (implemented on bacth)
         String sql = "INSERT INTO tracks (track_number, latitude, longitude, speed, identity_type, track_status, created_time) " +
                 "VALUES (?, ?, ?, ?, ?, ?, CAST(? AS TIMESTAMP))";
 
@@ -32,6 +33,7 @@ public class TrackRepository {
                     track.track_id = keys.getLong(1);
                 }
             }
+            //explicit on (implemented in batch)
             System.out.println("Track inserted; no Alert. Database assigned ID: " + track.track_id);
 
         } catch (SQLException e) {
@@ -105,6 +107,49 @@ public class TrackRepository {
         String sql = "SELECT * FROM tracks WHERE UPPER(track_status) = ? ORDER BY created_time, track_id";
         return executeQuery(sql, pstmt -> pstmt.setString(1, status.trim().toUpperCase()));
     }
+
+
+    // Batch Proccessing starts
+    public void insertBatch(List<Track> validTracks) {
+        String sql = "INSERT INTO tracks (track_number, latitude, longitude, speed, identity_type, track_status, created_time) " +
+                "VALUES (?, ?, ?, ?, ?, ?, CAST(? AS TIMESTAMP))";
+
+        try (Connection conn = DbConnectionUtil.getConnection()) {
+            // Disable auto-commit to start a transaction
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                for (Track track : validTracks) {
+                    pstmt.setString(1, track.track_number);
+                    pstmt.setDouble(2, track.latitude);
+                    pstmt.setDouble(3, track.longitude);
+                    pstmt.setDouble(4, track.speed);
+                    pstmt.setString(5, track.identity_type);
+                    pstmt.setString(6, track.track_status);
+                    pstmt.setString(7, track.created_time);
+
+                    // Add the record to the in-memory batch queue
+                    pstmt.addBatch();
+                }
+
+                // Transmit the entire collection over a single pipeline request
+                pstmt.executeBatch();
+
+                // Commit the transaction to save all records at once
+                conn.commit();
+                System.out.println("Batch transaction committed successfully!");
+
+            } catch (SQLException e) {
+                // Rollback completely if an error occurs
+                conn.rollback();
+                throw new RuntimeException("Batch insertion error", e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database connectivity failure encountered during batch transaction.", e);
+        }
+    }
+    // Batch Proccessing ends
+
 
 
 

@@ -26,6 +26,7 @@ public class MTMSApplication {
             ReplayService replayService = new ReplayService(trackRepo);
             TrackSimulator simulator = new TrackSimulator();
             TrackAnalyticsService trackAnalyticsService = new TrackAnalyticsService(trackRepo, alertRepo);
+            BatchTrackService batchTrackService = new BatchTrackService(trackRepo, validationService, alertService);
 
             //TIME WINDOW CONFIGURATION
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -35,7 +36,7 @@ public class MTMSApplication {
             // TC-18: Check empty database --> Show empty if is.
             System.out.println("\n--- Testing TC-18 (Empty Database State Reports Check) ---");
             trackService.displayAllTracks();
-
+            /*
             // TC-01 through TC-10, and TC-17
             System.out.println("\n--- Processing Feed ---");
             List<Track> inputs = simulator.generateTracks();
@@ -77,6 +78,50 @@ public class MTMSApplication {
 
             // Reports
             trackAnalyticsService.reportStatistics();
+            */
+
+            // Batch Code
+            System.out.println("==========================================");
+            System.out.println("\nBatch insertion Starting now:");
+            System.out.println("\n--- Processing Feed via Batch Transaction Mode ---");
+            List<Track> batch = simulator.generateTracks();
+            batchTrackService.processTrackBatch(batch);
+
+            System.out.println("==========================================");
+
+            //Testing functions after batch insertion
+            // TC-11 & TC-12 (Search Operations)
+            System.out.println("\n--- Testing TC-11 (Search Existing: TRK1001) ---");
+            trackService.searchTrack("TRK1001");
+
+            System.out.println("\n--- Testing TC-12 (Search Missing: TRK9999) ---");
+            trackService.searchTrack("TRK9999");
+
+            // TC-17 (Protection against SQL Injection)
+            System.out.println("\n--- Testing TC-17 (SQL Injection Escape Handling Verification) ---");
+            trackService.searchTrack("TRK1' OR '1'='1");
+
+            // TC-15 (Replay)
+            System.out.println("\n--- Testing TC-15 (Replay) ---");
+            replayService.runReplay();
+
+            // Enhanced Replay with delay and window
+            String testingWindowEnd = LocalDateTime.now().format(formatter);
+            System.out.println("\n--- Testing Replay with timeframe and speed: Double ---");
+            replayService.runReplayWindow(testingWindowStart, testingWindowEnd, MTMSConstants.replayDouble);
+
+            // Reports
+            trackAnalyticsService.reportStatistics();
+            alertAnalyticsService.printAlertSeverityReport(MTMSConstants.alertLOW);
+
+            // Deleting a track
+            trackService.removeTrackByNumber("TRK1001");
+
+            // Verify deletion
+            System.out.println("\nVerifying database after deletion:");
+            System.out.println("\n--- Testing TC-11 (Search Existing: TRK1001) ---");
+            trackService.searchTrack("TRK1001");
+
 
 
         } catch (Exception dbUnavailableOrFault) {
