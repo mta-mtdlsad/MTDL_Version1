@@ -1,11 +1,14 @@
 package com.mtms.main;
 
+import com.mtms.constants.MTMSConstants;
 import com.mtms.domain.Track;
 import com.mtms.repository.AlertRepository;
 import com.mtms.repository.TrackRepository;
 import com.mtms.service.*;
 import com.mtms.simulator.TrackSimulator;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class MTMSApplication {
@@ -16,12 +19,17 @@ public class MTMSApplication {
             // Initializations
             TrackRepository trackRepo = new TrackRepository();
             AlertRepository alertRepo = new AlertRepository();
+            AlertAnalyticsService alertAnalyticsService = new AlertAnalyticsService(alertRepo);
             ValidationService validationService = new ValidationService();
             AlertService alertService = new AlertService(alertRepo);
             TrackService trackService = new TrackService(trackRepo, validationService, alertService);
             ReplayService replayService = new ReplayService(trackRepo);
             TrackSimulator simulator = new TrackSimulator();
-            TrackAnalyticsService analyticsService = new TrackAnalyticsService(trackRepo, alertRepo);
+            TrackAnalyticsService trackAnalyticsService = new TrackAnalyticsService(trackRepo, alertRepo);
+
+            //TIME WINDOW CONFIGURATION
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String testingWindowStart = LocalDateTime.now().format(formatter);
 
 
             // TC-18: Check empty database --> Show empty if is.
@@ -46,13 +54,19 @@ public class MTMSApplication {
             System.out.println("\n--- Testing TC-17 (SQL Injection Escape Handling Verification) ---");
             trackService.searchTrack("TRK1' OR '1'='1");
 
-
             // TC-15 (Replay)
             System.out.println("\n--- Testing TC-15 (Replay) ---");
             replayService.runReplay();
 
+            // Enhanced Replay with delay and window
+            String testingWindowEnd = LocalDateTime.now().format(formatter);
+            System.out.println("\n--- Testing Replay with timeframe and speed: Double ---");
+            replayService.runReplayWindow(testingWindowStart, testingWindowEnd, MTMSConstants.replayDouble);
+
+
             // Reports
-            analyticsService.reportStatistics();
+            trackAnalyticsService.reportStatistics();
+            alertAnalyticsService.printAlertSeverityReport(MTMSConstants.alertLOW);
 
             // Deleting a track
             trackService.removeTrackByNumber("TRK1001");
@@ -62,7 +76,8 @@ public class MTMSApplication {
             trackService.displayAllTracks();
 
             // Reports
-            analyticsService.reportStatistics();
+            trackAnalyticsService.reportStatistics();
+
 
         } catch (Exception dbUnavailableOrFault) {
             // TC-16: Detects failures and reports clear explanations when PostgreSQL falls off the grid

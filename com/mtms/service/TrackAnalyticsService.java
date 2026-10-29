@@ -56,7 +56,22 @@ public class TrackAnalyticsService {
         System.out.println("--------------------------------------------------");
         displayHighSpeedReport();
         System.out.println("====================================================");
+        String status = MTMSConstants.trackACTIVE;
+        System.out.printf("\n===== TRACK STATUS FILTER REPORT (%s) =====%n", status);
+        List<Track> statusTracks = trackRepository.selectByStatus(status);
+        if (statusTracks.isEmpty()) {
+            System.out.printf("No tracks registered matching status '%s'.%n", status);
+        } else {
+            //Total tracks with the status
+            System.out.println("Total Matches Found: " + statusTracks.size());
+            System.out.println("Matching Tracks:");
+            statusTracks.forEach(System.out::println);
+        }
+        System.out.println("--------------------------------------------------");
     }
+
+
+
 
     public void displayHighSpeedReport() {
         System.out.println("\n===== FR-14: High speed tracks (>700) =====");

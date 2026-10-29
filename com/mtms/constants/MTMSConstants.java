@@ -7,7 +7,7 @@ public final class MTMSConstants {
     //Alert Severity Constants
     public static final String alertLOW = "LOW"; //MTMSConstants.alertLOW
     public static final String alertMid = "MEDIUM"; //MTMSConstants.alertMid
-    public static final String alertHigh = "High"; //MTMSConstants.alertHigh
+    public static final String alertHigh = "HIGH"; //MTMSConstants.alertHigh
 
     //Track Status Constants
     public static final String trackACTIVE = "ACTIVE"; //MTMSConstants.trackACTIVE
@@ -18,6 +18,11 @@ public final class MTMSConstants {
     public static final String trackHOSTILE = "HOSTILE"; //MTMSConstants.trackHOSTILE
     public static final String trackNEUTRAL = "ACTIVE"; //MTMSConstants.trackNEUTRAL
     public static final String trackUNKNOWN = "UNKNOWN"; //MTMSConstants.trackUNKNOWN
+
+    //Replay Speed  Constants
+    public static final int replayHalf = 2000; //MTMSConstants.replayHalf
+    public static final int replayNormal = 1000; //MTMSConstants.replayNormal
+    public static final int replayDouble = 500; //MTMSConstants.replayDouble
 
 
 }

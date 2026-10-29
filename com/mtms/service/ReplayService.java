@@ -1,6 +1,6 @@
 package com.mtms.service;
 
-
+import com.mtms.constants.MTMSConstants;
 import com.mtms.domain.Track;
 import com.mtms.repository.TrackRepository;
 import java.util.List;
@@ -12,15 +12,23 @@ public class ReplayService {
         this.repository = repository;
     }
 
-    // TC-15: Replay
+    // Original workflow: Replays all tracks using the standard normal delay constant
     public void runReplay() {
-        System.out.println("\nStarting Track History Replay...");
+        runReplayWithSettings(repository.getReplayData(), MTMSConstants.replayNormal);
+    }
 
-        // Fetch rows ordered by created_time ASC, track_id ASC
-        List<Track> replayLogs = repository.getReplayData();
+    // Time Window workflow: Filters tracks by timestamps and applies a customized constant delay
+    public void runReplayWindow(String startTime, String endTime, int delayMilliseconds) {
+        System.out.printf("\nStarting Track History Replay window from [%s] to [%s] (Delay: %dms)...%n",
+                startTime, endTime, delayMilliseconds);
 
+        List<Track> windowedLogs = repository.selectByTimeWindow(startTime, endTime);
+        runReplayWithSettings(windowedLogs, delayMilliseconds);
+    }
+
+    private void runReplayWithSettings(List<Track> replayLogs, int delayMilliseconds) {
         if (replayLogs.isEmpty()) {
-            System.out.println("Replay explains no data: The datastore contains no tracks.");
+            System.out.println("Replay explains no data: The datastore contains no tracks matching this window.");
             return;
         }
 
@@ -29,9 +37,8 @@ public class ReplayService {
             count++;
             System.out.printf("[%d/%d] %s%n", count, replayLogs.size(), track.toString());
 
-            // TC-15:  1-second delay (1000 milliseconds) between track displays
             try {
-                Thread.sleep(1000);
+                Thread.sleep(delayMilliseconds);
             } catch (InterruptedException e) {
                 System.err.println("Replay loop execution was interrupted unexpectedly!");
                 Thread.currentThread().interrupt(); // Restore interrupted status flag

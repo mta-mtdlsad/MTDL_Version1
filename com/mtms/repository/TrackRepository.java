@@ -63,7 +63,7 @@ public class TrackRepository {
 
     // TC-11 & TC-17: Secure parameterized search to handle text lookup and block SQL Injection
     public List<Track> search(String trackNumber) {
-        String sql = "SELECT * FROM tracks WHERE track_number = ? ORDER BY created_time DESC, track_id DESC LIMIT 1";
+        String sql = "SELECT * FROM tracks WHERE track_number = ? ORDER BY created_time DESC, track_id DESC";
         return executeQuery(sql, pstmt -> pstmt.setString(1, trackNumber));
     }
 
@@ -89,6 +89,24 @@ public class TrackRepository {
     private interface ParameterBinder {
         void bind(PreparedStatement pstmt) throws SQLException;
     }
+
+    // Filters and pulls records falling within a specific time range.
+    // Expects parameters formatted as 'yyyy-MM-dd HH:mm:ss'.
+    public List<Track> selectByTimeWindow(String start, String end) {
+        String sql = "SELECT * FROM tracks WHERE created_time BETWEEN CAST(? AS TIMESTAMP) AND CAST(? AS TIMESTAMP) ORDER BY created_time, track_id";
+        return executeQuery(sql, pstmt -> {
+            pstmt.setString(1, start);
+            pstmt.setString(2, end);
+        });
+    }
+
+    // Filters and retrieves Active or Inactive tracks
+    public List<Track> selectByStatus(String status) {
+        String sql = "SELECT * FROM tracks WHERE UPPER(track_status) = ? ORDER BY created_time, track_id";
+        return executeQuery(sql, pstmt -> pstmt.setString(1, status.trim().toUpperCase()));
+    }
+
+
 
     // Helper method to keep data execution logic simple
     private List<Track> executeQuery(String sql, ParameterBinder binder) {

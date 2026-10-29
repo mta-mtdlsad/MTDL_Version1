@@ -26,7 +26,7 @@ public class TrackSimulator {
         simulatedFeed.add(new Track(0, "TRK", 34.0522, -118.2437,
                 500.00, "FRIEND", "ACTIVE", now));
 
-        // TC-04: Invalid latitude --> Rejected
+        // TC-04: Invalid latitude --> Rejected////////////////////////////////
         simulatedFeed.add(new Track(0, "TRK1004", 95.0000, -118.2437,
                 500.00, "FRIEND", "ACTIVE", now));
 

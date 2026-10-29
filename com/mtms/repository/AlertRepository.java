@@ -57,8 +57,39 @@ public class AlertRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Database error during alert query operation.", e);
+            throw new RuntimeException("Database error during alert query operation (Select all function).", e);
         }
         return alerts;
     }
+
+    public List<Alert> selectSeverity(String s) {
+        List<Alert> alertsBySeverity = new ArrayList<>();
+        // Converting filtering criteria to uppercase
+        String sql = "SELECT * FROM alerts WHERE UPPER(alert_severity) = ? ORDER BY alert_time ASC, alert_id ASC";
+
+        try (Connection conn = DbConnectionUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // Block SQL injection attempts
+            pstmt.setString(1, s != null ? s.trim().toUpperCase() : "");
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    alertsBySeverity.add(new Alert(
+                            rs.getLong("alert_id"),
+                            rs.getString("track_number"),
+                            rs.getString("alert_message"),
+                            rs.getString("alert_severity"),
+                            rs.getString("alert_time")
+                    ));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error during targeted alert severity filtering query.", e);
+        }
+        return alertsBySeverity;
+    }
+
 }
+
