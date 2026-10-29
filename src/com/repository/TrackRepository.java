@@ -8,7 +8,9 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TrackRepository {
     private static Connection connection = DbConnection.getConnection();
@@ -92,15 +94,15 @@ public class TrackRepository {
     }
 
     // DELETE by the track_number
-    public String deleteTrackByNo(String number) {
+    public boolean deleteTrackByNo(String number) {
         try {
             preparedStatement = connection.prepareStatement(
                     "DELETE FROM tracks WHERE track_number=?;");
             preparedStatement.setString(1, number);
             preparedStatement.executeUpdate();
-            return "Track " + number + " deleted successfully";
+            return true;
         }catch(Exception e) {
-            return "Track " + number + " cannot be deleted";
+            return false;
         }
     }
 
@@ -160,7 +162,8 @@ public class TrackRepository {
     }
 
     // SELECT the number of tracks in each identity_type
-    public List<String> getStatistics() {
+    public Map<String, Integer> getStatistics() {
+        Map<String, Integer> statistics = new LinkedHashMap<>();
         try {
             preparedStatement = connection.prepareStatement(
                     "SELECT identity_type, COUNT(*) FROM tracks GROUP BY identity_type;");
@@ -170,13 +173,13 @@ public class TrackRepository {
             while(resultSet.next()) {
                 String identity_type = resultSet.getString(1);
                 int count = resultSet.getInt(2);
-                trackStatistics.add(identity_type + " | " + count);
+                statistics.put(identity_type, count);
             }
-            return trackStatistics;
+
         }catch (Exception e) {
-            System.out.println("Unable to fetch tracks");
+            System.out.println("Unable to fetch track statistics: " + e.getMessage());
         }
-        return null;
+        return statistics;
     }
 
     // SELECT track based on status
@@ -237,14 +240,14 @@ public class TrackRepository {
     }
 
     // DELETE all tracks
-    public String clearTracksTable() {
+    public boolean clearTracksTable() {
         try {
             preparedStatement = connection.prepareStatement(
                     "DELETE FROM tracks;");
             preparedStatement.executeUpdate();
-            return "Tracks cleared successfully";
+            return true;
         }catch(Exception e) {
-            return "Unable to clear tracks";
+            return false;
         }
     }
 }

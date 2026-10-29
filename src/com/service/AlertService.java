@@ -20,11 +20,21 @@ public class AlertService {
 
     //using the repo displaying all alerts
     public List<Alert> getAlerts(){
-        return alert_repo.getAllAlerts();
+        List<Alert> alerts = alert_repo.getAllAlerts();
+        if (alerts.isEmpty()){
+            System.out.println("No Alerts found in the database");
+        }
+        return alerts;
     }
 
     //clearing all alerts using track repo
     public void clearAlerts() {
-        alert_repo.clearAlertsTable(); //returns confirmation string
+        Boolean alert = alert_repo.clearAlertsTable();
+        if (alert == false){
+            System.out.println("Alert table not cleared from the database");
+            return;
+        }
+        alert_repo.clearAlertsTable();
+        System.out.println("Alert table cleared successfully"); //prints confirmation string
     }
 }

@@ -44,6 +44,7 @@ public class MTMSApplication {
     public static void Test_V1() {
         try {
             TrackService track_service = new TrackService();
+            TrackAnalyticsService analytics_service = new TrackAnalyticsService();
 
             System.out.println("\n---------- Print by number ----------");
 
@@ -60,9 +61,8 @@ public class MTMSApplication {
             System.out.println("\n---------- Print all ----------");
             track_service.displayTracks().forEach(System.out::println);
             System.out.println("\n---------- Print statistics ----------");
-            track_service.statistcsReport().forEach(System.out::println);
+            analytics_service.statistcsReport();
 
-            TrackAnalyticsService analytics_service = new TrackAnalyticsService();
             System.out.println("\n---------- Print all hostile ----------");
             analytics_service.hostileReport();
             System.out.println("\n---------- Print high speed ----------");

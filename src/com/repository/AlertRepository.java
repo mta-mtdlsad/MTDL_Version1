@@ -85,14 +85,14 @@ public class AlertRepository {
     }
 
     // DELETE all alerts
-    public String clearAlertsTable() {
+    public boolean clearAlertsTable() {
         try {
             preparedStatement = connection.prepareStatement(
                     "DELETE FROM alerts;");
             preparedStatement.executeUpdate();
-            return "Alerts cleared successfully";
+            return true;
         }catch(Exception e) {
-            return "Unable to clear alerts";
+            return false;
         }
     }
 }

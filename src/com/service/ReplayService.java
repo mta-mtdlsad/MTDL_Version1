@@ -14,6 +14,10 @@ public class ReplayService {
         try {
             TrackRepository track_repo = new TrackRepository();
             List<Track> listOfTracks = track_repo.getAllTracksTimeframe(start_time, end_time);
+            if(listOfTracks.isEmpty() || listOfTracks == null){
+                System.out.println("No tracks found in the selected timeframe");
+                return;
+            }
             for(Track track : listOfTracks) {
                 System.out.println(track);
                 Thread.sleep(speed.getMilliseconds());

@@ -5,6 +5,7 @@ import com.domain.ValidationResult;
 import com.repository.TrackRepository;
 
 import java.util.List;
+import java.util.Map;
 
 public class TrackService {
     TrackRepository track_repo = new TrackRepository();
@@ -28,26 +29,41 @@ public class TrackService {
 
     //printing out all tracks using track repo
     public List<Track> displayTracks() {
-        return track_repo.getAllTracks();
+        List<Track> tracks = track_repo.getAllTracks();
+        if (tracks.isEmpty()){
+            System.out.println("No Tracks found in the database");
+        }
+        return tracks;
     }
 
     //printing out track given the track number using the track repo
     public Track searchTracks(String number) {
-        return track_repo.getTrackByNo(number);
-    }
-
-    //printing statistics report using the track repo
-    public List<String> statistcsReport() {
-        return track_repo.getStatistics();
+        Track track = track_repo.getTrackByNo(number);
+        if (track == null){
+            System.out.println("Track not found in the database");
+        }
+        return track;
     }
 
     //deleting a track using track repo
     public void deleteTrack(String number) {
-        track_repo.deleteTrackByNo(number); //returns confirmation string
+        Boolean track = track_repo.deleteTrackByNo(number);
+        if (track == false){
+            System.out.println("Track not found in the database");
+            return;
+        }
+        track_repo.deleteTrackByNo(number);
+        System.out.println("Track " + number + " Deleted successfully"); //prints confirmation string
     }
 
     //clearing all track using track repo
     public void clearTracks() {
-        track_repo.clearTracksTable(); //returns confirmation string
+        Boolean track = track_repo.clearTracksTable();
+        if (track == false){
+            System.out.println("Track table not cleared from the database");
+            return;
+        }
+        track_repo.clearTracksTable();
+        System.out.println("Track table cleared successfully"); //prints confirmation string
     }
 }
