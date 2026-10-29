@@ -83,4 +83,16 @@ public class AlertRepository {
 
         return statistics;
     }
+
+    // DELETE all alerts
+    public String clearAlertsTable() {
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "DELETE FROM alerts;");
+            preparedStatement.executeUpdate();
+            return "Alerts cleared successfully";
+        }catch(Exception e) {
+            return "Unable to clear alerts";
+        }
+    }
 }

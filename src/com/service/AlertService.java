@@ -22,4 +22,9 @@ public class AlertService {
     public List<Alert> getAlerts(){
         return alert_repo.getAllAlerts();
     }
+
+    //clearing all alerts using track repo
+    public void clearAlerts() {
+        alert_repo.clearAlertsTable(); //returns confirmation string
+    }
 }

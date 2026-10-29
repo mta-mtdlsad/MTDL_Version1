@@ -4,8 +4,6 @@ import com.domain.ReplaySpeed;
 import com.domain.Track;
 import com.service.*;
 import com.simulator.TrackSimulator;
-
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,6 +17,10 @@ public class MTMSApplication {
             //System.out.println("\n---------- Validate ----------");
             track_service.processTracks(all_tracks);
 
+            //use enhanced simulation function
+            List<Track> all_tracks_enhanced = track_sim.getTracksEnhanced();
+            track_service.processTracks(all_tracks_enhanced);
+
             //v1.0
             Test_V1();
 
@@ -27,13 +29,11 @@ public class MTMSApplication {
 
             System.out.println("\n---------- Delete ----------");
             track_service.deleteTrack("TRK001");
-            track_service.deleteTrack("TRK002");
-            track_service.deleteTrack("TRK003");
-            track_service.deleteTrack("TRK004");
-            track_service.deleteTrack("TRK005");
-            track_service.deleteTrack("TRK006");
-            track_service.deleteTrack("TRK007");
-            track_service.deleteTrack("TRK008");
+
+            System.out.println("\n---------- Clear tables ----------");
+            AlertService alert_service = new AlertService();
+            track_service.clearTracks();
+            alert_service.clearAlerts();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,11 +86,11 @@ public class MTMSApplication {
             // E-03 :: Replay Time Window
             ReplayService replay_service = new ReplayService();
             LocalDateTime start_time = LocalDateTime.of(2026, 1, 1, 0, 0, 0);
-            LocalDateTime end_time = LocalDateTime.of(2026, 12, 31, 11, 59, 59);
+            LocalDateTime end_time = LocalDateTime.of(2026, 1, 2, 0, 0, 0);
             //System.out.println("\n---------- Replay HALF ----------");
             //replay_service.replayTracks(ReplaySpeed.HALF, start_time, end_time);
-            System.out.println("\n---------- Replay NORMAL ----------");
-            replay_service.replayTracks(ReplaySpeed.NORMAL, start_time, end_time);
+            //System.out.println("\n---------- Replay NORMAL ----------");
+            //replay_service.replayTracks(ReplaySpeed.NORMAL, start_time, end_time);
             System.out.println("\n---------- Replay DOUBLE ----------");
             replay_service.replayTracks(ReplaySpeed.DOUBLE, start_time, end_time);
 

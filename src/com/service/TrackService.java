@@ -45,4 +45,9 @@ public class TrackService {
     public void deleteTrack(String number) {
         track_repo.deleteTrackByNo(number); //returns confirmation string
     }
+
+    //clearing all track using track repo
+    public void clearTracks() {
+        track_repo.clearTracksTable(); //returns confirmation string
+    }
 }

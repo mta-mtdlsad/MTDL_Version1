@@ -235,4 +235,16 @@ public class TrackRepository {
         }
         return null;
     }
+
+    // DELETE all tracks
+    public String clearTracksTable() {
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "DELETE FROM tracks;");
+            preparedStatement.executeUpdate();
+            return "Tracks cleared successfully";
+        }catch(Exception e) {
+            return "Unable to clear tracks";
+        }
+    }
 }

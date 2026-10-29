@@ -5,6 +5,7 @@ import com.domain.Track;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 //Manual test tracks to test out different test cases
 public class TrackSimulator {
@@ -48,6 +49,26 @@ public class TrackSimulator {
     ));
 
     public List<Track> getTracks(){
+        return tracks;
+    }
+
+    public List<Track> getTracksEnhanced(){
+        Random random = new Random();
+        List<Track> tracks = new ArrayList<>();
+        String[] identity_types = {"FRIEND", "HOSTILE", "NEUTRAL", "UNKNOWN"};
+        String[] track_status = {"ACTIVE", "INACTIVE"};
+        double latitude, longitude, speed;
+        String track_number;
+        int day = 1, hour;
+        for(int i = 1; i <= 100; i++) {
+            track_number = "TRK00" + i;
+            latitude = 10.0 + (random.nextInt(100) / 100.0);
+            longitude = 70.0 + (random.nextInt(100) / 100.0);
+            speed = 300.0 + (random.nextInt(1500));
+            hour = i % 24;
+            if(hour == 0) day++;
+            tracks.add(new Track(track_number, latitude, longitude, speed, identity_types[random.nextInt(4)], track_status[random.nextInt(2)], LocalDateTime.of(2026, 1, day, hour, 0, 0)));
+        }
         return tracks;
     }
 }
