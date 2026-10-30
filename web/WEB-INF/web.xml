@@ -52,4 +52,29 @@
         <url-pattern>/tracks/delete</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ReplayTracksRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.ReplayTracksServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ReplayTracksRelatedServlet</servlet-name>
+        <url-pattern>/tracks/replay</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ReplayTracksRelatedServlet</servlet-name>
+        <url-pattern>/getTracksTimeFrame</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SearchTrackRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.SearchTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SearchTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/search</url-pattern>
+    </servlet-mapping>
+
 </web-app>

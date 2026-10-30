@@ -207,15 +207,14 @@ public class TrackRepository {
     }
 
     // DELETE by the track_number
-    public boolean deleteTrackByNo(String number) {
+    public void deleteTrackByNo(String number) {
         try {
             preparedStatement = connection.prepareStatement(
                     "DELETE FROM tracks WHERE track_number=?;");
             preparedStatement.setString(1, number);
             preparedStatement.executeUpdate();
-            return true;
         }catch(Exception e) {
-            return false;
+            e.printStackTrace();
         }
     }
 

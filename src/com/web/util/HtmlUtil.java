@@ -6,6 +6,47 @@ import com.domain.Track;
 import java.util.List;
 
 public class HtmlUtil {
+    public static String escape(String value) {
+
+        if (value == null) {
+            return "";
+        }
+
+        return value
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
+    }
+
+    public static void startPage(
+            java.io.PrintWriter out,
+            String title) {
+
+        out.println("<!DOCTYPE html>");
+        out.println("<html lang='en'>");
+        out.println("<head>");
+        out.println("<meta charset='UTF-8'>");
+        out.println("<title>" + escape(title) + "</title>");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<h1>" + escape(title) + "</h1>");
+    }
+
+    public static void endPage(
+            java.io.PrintWriter out,
+            String contextPath) {
+
+        out.println("<hr>");
+        out.println("<p><a href='"
+                + escape(contextPath)
+                + "/index.html'>Return Home</a></p>");
+
+        out.println("</body>");
+        out.println("</html>");
+    }
+
     public static String convertTracksToHtmlTable(List<Track> list) {
         StringBuilder html = new StringBuilder();
 

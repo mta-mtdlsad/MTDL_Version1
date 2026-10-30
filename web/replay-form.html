@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>EDGE | Replay Form</title>
+</head>
+<body>
+<div class="">
+    <h3>Replay Time Frame</h3>
+    <form id="replayForm" method="post" action="tracks/replay">
+        <label>Replay Speed:</label>
+        <select name="speed" id="speed">
+            <option value="HALF">Half Speed (2 seconds)</option>
+            <br>
+            <option value="NORMAL">Normal Speed (1 second)</option>
+            <br>
+            <option value="DOUBLE">Double Speed (0.5 second)</option>
+            <br>
+        </select><br>
+        <input type="datetime-local" name="startDate" placeholder="Enter Track Start Date" required><br><br>
+        <input type="datetime-local" name="endDate" placeholder="Enter Track End Date" required><br><br>
+        <input type="submit">
+    </form>
+    <h3>Results</h3>
+    <div id="results"></div>
+</div>
+<script>
+    document.getElementById("replayForm")
+        .addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const results = document.getElementById("results");
+            const submitButton = this.querySelector('[type="submit"]');
+            results.textContent = "Replaying tracks...\n";
+            submitButton.disabled = true;
+            try {
+                const response = await fetch("replayTracks", {
+                    method: "POST",
+                    body: new URLSearchParams(formData)
+                });
+                if (!response.ok) {
+                    throw new Error(await response.text());
+                }
+                if (!response.body) {
+                    throw new Error("Streaming is not supported.");
+                }
+                results.textContent = "";
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder("utf-8");
+                while (true) {
+                    const {done, value} = await reader.read();
+                    if (done) {
+                        break;
+                    }
+                    const text = decoder.decode(value, {
+                        stream: true
+                    });
+                    results.textContent += text;
+                }
+                results.textContent += decoder.decode();
+                if (results.textContent.trim() === "") {
+                    results.textContent = "No tracks found.";
+                }
+            } catch (error) {
+                results.textContent = "Error: " + error.message;
+            } finally {
+                submitButton.disabled = false;
+            }
+        });
+</script>
+</body>
+</html>

@@ -1,4 +1,5 @@
 package com.web.sevlet;
 
-public class StatisticsServlet {
+public class StatisticsServlet  {
+    //
 }
