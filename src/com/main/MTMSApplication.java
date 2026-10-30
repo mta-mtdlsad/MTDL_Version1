@@ -23,7 +23,7 @@ public class MTMSApplication {
             List<Track> all_tracks_enhanced = track_sim.getTracksEnhanced();
             //track_service.processTracks(all_tracks_enhanced);
             batch_track_service.processBatch(all_tracks_enhanced);
-
+/*
             //v1.0
             Test_V1();
 
@@ -31,18 +31,18 @@ public class MTMSApplication {
             Test_V1_1();
 
             System.out.println("\n---------- Delete ----------");
-            track_service.deleteTrack("TRK001");
+            //track_service.deleteTrack("TRK001");
 
             System.out.println("\n---------- Clear tables ----------");
             AlertService alert_service = new AlertService();
             track_service.clearTracks();
-            alert_service.clearAlerts();
+            alert_service.clearAlerts();*/
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+/*
     //Version 1.0 tests
     public static void Test_V1() {
         try {
@@ -69,7 +69,7 @@ public class MTMSApplication {
             System.out.println("\n---------- Print all hostile ----------");
             analytics_service.hostileReport();
             System.out.println("\n---------- Print high speed ----------");
-            analytics_service.highSpeedReport();
+            analytics_service.highSpeedReport(700.0);
 
             System.out.println("\n---------- All Alerts ----------");
             AlertService alert_service = new AlertService();
@@ -111,5 +111,5 @@ public class MTMSApplication {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }

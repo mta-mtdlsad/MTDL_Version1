@@ -14,7 +14,42 @@
 
     <servlet-mapping>
         <servlet-name>CreateTrackRelatedServlet</servlet-name>
-        <url-pattern>/saveTrack</url-pattern>
+        <url-pattern>/tracks/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>CreateTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/list</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>CreateTrackRelatedServlet</servlet-name>
+        <url-pattern>/alerts/list</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>CreateTrackRelatedServlet</servlet-name>
+        <url-pattern>/statistics</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>FilterTracksRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.FilterTracksServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>FilterTracksRelatedServlet</servlet-name>
+        <url-pattern>/tracks/filter</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteTrackRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.DeleteTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DeleteTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/delete</url-pattern>
     </servlet-mapping>
 
 </web-app>

@@ -33,6 +33,28 @@ public class TrackService {
         }
     }
 
+    //Using the track and alert repo to validate one track and raise alerts
+    public boolean processTrack(Track track) {
+        ValidationService val_service = new ValidationService();
+        AlertService alert_service = new AlertService();
+        List<ValidationResult> results;
+        results = val_service.validateTrack(track);
+        if(results.isEmpty()) {
+            try {
+                track_repo.saveTrack(track); //returns confirmation string
+                return true;
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            for(ValidationResult result : results) {
+                alert_service.createAlert(track, result);
+            }
+        }
+        return false;
+    }
+
     //printing out all tracks using track repo
     public List<Track> displayTracks() {
         List<Track> tracks = track_repo.getAllTracks();

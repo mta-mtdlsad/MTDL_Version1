@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>EDGE | Filter Form</title>
+</head>
+<body>
+<div class="">
+    <h3>Filter Form</h3>
+
+    <form method="get" action="tracks/filter">
+        <label>Select Track Identity Type</label>
+        <select name="trackFilterIdentity" required>
+            <option value="FRIEND">FRIEND</option>
+            <option value="HOSTILE">HOSTILE</option>
+            <option value="NEUTRAL">NEUTRAL</option>
+            <option value="UNKNOWN" selected>UNKNOWN</option></select><br><br>
+        <input type="hidden" name="purpose" value="identity">
+        <input type="submit">
+    </form><br><br>
+
+    <form method="get" action="tracks/filter">
+        <label>Select Track Status</label>
+        <select name="trackFilterStatus" required>
+            <option value="ACTIVE" selected>ACTIVE</option>
+            <option value="INACTIVE">INACTIVE</option>
+        </select><br><br>
+        <input type="hidden" name="purpose" value="status">
+        <input type="submit">
+    </form><br><br>
+
+    <form method="get" action="tracks/filter">
+        <label>Enter Minimum Track Speed</label>
+        <input type="number" name="trackFilterSpeed" required><br><br>
+        <input type="hidden" name="purpose" value="speed">
+        <input type="submit">
+    </form>
+
+</div>
+
+</body>
+</html>

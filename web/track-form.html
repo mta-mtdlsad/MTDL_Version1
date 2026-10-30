@@ -7,15 +7,34 @@
 <body>
 <div class="">
     <h3>Track Form</h3>
-    <form method="post" action="saveTrack">
-        <input type="text" name="trackNumber" placeholder="Enter Track Number" required><br><br>
-        <input type="number" name="trackLatitude" placeholder="Enter Track Latitude" required><br><br>
-        <input type="number" name="trackLongitude" placeholder="Enter Track Longitude" required><br><br>
-        <input type="number" name="trackSpeed" placeholder="Enter Track Speed" required><br><br>
-        <input type="text" name="trackIdentity" placeholder="Enter Track Identity" required><br><br>
-        <input type="text" name="trackStatus" placeholder="Enter Track Status" required><br><br>
-        <input type="date" name="trackCreatedTime" placeholder="Enter Track Created Time" required><br><br>
+    <form method="post" action="tracks/create">
+        <label>Enter Track Number</label>
+        <input type="text" name="trackNumber" required><br><br>
+        <label>Enter Track Latitude</label>
+        <input type="number" name="trackLatitude" required><br><br>
+        <label>Enter Track Longitude</label>
+        <input type="number" name="trackLongitude" required><br><br>
+        <label>Enter Track Speed</label>
+        <input type="number" name="trackSpeed" required><br><br>
+        <label>Enter Track Identity Type</label>
+        <select name="trackIdentity" required>
+            <option value="FRIEND">FRIEND</option>
+            <option value="HOSTILE">HOSTILE</option>
+            <option value="NEUTRAL">NEUTRAL</option>
+            <option value="UNKNOWN" selected>UNKNOWN</option>
+        </select><br><br>
+        <label>Enter Track Status</label>
+        <select name="trackStatus" required>
+            <option value="ACTIVE" selected>ACTIVE</option>
+            <option value="INACTIVE">INACTIVE</option>
+        </select><br><br>
+        <label>Enter Track Created Time</label>
+        <input type="datetime-local" name="trackCreatedTime" required><br><br>
         <input type="submit">
+    </form><br><br>
+    <form method="get" action="statistics">
+        <input type="hidden" name="purpose" value="statistics">
+        <input type="submit" value="Get Statistics">
     </form>
 </div>
 </body>

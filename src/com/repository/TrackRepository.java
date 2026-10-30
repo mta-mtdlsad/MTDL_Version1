@@ -144,6 +144,20 @@ public class TrackRepository {
         return null;
     }
 
+    // SELECT tracks where speed is greater than certain number
+    public List<Track> getTracksByIdentity(String identity) {
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks WHERE identity_type = ? ORDER BY created_time DESC, track_id DESC;");
+            preparedStatement.setString(1, identity);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return getList(resultSet);
+        }catch (Exception e) {
+            System.out.println("Unable to fetch all tracks");
+        }
+        return null;
+    }
+
     // SELECT track based on the track_number
     public Track getTrackByNo(String number) {
         try {
