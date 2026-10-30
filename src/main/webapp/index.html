@@ -1,0 +1,77 @@
+<!--//Home page with nav links to all other pages (?)-->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HomePage | Navigation Bar</title>
+</head>
+
+<!--CSS styling-->
+<title> Navigation Bar </title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f4f6f9;
+    }
+
+    /* Navigation Bar */
+    nav {
+        background-color: #263445;
+        padding: 18px;
+        display: flex;
+        justify-content: center;
+        gap: 35px;
+    }
+
+    nav a {
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+    nav a:hover {
+        color: #64b5f6;
+    }
+
+    /* Main Content */
+    .container {
+        text-align: center;
+        margin-top: 100px;
+    }
+
+    h1 {
+        color: #263445;
+    }
+
+    p {
+        color: #555;
+        font-size: 18px;
+    }
+
+</style>
+
+<body>
+
+<!--Link to all pages-->
+<nav class="Navigation Bar">
+    <ul>
+        <li><a href="track-form.html">Create Track </a></li>
+        <li><a href="search-form.html">Search Tracks</a></li>
+        <li><a href="filter-form.html">Filter Tracks</a></li>
+        <li><a href="search-form.html">Replay Tracks</a></li>
+        <li><a href="delete-form.html">Delete Tracks</a></li>
+
+    </ul>
+</nav>
+
+<div class="container">
+    <h1>Track Management Home Page</h1>
+</div>
+
+
+</body>
+</html>

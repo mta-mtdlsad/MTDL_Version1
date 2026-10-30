@@ -1,0 +1,31 @@
+
+<!-- Delete a track -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HomePage | Delete Track Form</title>
+</head>
+<body>
+
+<h3>Delete Track</h3>
+
+<form action="tracks/delete" method="post">
+
+  <label>
+    <input type="text"
+           name="trackNumber"
+           placeholder="Enter The Number of The Track You Want to Delete:"
+           required
+           minlength="5" />
+  </label>
+
+  <br><br>
+
+  <button type="submit">Delete Track</button>
+
+</form>
+<a href="index.html">Return Home</a>
+
+</body>
+</html>

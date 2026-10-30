@@ -1,0 +1,66 @@
+<!--//Form to create a track-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> HomePage | Create Track Forms </title>
+</head>
+<body>
+
+
+<h3>Create New Track</h3>
+<form  action="tracks/create" method="post">
+
+
+    <label>
+        <input type="text"
+               name="trackNumber"
+               placeholder="Enter Track Number: "
+               required minlength="5"/>
+
+    </label><br>
+
+    <label>
+        <input type="text"
+               name="latitude"
+               placeholder="Enter latitude: "/>
+    </label><br>
+
+    <input type="text"
+           name="longitude"
+           placeholder="Enter longitude: "/><br>
+
+    <label>
+        <input type="text"
+               name="speedNumber"
+               placeholder="Enter speed: "/>
+    </label><br>
+
+    <label for="identity">Choose Identity Type: </label>
+    <select name="identity" id="identity" required>
+        <option value="friend">FRIEND</option>
+        <option value="neutral">NEUTRAL</option>
+        <option value="hostile">HOSTILE</option>
+        <option value="unknown">UNKNOWN</option>
+    </select>
+    <br>
+
+    <label for="status">Choose Status Type: </label>
+    <select name="status" id="status" required>
+        <option value="active">ACTIVE</option>
+        <option value="inactive">INACTIVE</option>
+    </select>
+    <br>
+
+    <button type="submit"> Submit Track </button>
+
+
+</form>
+
+<a href="index.html">Return Home</a>
+
+</body>
+
+</html>
+

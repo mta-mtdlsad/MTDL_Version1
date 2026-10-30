@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
+         version="6.1">
+    <display-name>MTMS-Web-1.2</display-name>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+
+    <!--    CreateTrackServlet + track form -->
+    <servlet>
+        <servlet-name>CreateTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.CreateTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CreateTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/create</url-pattern>
+    </servlet-mapping>
+
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>CreateTrackRelatedServlet</servlet-name>-->
+<!--        <url-pattern>/tracks/list</url-pattern>-->
+<!--    </servlet-mapping>-->
+
+
+    <!--    SearchTrack + search form -->
+    <servlet>
+        <servlet-name>SearchTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.SearchTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SearchTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/search</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- FilterTrack + filter form -->
+
+    <servlet>
+        <servlet-name>FilterTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.FilterTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>FilterTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/filter</url-pattern>
+    </servlet-mapping>
+
+    <!--Replay Track + replay form -->
+
+    <servlet>
+        <servlet-name>ReplayTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.ReplayTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ReplayTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/replay</url-pattern>
+    </servlet-mapping>
+
+
+    <!--    DeleteTrack + delete form-->
+
+    <servlet>
+        <servlet-name>DeleteTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.DeleteTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DeleteTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/delete</url-pattern>
+    </servlet-mapping>
+
+
+</web-app>

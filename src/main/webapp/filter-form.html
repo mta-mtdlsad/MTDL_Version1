@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> HomePage | Filter Track Form</title>
+</head>
+<body>
+
+<h3>Filter Tracks</h3>
+
+<form action="tracks/filter" method="get">
+
+  <label for="identity">Choose Identity Type:</label>
+  <select name="identity" id="identity">
+    <option value="friend">FRIEND</option>
+    <option value="neutral">NEUTRAL</option>
+    <option value="hostile">HOSTILE</option>
+    <option value="unknown">UNKNOWN</option>
+  </select>     <button type="submit">Submit</button>
+
+
+  <br><br>
+
+  <label for="status">Choose Status Type:</label>
+  <select name="status" id="status">
+    <option value="active">ACTIVE</option>
+    <option value="inactive">INACTIVE</option>
+  </select>
+  <button type="submit">Submit</button>
+
+  <br><br>
+
+  <label for="minimumSpeed">Minimum Speed:</label>
+  <input type="number" name="minimumSpeed"
+         id="minimumSpeed" min="0" step="any"
+  >     <button type="submit">Submit</button>
+
+
+  <br><br>
+
+
+</form>
+<a href="index.html">Return Home</a>
+
+</body>
+</html>

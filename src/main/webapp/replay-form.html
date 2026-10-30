@@ -1,0 +1,46 @@
+<!--Select for a replay time window-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HomePage | Replay Track Form</title>
+
+</head>
+<body>
+
+
+<h3>Replay Track</h3>
+<form  action="tracks/replay" method="get">
+
+
+    <label for="start">Enter Start Date & Time: </label>
+    <input type="datetime-local"
+           name="start"
+           id="start"
+           required>
+
+    <br><br>
+
+    <label for="end">Enter End Date & Time: </label>
+    <input type="datetime-local"
+           name="end"
+           id="end"
+           required>
+
+    <label for="speed">Select Replay Speed: </label>
+    <select name="speed" id="speed" required>
+        <option value="half">HALF (2000) </option>
+        <option value="double">DOUBLE (1000) </option>
+        <option value="normal">NORMAL (500) </option>
+    </select>
+
+
+    <button type="submit">Replay Track</button>
+
+</form>
+<a href="index.html">Return Home</a>
+
+</body>
+
+</html>>
