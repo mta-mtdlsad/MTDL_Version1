@@ -48,11 +48,13 @@ public class ReplayTracksServlet extends HttpServlet {
         ArrayList<Track> listOfTracks = new ArrayList<>();
         PrintWriter writer = resp.getWriter();
         try {
+            System.out.println("1");
             listOfTracks = (ArrayList<Track>) replayService.replayTracks(speed, startDate, endDate, track -> {
                         writer.println(track);
                         writer.flush();
                     }
             );
+            System.out.println("2");
         } catch (Exception e) {
             e.printStackTrace();
         }

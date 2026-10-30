@@ -59,7 +59,7 @@
 
     <servlet-mapping>
         <servlet-name>ReplayTracksRelatedServlet</servlet-name>
-        <url-pattern>/tracks/replay</url-pattern>
+        <url-pattern>/replayTracks</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
