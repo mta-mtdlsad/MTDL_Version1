@@ -15,18 +15,30 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class DeleteTrackServlet extends HttpServlet {
+public class DeleteTrackServlet extends BaseServlet  {
     private TrackService track_service = new TrackService();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter writer = resp.getWriter();
-        if(track_service.deleteTrack(req.getParameter("trackNumber"))) {
-            writer.print("<p>Track Deleted Successfully</p>");
+        PrintWriter out = prepareResponse(resp);
+        String trackNumber = req.getParameter("trackNumber");
+        startPage(out, "Delete Result");
+        try{
+            if (trackNumber == null || trackNumber.isBlank()) {
+                showError(req, resp, 400, "Track Number is required.");
+                return;
+            }
+            if(track_service.deleteTrack(trackNumber)) {
+                out.print("<p>Track Deleted Successfully</p>");
+            }
+            else {
+                out.print("<p>Failed to Delete Track</p>");
+            }
+        }catch (Exception e) {
+            resp.setStatus(500);
+            out.println("<p>Unable to delete Track.</p>");
         }
-        else {
-            writer.print("<p>Failed to Delete Track</p>");
-        }
+        endPage(out, req);
     }
 }
 

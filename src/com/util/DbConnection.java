@@ -8,7 +8,7 @@ public class DbConnection {
 
     private static final String URL = "jdbc:postgresql://localhost:5432/MTMS_DB";
     private static final String USER = "postgres";
-    private static final String PASSWORD = "postgres";
+    private static final String PASSWORD = "1234";
 
     public static Connection getConnection() {
         try {
