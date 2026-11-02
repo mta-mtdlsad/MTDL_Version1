@@ -89,6 +89,7 @@ public class TrackService {
         if (tracks.isEmpty()) {
             System.out.println("No Tracks found in the database");
         }
+        System.out.println(tracks);
         return tracks;
     }
 

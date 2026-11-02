@@ -127,7 +127,7 @@ public class TrackRepository {
     // SELECT to retrieve all tracks by the created time and the track_id
     public List<Track> getAllTracks() {
         try {
-            String[] sort = {"created_time", " = track_id"};
+            String[] sort = {"created_time", " track_id"};
             return searchAllTracks(null, sort, null, null);
         }catch (Exception e) {
             System.out.println("Unable to fetch all tracks");

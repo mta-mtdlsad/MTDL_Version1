@@ -51,6 +51,8 @@ public class HtmlUtil {
         html.append("<table border=\"1\" style=\"border-collapse: collapse;\">\n");
         html.append("  <thead>\n");
         html.append("    <tr>\n");
+        html.append("      <th>Source ID</th>\n");
+        html.append("      <th>Sequence Number</th>\n");
         html.append("      <th>Number</th>\n");
         html.append("      <th>Latitude</th>\n");
         html.append("      <th>Longitude</th>\n");
@@ -65,6 +67,8 @@ public class HtmlUtil {
         // Iterate over the list and inject data
         for (Track track : list) {
             html.append("    <tr>\n");
+            html.append("      <td>").append(track.getSource_id()).append("</td>\n");
+            html.append("      <td>").append(track.getSequence_number()).append("</td>\n");
             html.append("      <td>").append(track.getTrack_number()).append("</td>\n");
             html.append("      <td>").append(track.getLatitude()).append("</td>\n");
             html.append("      <td>").append(track.getLongitude()).append("</td>\n");
