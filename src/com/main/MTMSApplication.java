@@ -10,7 +10,7 @@ import java.util.List;
 public class MTMSApplication {
     public static void main(String[] args) {
         try {
-            TrackSimulator track_sim = new TrackSimulator();
+ /*           TrackSimulator track_sim = new TrackSimulator();
             List<Track> all_tracks = track_sim.getTracks();
 
             //System.out.println("\n---------- Validate ----------");
@@ -23,7 +23,7 @@ public class MTMSApplication {
             List<Track> all_tracks_enhanced = track_sim.getTracksEnhanced();
             //track_service.processTracks(all_tracks_enhanced);
             batch_track_service.processBatch(all_tracks_enhanced);
-/*
+
             //v1.0
             Test_V1();
 

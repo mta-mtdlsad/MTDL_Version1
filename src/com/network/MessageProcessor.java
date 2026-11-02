@@ -1,8 +1,8 @@
 package com.network;
 
-import com.repository.UDPObservationRepository;
+import com.domain.Track;
+import com.repository.TrackRepository;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,15 +14,16 @@ public class MessageProcessor {
     // Stores the highest sequence number for each source
     private final Map<String, Integer> highestSequences = new HashMap<>();
     // object of the repository
-    private final UDPObservationRepository repo = new UDPObservationRepository();
+    private final TrackRepository repo = new TrackRepository();
 
     // Counters
     private int duplicateCount = 0;
     private int outOfOrderCount = 0;
 
-    public void process(UDPMessage message) {
-        String sourceId = message.sourceId();
-        Integer sequence = message.sequenceNumber();
+    public void process(Track track) {
+        if(track == null) return;
+        String sourceId = track.getSource_id();
+        Integer sequence = track.getSequence_number();
         // Create a sequence set for a new source
         receivedSequences.putIfAbsent(sourceId, new HashSet<>());
         Set<Integer> sequences = receivedSequences.get(sourceId);
@@ -43,7 +44,7 @@ public class MessageProcessor {
         }
         try {
             // Save the observation to PostgreSQL
-            boolean saved = repo.saveObservation(message);
+            boolean saved = repo.saveTrack(track);
             if (!saved) {
                 duplicateCount++;
                 System.out.println("Database duplicate: " + sourceId + " sequence " + sequence);
@@ -55,7 +56,7 @@ public class MessageProcessor {
             if (sequence > highest) {
                 highestSequences.put(sourceId, sequence);
             }
-            System.out.println("Saved observation: " + message);
+            System.out.println("Saved Track: " + track);
         } catch (Exception e) {
             // Do not mark the message as accepted if saving fails
             System.out.println("Database error: " + e.getMessage());

@@ -2,8 +2,10 @@ package com.domain;
 
 import java.time.LocalDateTime;
 
-public class Track {
+public class Track{
     int track_id;
+    String source_id;
+    int sequence_number;
     String track_number;
     double latitude;
     double longitude;
@@ -12,8 +14,10 @@ public class Track {
     String track_status;
     LocalDateTime created_time;
 
-    public Track(int track_id, String track_number, double latitude, double longitude, double speed, String identity_type, String track_status, LocalDateTime created_time) {
+    public Track(int track_id, String source_id, int sequence_number, String track_number, double latitude, double longitude, double speed, String identity_type, String track_status, LocalDateTime created_time) {
         this.track_id = track_id;
+        this.source_id = source_id;
+        this.sequence_number = sequence_number;
         this.track_number = track_number;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -23,7 +27,9 @@ public class Track {
         this.created_time = created_time;
     }
 
-    public Track(String track_number, double latitude, double longitude, double speed, String identity_type, String track_status, LocalDateTime created_time) {
+    public Track(String source_id, int sequence_number, String track_number, double latitude, double longitude, double speed, String identity_type, String track_status, LocalDateTime created_time) {
+        this.source_id = source_id;
+        this.sequence_number = sequence_number;
         this.track_number = track_number;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -37,8 +43,16 @@ public class Track {
         return track_id;
     }
 
+    public String getSource_id() {
+        return source_id;
+    }
+
     public String getTrack_number() {
         return track_number;
+    }
+
+    public int getSequence_number() {
+        return sequence_number;
     }
 
     public double getLatitude() {
@@ -69,6 +83,8 @@ public class Track {
     public String toString() {
         return "Track{" +
                 "track_id=" + track_id +
+                ", source_id='" + source_id + '\'' +
+                ", sequence_number=" + sequence_number +
                 ", track_number='" + track_number + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +

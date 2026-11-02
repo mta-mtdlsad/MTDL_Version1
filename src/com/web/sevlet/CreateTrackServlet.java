@@ -16,6 +16,8 @@ public class CreateTrackServlet extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Track track = new Track(
+                req.getParameter("sourceId"),
+                Integer.parseInt(req.getParameter("sequenceNumber")),
                 req.getParameter("trackNumber"),
                 Double.parseDouble(req.getParameter("trackLatitude")),
                 Double.parseDouble(req.getParameter("trackLongitude")),

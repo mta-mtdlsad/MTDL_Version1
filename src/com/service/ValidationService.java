@@ -9,6 +9,20 @@ import java.util.Objects;
 
 public class ValidationService {
 
+    public static ValidationResult validateSource_id(Track track){
+        if(!track.getSource_id().matches("[A-Za-z0-9_-]{2,30}")){
+            return new ValidationResult("Invalid source_id: not matching [A-Za-z0-9_-]{2,30}", "LOW");
+        }
+        return null;
+    }
+
+    public static ValidationResult validateSequence_number(Track track){
+        if (track.getSequence_number()< 0) {
+            return new ValidationResult("Invalid sequence number: is negative", "MEDIUM");
+        }
+        return null;
+    }
+
     //Validating the track_number is not null. not empty, and more than or equal 5 characters
     public static ValidationResult validateTrack_number(Track track){
 
@@ -96,7 +110,7 @@ public class ValidationService {
     //Returning the list of all the errors of a track
     public static List<ValidationResult> validateTrack(Track track){
         List<ValidationResult> results = new ArrayList<>();
-
+        results.add(validateSource_id(track));
         results.add(validateTrack_number(track));
         results.add(validateLatitude(track));
         results.add(validateLongitude(track));

@@ -53,6 +53,35 @@ public class TrackService {
         return false;
     }
 
+    public boolean validateTrack(Track track) {
+        ValidationService val_service = new ValidationService();
+        AlertService alert_service = new AlertService();
+        List<ValidationResult> results;
+        results = val_service.validateTrack(track);
+        if (results.isEmpty()) {
+            try {
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            for (ValidationResult result : results) {
+                alert_service.createAlert(track, result);
+            }
+        }
+        return false;
+    }
+
+    public boolean saveTrack(Track track) {
+        try {
+            track_repo.saveTrack(track); //returns confirmation string
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     //printing out all tracks using track repo
     public List<Track> displayTracks() {
         List<Track> tracks = track_repo.getAllTracks();

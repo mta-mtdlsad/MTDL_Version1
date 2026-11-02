@@ -13,21 +13,22 @@ public class TrackRepository {
     private List<Track> listOfTracks = null;
 
     // INSERT new tracks
-    public String saveTrack(Track track) throws Exception{
+    public Boolean saveTrack(Track track) throws Exception{
         try {
             preparedStatement = connection.prepareStatement(
-                    "INSERT INTO tracks (track_number,latitude,longitude,speed,identity_type,track_status,created_time) VALUES (?,?,?,?,?,?,?);");
+                    "INSERT INTO tracks (source_id,sequence_number,track_number,latitude,longitude,speed,identity_type,track_status,created_time) VALUES (?,?,?,?,?,?,?,?,?);");
 
-            preparedStatement.setString(1, track.getTrack_number());
-            preparedStatement.setDouble(2, track.getLatitude());
-            preparedStatement.setDouble(3, track.getLongitude());
-            preparedStatement.setDouble(4, track.getSpeed());
-            preparedStatement.setString(5, track.getIdentity_type());
-            preparedStatement.setString(6, track.getTrack_status());
-            preparedStatement.setTimestamp(7, Timestamp.valueOf(track.getCreated_time()));
+            preparedStatement.setString(1, track.getSource_id());
+            preparedStatement.setInt(2, track.getSequence_number());
+            preparedStatement.setString(3, track.getTrack_number());
+            preparedStatement.setDouble(4, track.getLatitude());
+            preparedStatement.setDouble(5, track.getLongitude());
+            preparedStatement.setDouble(6, track.getSpeed());
+            preparedStatement.setString(7, track.getIdentity_type());
+            preparedStatement.setString(8, track.getTrack_status());
+            preparedStatement.setTimestamp(9, Timestamp.valueOf(track.getCreated_time()));
 
-            preparedStatement.executeUpdate();
-            return "Track added successfully";
+            return preparedStatement.executeUpdate() == 1;
         }catch (Exception e) {
             System.out.println("Failed to add track");
             throw e;
@@ -61,12 +62,14 @@ public class TrackRepository {
                 listOfTracks.add(
                         new Track(resultSet.getInt(1),
                                 resultSet.getString(2),
-                                resultSet.getDouble(3),
-                                resultSet.getDouble(4),
+                                resultSet.getInt(3),
+                                resultSet.getString(4),
                                 resultSet.getDouble(5),
-                                resultSet.getString(6),
-                                resultSet.getString(7),
-                                resultSet.getTimestamp(8).toLocalDateTime()));
+                                resultSet.getDouble(6),
+                                resultSet.getDouble(7),
+                                resultSet.getString(8),
+                                resultSet.getString(9),
+                                resultSet.getTimestamp(10).toLocalDateTime()));
             }
 
             return listOfTracks;
@@ -171,12 +174,14 @@ public class TrackRepository {
             if(resultSet.next()) {
                 track = new Track(resultSet.getInt(1),
                         resultSet.getString(2),
-                        resultSet.getDouble(3),
-                        resultSet.getDouble(4),
+                        resultSet.getInt(3),
+                        resultSet.getString(4),
                         resultSet.getDouble(5),
-                        resultSet.getString(6),
-                        resultSet.getString(7),
-                        resultSet.getTimestamp(8).toLocalDateTime());
+                        resultSet.getDouble(6),
+                        resultSet.getDouble(7),
+                        resultSet.getString(8),
+                        resultSet.getString(9),
+                        resultSet.getTimestamp(10).toLocalDateTime());
                 return track;
             }
         }catch (Exception e) {

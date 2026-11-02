@@ -1,6 +1,6 @@
 package com.network;
 
-import com.repository.UDPObservationRepository;
+import com.domain.Track;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -36,9 +36,9 @@ public class UDPReceiver {
                 );
                 try {
                     // Convert UDP text into a Java object
-                    UDPMessage udpMessage = parser.parse(message);
+                    Track track = parser.parse(message);
                     // Check duplicates and message ordering
-                    processor.process(udpMessage);
+                    processor.process(track);
                 } catch (IllegalArgumentException e) {
                     // Reject invalid messages without stopping the receiver
                     System.out.println("Rejected UDP message: " + e.getMessage());

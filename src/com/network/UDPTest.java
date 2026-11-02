@@ -1,5 +1,7 @@
 package com.network;
 
+import com.simulator.TrackSimulator;
+
 public class UDPTest {
     public static void main(String[] args) throws Exception {
         UDPReceiver receiver = new UDPReceiver();
@@ -38,6 +40,15 @@ public class UDPTest {
         sender.sendMessage(
                 "LINK-B|5|TRK1001|12.972000|77.595000|450|FRIEND|ACTIVE|2026-11-02T09:15:45"
         );
+        // Different source: sequence 5 is allowed
+        sender.sendMessage(
+                "LINK-B|6|TRK1001|12.972000|77.595000|3000|FRIEND|ACTIVE|2026-11-02T09:15:45"
+        );
+
+        TrackSimulator simulator = new TrackSimulator();
+        sender.sendMessage(simulator.simulateTrack(0));
+        sender.sendMessage(simulator.simulateTrack(1));
+        sender.sendMessage(simulator.simulateTrack(2));
         Thread.sleep(1000);
     }
 }
