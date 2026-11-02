@@ -3,20 +3,15 @@ package com.web.sevlet;
 import com.domain.Track;
 
 import com.service.TrackService;
-import com.web.util.HtmlUtil;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.time.LocalDateTime;
-import java.util.List;
 
-public class CreateTrackServlet extends HttpServlet {
+public class CreateTrackServlet extends BaseServlet {
     private TrackService track_service = new TrackService();
-    private HtmlUtil html_util = new HtmlUtil();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -34,13 +29,5 @@ public class CreateTrackServlet extends HttpServlet {
         else {
             resp.sendRedirect(req.getContextPath() + "/alerts/list?purpose=alerts");
         }
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter writer = resp.getWriter();
-        List<Track> listOfTracks;
-        listOfTracks = track_service.displayTracks();
-        writer.print(html_util.convertTracksToHtmlTable(listOfTracks));
     }
 }

@@ -17,8 +17,13 @@
         <url-pattern>/tracks/create</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>TrackListRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.TrackListServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
-        <servlet-name>CreateTrackRelatedServlet</servlet-name>
+        <servlet-name>TrackListRelatedServlet</servlet-name>
         <url-pattern>/tracks/list</url-pattern>
     </servlet-mapping>
 
