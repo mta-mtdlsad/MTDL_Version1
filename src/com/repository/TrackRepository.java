@@ -78,13 +78,57 @@ public class TrackRepository {
         }
     }
 
+    // SELECT tracks based on given filters - dynamic
+    public List<Track> searchAllTracks(String[][] filters, String[] sort, LocalDateTime start_time, LocalDateTime end_time) {
+        try {
+            // Dynamically create sql statement based on filter
+            StringBuilder builder = new StringBuilder();
+            builder.append("SELECT * FROM tracks ");
+
+            // If filters are given add WHERE
+            if (filters != null) {
+                builder.append("WHERE ");
+                for(int i = 0; i < filters[0].length; i++) {
+                    builder.append(filters[0][i]);
+                    builder.append(filters[1][i]);
+                    if(i+1 != filters[0].length) builder.append(" AND ");
+                }
+                builder.append(" ");
+            }
+
+            // If sort is given add ORDER BY
+            builder.append("ORDER BY ");
+            for(int j = 0; j < sort.length; j++) {
+                builder.append(sort[j]);
+                if(j+1 != sort.length) builder.append(", ");
+            }
+            builder.append(";");
+            //System.out.println(builder);
+
+            // Get final string and give it to preparedStatement
+            preparedStatement = connection.prepareStatement(builder.toString());
+
+            // Replace ? if created_time is used so the format is correct
+            if(start_time != null) {
+                preparedStatement.setTimestamp(1, Timestamp.valueOf(start_time));
+                if(start_time != null) preparedStatement.setTimestamp(2, Timestamp.valueOf(end_time));
+                else preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            }
+
+            // Send query to DB and return result
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return getList(resultSet);
+        }catch (Exception e) {
+            System.out.println("Unable to fetch all tracks");
+        }
+        return null;
+    }
+
     // SELECT to retrieve all tracks by the created time and the track_id
     public List<Track> getAllTracks() {
         try {
-            preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM tracks ORDER BY created_time, track_id;");
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return getList(resultSet);
+            String[] sort = {"created_time", " = track_id"};
+            return searchAllTracks(null, sort, null, null);
         }catch (Exception e) {
             System.out.println("Unable to fetch all tracks");
         }
@@ -94,10 +138,9 @@ public class TrackRepository {
     // SELECT all tracks where the identity_type is HOSTILE
     public List<Track> getAllHostileTracks() {
         try {
-            preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM tracks WHERE identity_type = 'HOSTILE' ORDER BY created_time;");
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return getList(resultSet);
+            String[][] filter = {{"identity_type"}, {" = 'HOSTILE'"}};
+            String[] sort = {"created_time"};
+            return searchAllTracks(filter, sort, null, null);
         }catch (Exception e) {
             System.out.println("Unable to fetch all tracks");
         }
@@ -107,11 +150,10 @@ public class TrackRepository {
     // SELECT tracks where speed is greater than certain number
     public List<Track> getTracksBySpeed(Double speed) {
         try {
-            preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM tracks WHERE speed > ? ORDER BY speed DESC;");
-            preparedStatement.setDouble(1, speed);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return getList(resultSet);
+            String s = " > " + speed;
+            String[][] filter = {{"speed"}, {s}};
+            String[] sort = {"speed DESC"};
+            return searchAllTracks(filter, sort, null, null);
         }catch (Exception e) {
             System.out.println("Unable to fetch all tracks");
         }
@@ -121,11 +163,10 @@ public class TrackRepository {
     // SELECT track based on status
     public List<Track> getTracksByStatus(String status) {
         try {
-            preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM tracks WHERE track_status = ? ORDER BY created_time DESC, track_id DESC;");
-            preparedStatement.setString(1, status);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return getList(resultSet);
+            String s = " = '" + status + "'";
+            String[][] filter = {{"track_status"}, {s}};
+            String[] sort = {"created_time DESC", "track_id DESC"};
+            return searchAllTracks(filter, sort, null, null);
         }catch (Exception e) {
             System.out.println("Unable to fetch all tracks");
         }
@@ -135,12 +176,9 @@ public class TrackRepository {
     // SELECT to retrieve all tracks in the supplied timeframe
     public List<Track> getAllTracksTimeframe(LocalDateTime start_time, LocalDateTime end_time) {
         try {
-            preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM tracks WHERE created_time >= ? AND created_time < ? ORDER BY created_time, track_id;");
-            preparedStatement.setTimestamp(1, Timestamp.valueOf(start_time));
-            preparedStatement.setTimestamp(2, Timestamp.valueOf(end_time));
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return getList(resultSet);
+            String[][] filter = {{"created_time", "created_time"}, {" >= ?", " < ?"}};
+            String[] sort = {"created_time", "track_id"};
+            return searchAllTracks(filter, sort, start_time, end_time);
         }catch (Exception e) {
             System.out.println("Unable to fetch all tracks");
         }
@@ -150,11 +188,10 @@ public class TrackRepository {
     // SELECT tracks where speed is greater than certain number
     public List<Track> getTracksByIdentity(String identity) {
         try {
-            preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM tracks WHERE identity_type = ? ORDER BY created_time DESC, track_id DESC;");
-            preparedStatement.setString(1, identity);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return getList(resultSet);
+            String s = " = '" + identity + "'";
+            String[][] filter = {{"identity_type"}, {s}};
+            String[] sort = {"created_time DESC", "track_id DESC"};
+            return searchAllTracks(filter, sort, null, null);
         }catch (Exception e) {
             System.out.println("Unable to fetch all tracks");
         }
