@@ -66,6 +66,7 @@ public class TrackService {
             }
         } else {
             for (ValidationResult result : results) {
+                System.out.println(result.toString());
                 alert_service.createAlert(track, result);
             }
         }

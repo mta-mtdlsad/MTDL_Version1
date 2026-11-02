@@ -14,6 +14,7 @@ public class UDPReceiver {
             MessageParser parser = new MessageParser();
             // Checks duplicates and message ordering
             MessageProcessor processor = new MessageProcessor();
+            String result;
 
             System.out.println("UDP Receiver listening on port " + PORT);
             // Keep receiving messages
@@ -35,14 +36,24 @@ public class UDPReceiver {
                         StandardCharsets.UTF_8
                 );
                 try {
-                    // Convert UDP text into a Java object
+                    // Parse and validate the message
                     Track track = parser.parse(message);
-                    // Check duplicates and message ordering
-                    processor.process(track);
-                } catch (IllegalArgumentException e) {
-                    // Reject invalid messages without stopping the receiver
+                    // Process and save the track
+                    boolean saved = processor.process(track);
+                    result = saved ? "SUCCESS" : "ERROR";
+                } catch (Exception e) {
                     System.out.println("Rejected UDP message: " + e.getMessage());
+                    result = "ERROR";
                 }
+                // Send the result back to the sender
+                byte[] responseData = result.getBytes(StandardCharsets.UTF_8);
+                DatagramPacket responsePacket = new DatagramPacket(
+                        responseData,
+                        responseData.length,
+                        packet.getAddress(),
+                        packet.getPort()
+                );
+                socket.send(responsePacket);
             }
         }
     }

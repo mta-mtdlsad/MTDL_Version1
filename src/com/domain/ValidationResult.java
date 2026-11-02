@@ -16,4 +16,11 @@ public class ValidationResult {
     public String getSeverity() {
         return severity;
     }
+
+    @Override
+    public String toString() {
+        return "Invalid Track :: " +
+                "Message : '" + message + '\'' +
+                ", Severity : '" + severity + '\'';
+    }
 }

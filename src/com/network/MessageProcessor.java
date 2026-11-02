@@ -1,7 +1,9 @@
 package com.network;
 
 import com.domain.Track;
+import com.domain.ValidationResult;
 import com.repository.TrackRepository;
+import com.service.AlertService;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,13 +17,14 @@ public class MessageProcessor {
     private final Map<String, Integer> highestSequences = new HashMap<>();
     // object of the repository
     private final TrackRepository repo = new TrackRepository();
+    private final AlertService alertService = new AlertService();
 
     // Counters
     private int duplicateCount = 0;
     private int outOfOrderCount = 0;
 
-    public void process(Track track) {
-        if(track == null) return;
+    public boolean process(Track track) {
+        if(track == null) return false;
         String sourceId = track.getSource_id();
         Integer sequence = track.getSequence_number();
         // Create a sequence set for a new source
@@ -30,8 +33,10 @@ public class MessageProcessor {
         // Check if this sequence was already received
         if (sequences.contains(sequence)) {
             duplicateCount++;
-            System.out.println("Duplicate message: " + sourceId + " sequence " + sequence);
-            return;
+            ValidationResult result = new ValidationResult("Duplicate message: " + sourceId + " sequence " + sequence, "LOW");
+            System.out.println(result.toString());
+            alertService.createAlert(track, result);
+            return false;
         }
         // Check if the message arrived out of order
         Integer highest = highestSequences.getOrDefault(
@@ -40,7 +45,9 @@ public class MessageProcessor {
         boolean outOfOrder = sequence < highest;
         if (outOfOrder) {
             outOfOrderCount++;
-            System.out.println("Out-of-order message: " + sourceId + " sequence " + sequence);
+            ValidationResult result = new ValidationResult("Out-of-order message: " + sourceId + " sequence " + sequence, "LOW");
+            System.out.println(result.toString());
+            alertService.createAlert(track, result);
         }
         try {
             // Save the observation to PostgreSQL
@@ -48,7 +55,7 @@ public class MessageProcessor {
             if (!saved) {
                 duplicateCount++;
                 System.out.println("Database duplicate: " + sourceId + " sequence " + sequence);
-                return;
+                return false;
             }
             // Remember the saved sequence number
             sequences.add(sequence);
@@ -60,7 +67,9 @@ public class MessageProcessor {
         } catch (Exception e) {
             // Do not mark the message as accepted if saving fails
             System.out.println("Database error: " + e.getMessage());
+            return false;
         }
+        return true;
     }
     public int getDuplicateCount() {
         return duplicateCount;

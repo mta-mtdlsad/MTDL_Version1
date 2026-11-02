@@ -48,8 +48,8 @@ public class MessageParser {
             trackService.validateTrack(track);
 
             // Create and return the Track message object
-            if(trackService.validateTrack(track) == false){
-                return null;
+            if(!trackService.validateTrack(track)){
+                throw new IllegalArgumentException("Invalid track");
             }
             return track;
 
