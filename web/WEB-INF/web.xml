@@ -22,13 +22,23 @@
         <url-pattern>/tracks/list</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ListAlertRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.AlertListServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
-        <servlet-name>CreateTrackRelatedServlet</servlet-name>
+        <servlet-name>ListAlertRelatedServlet</servlet-name>
         <url-pattern>/alerts/list</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>SatisticsRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.StatisticsServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
-        <servlet-name>CreateTrackRelatedServlet</servlet-name>
+        <servlet-name>SatisticsRelatedServlet</servlet-name>
         <url-pattern>/statistics</url-pattern>
     </servlet-mapping>
 
