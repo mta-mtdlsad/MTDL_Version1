@@ -4,7 +4,8 @@ import com.domain.Track;
 
 import com.repository.TrackRepository;
 
-import com.web.util.ApplicationFactory;
+import com.service.TrackService;
+
 import com.web.util.HtmlUtil;
 
 import java.io.IOException;
@@ -38,8 +39,8 @@ public class SearchTrackServlet extends BaseServlet {
         startPage(out, "Search Result");
 
         try {
-            // Get an instance of TrackRepository using ApplicationFactory
-            TrackRepository repository = ApplicationFactory.getTrackRepository();
+            // Get an instance of TrackRepository
+            TrackRepository repository = new TrackRepository();
 
             // Search for the track using its track number
             Track track = repository.getTrackByNo(trackNumber);
