@@ -48,11 +48,6 @@ public class UDPTest {
         sender.sendMessage(
                 "LINK-B|6|TRK1001|12.972000|77.595000|500|HOSTILE|ACTIVE|2026-11-02T09:15:45"
         );
-
-        TrackSimulator simulator = new TrackSimulator();
-        sender.sendMessage(simulator.simulateTrack(0));
-        sender.sendMessage(simulator.simulateTrack(1));
-        sender.sendMessage(simulator.simulateTrack(2));
         Thread.sleep(1000);
     }
 }
