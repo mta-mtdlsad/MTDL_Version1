@@ -4,8 +4,10 @@ import com.domain.Alert;
 import com.domain.Track;
 
 import java.util.List;
-
+// Utility class for generating HTML content.
+// It provides methods to escape HTML characters, create page layouts, and convert Track and Alert lists into HTML tables.
 public class HtmlUtil {
+    //Escapes special HTML characters to prevent HTML injection and cross-site scripting (XSS).
     public static String escape(String value) {
 
         if (value == null) {
@@ -20,10 +22,8 @@ public class HtmlUtil {
                 .replace("'", "&#39;");
     }
 
-    public static void startPage(
-            java.io.PrintWriter out,
-            String title) {
-
+    //generate the HTML opening structure
+    public static void startPage(java.io.PrintWriter out, String title) {
         out.println("<!DOCTYPE html>");
         out.println("<html lang='en'>");
         out.println("<head>");
@@ -34,19 +34,16 @@ public class HtmlUtil {
         out.println("<h1>" + escape(title) + "</h1>");
     }
 
-    public static void endPage(
-            java.io.PrintWriter out,
-            String contextPath) {
+    public static void endPage( java.io.PrintWriter out, String contextPath) {
 
         out.println("<hr>");
-        out.println("<p><a href='"
-                + escape(contextPath)
-                + "/index.html'>Return Home</a></p>");
+        out.println("<p><a href='" + escape(contextPath)+ "/index.html'>Return Home</a></p>");
 
         out.println("</body>");
         out.println("</html>");
     }
 
+    // Converts alerts into an HTML table
     public static String convertTracksToHtmlTable(List<Track> list) {
         StringBuilder html = new StringBuilder();
 
@@ -85,6 +82,7 @@ public class HtmlUtil {
         return html.toString();
     }
 
+    // Converts alerts into an HTML table
     public static String convertAlertsToHtmlTable(List<Alert> list) {
         StringBuilder html = new StringBuilder();
 
