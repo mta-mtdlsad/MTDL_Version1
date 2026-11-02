@@ -61,7 +61,7 @@ public class TrackSimulator {
         String track_number;
         int day = 1, hour;
         for(int i = 1; i <= 100; i++) {
-            track_number = "TRK00" + i;
+            track_number = "TRK" + String.format("%03d", i);
             latitude = 10.0 + (random.nextInt(100) / 100.0);
             longitude = 70.0 + (random.nextInt(100) / 100.0);
             speed = 300.0 + (random.nextInt(1500));
