@@ -14,10 +14,19 @@ public class AlertService {
 
     //using the repo creating a new alert
     public void createAlert(Track track, ValidationResult result) {
-        Alert alert = new Alert(track.getTrack_number(), result.getMessage(), result.getSeverity(), LocalDateTime.now());
-        alert_repo.saveAlert(alert); // returns confirmation string
+        String trackNumber = null;
+        // Malformed UDP messages may not have a Track object.
+        if (track != null) {
+            trackNumber = track.getTrack_number();
+        }
+        Alert alert = new Alert(
+                trackNumber,
+                result.getMessage(),
+                result.getSeverity(),
+                LocalDateTime.now()
+        );
+        alert_repo.saveAlert(alert);
     }
-
     //using the repo displaying all alerts
     public List<Alert> getAlerts(){
         List<Alert> alerts = alert_repo.getAllAlerts();

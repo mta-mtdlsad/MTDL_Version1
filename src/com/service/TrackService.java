@@ -48,6 +48,7 @@ public class TrackService {
         } else {
             for (ValidationResult result : results) {
                 alert_service.createAlert(track, result);
+                System.out.println(result.toString());
             }
         }
         return false;

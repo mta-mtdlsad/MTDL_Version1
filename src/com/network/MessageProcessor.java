@@ -17,6 +17,7 @@ public class MessageProcessor {
     private final Map<String, Integer> highestSequences = new HashMap<>();
     // object of the repository
     private final TrackRepository repo = new TrackRepository();
+    // object for alert service to create required alerts
     private final AlertService alertService = new AlertService();
 
     // Counters
@@ -66,7 +67,9 @@ public class MessageProcessor {
             System.out.println("Saved Track: " + track);
         } catch (Exception e) {
             // Do not mark the message as accepted if saving fails
-            System.out.println("Database error: " + e.getMessage());
+            ValidationResult result = new ValidationResult("Processing failure: " + e.getMessage(), "HIGH");
+            System.out.println(result.toString());
+            alertService.createAlert(track, result);
             return false;
         }
         return true;
