@@ -16,7 +16,7 @@ public class TrackRepository {
     public Boolean saveTrack(Track track) throws Exception{
         try {
             preparedStatement = connection.prepareStatement(
-                    "INSERT INTO tracks (source_id,sequence_number,track_number,latitude,longitude,speed,identity_type,track_status,created_time) VALUES (?,?,?,?,?,?,?,?,?);");
+                    "INSERT INTO tracks (source_id,sequence_number,track_number,latitude,longitude,speed,identity_type,track_status,created_time) VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT DO NOTHING;");
 
             preparedStatement.setString(1, track.getSource_id());
             preparedStatement.setInt(2, track.getSequence_number());
@@ -28,7 +28,7 @@ public class TrackRepository {
             preparedStatement.setString(8, track.getTrack_status());
             preparedStatement.setTimestamp(9, Timestamp.valueOf(track.getCreated_time()));
 
-            return preparedStatement.executeUpdate() == 1;
+            return preparedStatement.executeUpdate() > 0;
         }catch (Exception e) {
             System.out.println("Failed to add track");
             throw e;

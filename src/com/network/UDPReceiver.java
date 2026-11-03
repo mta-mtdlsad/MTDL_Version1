@@ -32,7 +32,6 @@ public class UDPReceiver {
     private final AtomicLong rejectedCount = new AtomicLong();
     private final AtomicLong duplicateCount = new AtomicLong();
     private final AtomicLong outOfOrderCount = new AtomicLong();
-    private final AtomicLong failureCount = new AtomicLong();
     private final AtomicLong droppedCount = new AtomicLong();
     private volatile boolean running = false;
     private volatile boolean stopRequested = false;
@@ -157,11 +156,9 @@ public class UDPReceiver {
                         }
                         case DUPLICATE -> {
                             duplicateCount.incrementAndGet();
-                            failureCount.incrementAndGet();
                             System.out.println("Track not saved (duplicate).");
                         }
                         case FAILURE -> {
-                            failureCount.incrementAndGet();
                             System.out.println("Track not saved (processing failure).");
                         }
                     }
@@ -200,13 +197,14 @@ public class UDPReceiver {
     }
     // Print UDP statistics.
     public void printStatistics() {
+        long failureCount = rejectedCount.get() + duplicateCount.get();
         System.out.println("\n========== UDP STATISTICS ==========");
         System.out.println("Received: " + receivedCount.get());
         System.out.println("Accepted: " + acceptedCount.get());
         System.out.println("Rejected: " + rejectedCount.get());
         System.out.println("Duplicates: " + duplicateCount.get());
         System.out.println("Out of order: " + outOfOrderCount.get());
-        System.out.println("Failures: " + failureCount.get());
+        System.out.println("Failures: " + failureCount);
         System.out.println("Dropped: " + droppedCount.get());
         System.out.println("Pending: " + queue.size());
     }

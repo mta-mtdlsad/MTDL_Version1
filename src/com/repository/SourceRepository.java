@@ -72,7 +72,7 @@ public class SourceRepository {
         int accepted = outcome.equals("ACCEPTED") ? 1 : 0;
         int rejected = outcome.equals("REJECTED") ? 1 : 0;
         int duplicate = outcome.equals("DUPLICATE") ? 1 : 0;
-        int failure = outcome.equals("FAILURE") ? 1 : 0;
+        int failure = (outcome.equals("REJECTED") || outcome.equals("DUPLICATE")) ? 1 : 0;
         // Only accepted observations advance highest_sequence.
         int highest = accepted == 1 ? sequence : 0;
         String sql = """
