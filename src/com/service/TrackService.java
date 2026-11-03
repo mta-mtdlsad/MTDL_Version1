@@ -4,6 +4,7 @@ import com.domain.Track;
 import com.domain.ValidationResult;
 import com.repository.TrackRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -123,5 +124,9 @@ public class TrackService {
         }
         track_repo.clearTracksTable();
         System.out.println("Track table cleared successfully"); //prints confirmation string
+    }
+
+    public List<Track> filterTracks(List<String> filters, List<String> filter_values, List<String> sort, LocalDateTime start_time, LocalDateTime end_time) {
+        return track_repo.searchAllTracks(filters, filter_values, sort, start_time, end_time);
     }
 }

@@ -57,6 +57,7 @@ public class TrackRepository {
     // SELECT general function that returns a list based on selected statement
     public List<Track> getList(ResultSet resultSet) throws SQLException {
         try {
+            if(resultSet.wasNull()) return null;
             listOfTracks = new ArrayList<>();
             while(resultSet.next()) {
                 listOfTracks.add(
@@ -79,41 +80,41 @@ public class TrackRepository {
     }
 
     // SELECT tracks based on given filters - dynamic
-    public List<Track> searchAllTracks(String[][] filters, String[] sort, LocalDateTime start_time, LocalDateTime end_time) {
+    public List<Track> searchAllTracks(List<String> filters, List<String> filter_values, List<String> sort, LocalDateTime start_time, LocalDateTime end_time) {
         try {
             // Dynamically create sql statement based on filter
             StringBuilder builder = new StringBuilder();
             builder.append("SELECT * FROM tracks ");
 
             // If filters are given add WHERE
-            if (filters != null) {
+            if (filters != null && !filters.isEmpty()) {
                 builder.append("WHERE ");
-                for(int i = 0; i < filters[0].length; i++) {
-                    builder.append(filters[0][i]);
-                    builder.append(filters[1][i]);
-                    if(i+1 != filters[0].length) builder.append(" AND ");
+                for(int i = 0; i < filters.size(); i++) {
+                    builder.append(filters.get(i));
+                    builder.append(filter_values.get(i));
+                    if(i+1 != filters.size()) builder.append(" AND ");
                 }
                 builder.append(" ");
             }
 
             // If sort is given add ORDER BY
-            builder.append("ORDER BY ");
-            for(int j = 0; j < sort.length; j++) {
-                builder.append(sort[j]);
-                if(j+1 != sort.length) builder.append(", ");
+            if (sort != null && !sort.isEmpty()) {
+                builder.append("ORDER BY ");
+                for (int j = 0; j < sort.size(); j++) {
+                    builder.append(sort.get(j));
+                    if (j + 1 != sort.size()) builder.append(", ");
+                }
             }
+
             builder.append(";");
-            //System.out.println(builder);
+            System.out.println(builder);
 
             // Get final string and give it to preparedStatement
             preparedStatement = connection.prepareStatement(builder.toString());
 
             // Replace ? if created_time is used so the format is correct
-            if(start_time != null) {
-                preparedStatement.setTimestamp(1, Timestamp.valueOf(start_time));
-                if(start_time != null) preparedStatement.setTimestamp(2, Timestamp.valueOf(end_time));
-                else preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
-            }
+            if(start_time != null) preparedStatement.setTimestamp(1, Timestamp.valueOf(start_time));
+            if(end_time != null) preparedStatement.setTimestamp(2, Timestamp.valueOf(end_time));
 
             // Send query to DB and return result
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -127,8 +128,8 @@ public class TrackRepository {
     // SELECT to retrieve all tracks by the created time and the track_id
     public List<Track> getAllTracks() {
         try {
-            String[] sort = {"created_time", " track_id"};
-            return searchAllTracks(null, sort, null, null);
+            List<String> sort = Arrays.asList("created_time", " track_id");
+            return searchAllTracks(null, null, sort, null, null);
         }catch (Exception e) {
             System.out.println("Unable to fetch all tracks");
         }
@@ -138,9 +139,10 @@ public class TrackRepository {
     // SELECT all tracks where the identity_type is HOSTILE
     public List<Track> getAllHostileTracks() {
         try {
-            String[][] filter = {{"identity_type"}, {" = 'HOSTILE'"}};
-            String[] sort = {"created_time"};
-            return searchAllTracks(filter, sort, null, null);
+            List<String> filter = Arrays.asList("identity_type");
+            List<String> filter_values = Arrays.asList(" = 'HOSTILE'");
+            List<String> sort = Arrays.asList("created_time");
+            return searchAllTracks(filter, filter_values, sort, null, null);
         }catch (Exception e) {
             System.out.println("Unable to fetch all tracks");
         }
@@ -151,9 +153,10 @@ public class TrackRepository {
     public List<Track> getTracksBySpeed(Double speed) {
         try {
             String s = " > " + speed;
-            String[][] filter = {{"speed"}, {s}};
-            String[] sort = {"speed DESC"};
-            return searchAllTracks(filter, sort, null, null);
+            List<String> filter = Arrays.asList("speed");
+            List<String> filter_values = Arrays.asList(s);
+            List<String> sort = Arrays.asList("speed DESC");
+            return searchAllTracks(filter, filter_values, sort, null, null);
         }catch (Exception e) {
             System.out.println("Unable to fetch all tracks");
         }
@@ -164,9 +167,10 @@ public class TrackRepository {
     public List<Track> getTracksByStatus(String status) {
         try {
             String s = " = '" + status + "'";
-            String[][] filter = {{"track_status"}, {s}};
-            String[] sort = {"created_time DESC", "track_id DESC"};
-            return searchAllTracks(filter, sort, null, null);
+            List<String> filter = Arrays.asList("track_status");
+            List<String> filter_values = Arrays.asList(s);
+            List<String> sort = Arrays.asList("created_time DESC", "track_id DESC");
+            return searchAllTracks(filter, filter_values, sort, null, null);
         }catch (Exception e) {
             System.out.println("Unable to fetch all tracks");
         }
@@ -176,9 +180,10 @@ public class TrackRepository {
     // SELECT to retrieve all tracks in the supplied timeframe
     public List<Track> getAllTracksTimeframe(LocalDateTime start_time, LocalDateTime end_time) {
         try {
-            String[][] filter = {{"created_time", "created_time"}, {" >= ?", " < ?"}};
-            String[] sort = {"created_time", "track_id"};
-            return searchAllTracks(filter, sort, start_time, end_time);
+            List<String> filter = Arrays.asList("created_time", "created_time");
+            List<String> filter_values = Arrays.asList(" >= ?", " < ?");
+            List<String> sort = Arrays.asList("created_time", "track_id");
+            return searchAllTracks(filter, filter_values, sort, start_time, end_time);
         }catch (Exception e) {
             System.out.println("Unable to fetch all tracks");
         }
@@ -189,9 +194,10 @@ public class TrackRepository {
     public List<Track> getTracksByIdentity(String identity) {
         try {
             String s = " = '" + identity + "'";
-            String[][] filter = {{"identity_type"}, {s}};
-            String[] sort = {"created_time DESC", "track_id DESC"};
-            return searchAllTracks(filter, sort, null, null);
+            List<String> filter = Arrays.asList("identity_type");
+            List<String> filter_values = Arrays.asList(s);
+            List<String> sort = Arrays.asList("created_time DESC", "track_id DESC");
+            return searchAllTracks(filter, filter_values, sort, null, null);
         }catch (Exception e) {
             System.out.println("Unable to fetch all tracks");
         }
