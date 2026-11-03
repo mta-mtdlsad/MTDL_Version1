@@ -4,9 +4,11 @@ import com.domain.Track;
 import com.domain.ValidationResult;
 import com.repository.TrackRepository;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class TrackService {
     TrackRepository track_repo = new TrackRepository();
@@ -127,7 +129,55 @@ public class TrackService {
         System.out.println("Track table cleared successfully"); //prints confirmation string
     }
 
-    public List<Track> filterTracks(List<String> filters, List<String> filter_values, List<String> sort, LocalDateTime start_time, LocalDateTime end_time) {
+    public List<Track> filterTracks(List<String> filters, List<String> filter_values, List<String> sort,
+                                    LocalDateTime start_time, LocalDateTime end_time) {
         return track_repo.searchAllTracks(filters, filter_values, sort, start_time, end_time);
+    }
+
+    public List<Track> correlateTrack(Track selected_track) {
+        String s1 = " != '" + selected_track.getSource_id() + "'";
+        String s2 = " = '" + selected_track.getIdentity_type() + "'";
+        List<String> filter = Arrays.asList("source_id", "identity_type");
+        List<String> filter_values = Arrays.asList(s1, s2);
+        List<Track> listOfTracks = track_repo.searchAllTracks(filter, filter_values, null, null, null);
+
+        List<Track> listOfCorrelatedTracks = new ArrayList<>();
+        double distance;
+        long time;
+        for (Track track : listOfTracks) {
+            if (Math.abs(selected_track.getSpeed() - track.getSpeed()) <= 100) {
+                time = Math.abs(Duration.between(selected_track.getCreated_time(), track.getCreated_time()).getSeconds());
+                if (time <= 30) {
+                    distance = calculate_distance(selected_track.getLatitude(), selected_track.getLongitude(),
+                            track.getLatitude(), track.getLongitude());
+                    if (distance <= 2)
+                        listOfCorrelatedTracks.add(track);
+                }
+            }
+        }
+        return listOfCorrelatedTracks;
+    }
+
+    public double calculate_distance(double lat1, double lon1, double lat2, double lon2) {
+        final double EARTH_RADIUS_KM = 6371.0;
+
+        // Convert degrees to radians
+        double lat1Rad = Math.toRadians(lat1);
+        double lon1Rad = Math.toRadians(lon1);
+        double lat2Rad = Math.toRadians(lat2);
+        double lon2Rad = Math.toRadians(lon2);
+
+        // Differences in coordinates
+        double deltaLat = lat2Rad - lat1Rad;
+        double deltaLon = lon2Rad - lon1Rad;
+
+        // Haversine core math
+        double a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2)
+                + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        // Return final distance in kilometers
+        return EARTH_RADIUS_KM * c;
     }
 }

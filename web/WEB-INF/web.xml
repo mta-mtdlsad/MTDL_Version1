@@ -92,4 +92,14 @@
         <url-pattern>/tracks/search</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>OtherFormsRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.OtherFormsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>OtherFormsRelatedServlet</servlet-name>
+        <url-pattern>/tracks/correlation</url-pattern>
+    </servlet-mapping>
+
 </web-app>
