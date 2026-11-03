@@ -25,7 +25,7 @@ public class UDPStartupListener implements ServletContextListener {
             } catch (Exception e) {
                 ValidationResult result = new ValidationResult("UDP Receiver error:","HIGH");
                 System.out.println(result.toString());
-                alertService.createAlert(null, result);
+                alertService.createAlert(result);
                 System.err.println("UDP Receiver error: " + e.getMessage());
             }
         }, "UDP-Receiver");

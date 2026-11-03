@@ -277,4 +277,24 @@ public class TrackRepository {
             return false;
         }
     }
+
+    // Get the highest sequence number saved for a source.
+    public int getHighestSequence(String sourceId) throws SQLException {
+        String sql = """
+                SELECT COALESCE(MAX(sequence_number), 0)
+                FROM tracks
+                WHERE source_id = ?
+                """;
+        try (Connection con = DbConnection.getConnection();
+
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, sourceId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+        return 0;
+    }
 }

@@ -131,7 +131,7 @@ public class TrackSimulator {
 
         // Create Link-A, Link-B, Link-C, etc.
         for (int i = 0; i < sources; i++) {
-            sourceIds[i] = "Link-" + (char) ('A' + i);
+            sourceIds[i] = "LINK-" + (char) ('A' + i);
 
             // Starting at zero means the first message will use sequence number 1.
             sequenceIds[i] = 0;

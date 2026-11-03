@@ -1,97 +1,102 @@
 package com.network;
 
+
+
 import com.domain.Track;
+
 import com.domain.ValidationResult;
+
 import com.service.AlertService;
-import com.service.TrackService;
+
 import com.service.ValidationService;
 
+
+
 import java.time.LocalDateTime;
+
 import java.time.format.DateTimeParseException;
+
 import java.util.List;
 
+
+
 public class MessageParser {
-
-    //object of the track service
-    private final TrackService trackService = new TrackService();
-    //object for the alert service
     private final AlertService alertService = new AlertService();
-
     public Track parse(String message) {
-        // Check if the message is empty
+        // Check empty messages.
         if (message == null || message.isBlank()) {
-            throw new IllegalArgumentException("Message is empty");
+            rejectMalformed(null, "Malformed message: Message is empty");
         }
-        // Split the message using | as the separator
+        // Split the message into fields.
         String[] fields = message.split("\\|", -1);
-
-        // Every UDP message must contain exactly 9 fields
+        // Extract track number if available.
+        String trackNumber = fields.length > 2 ? fields[2].trim() : null;
+        // Check number of fields.
         if (fields.length != 9) {
-            ValidationResult result = new ValidationResult("Malformed message: 9 fields required, received :: " + fields.length, "HIGH");
-            System.out.println(result.toString());
-            alertService.createAlert(null, result);
-            throw new IllegalArgumentException(
-                    "9 fields required, received :: " + fields.length
-            );
+            rejectMalformed(trackNumber, "Malformed message: 9 fields required, received " + fields.length);
         }
-
-        // Remove spaces and check for missing values
+        // Check missing fields.
         for (int i = 0; i < fields.length; i++) {
             fields[i] = fields[i].trim();
             if (fields[i].isEmpty()) {
-                ValidationResult result = new ValidationResult("Malformed message: Field " + (i + 1) + " is missing", "HIGH");
-                System.out.println(result.toString());
-                alertService.createAlert(null, result);
-                throw new IllegalArgumentException(
-                        "Field " + (i + 1) + " is missing"
-                );
+                rejectMalformed(trackNumber, "Malformed message: Field " + (i + 1) + " is missing");
             }
         }
+        Track track;
         try {
-            // Convert the text fields into their correct data types
             String sourceId = fields[0];
-            Integer sequence = Integer.parseInt(fields[1]);
-            String trackNumber = fields[2];
+            int sequence = Integer.parseInt(fields[1]);
+            trackNumber = fields[2];
             double latitude = Double.parseDouble(fields[3]);
             double longitude = Double.parseDouble(fields[4]);
             double speed = Double.parseDouble(fields[5]);
             String identity = fields[6];
             String status = fields[7];
             LocalDateTime createdTime = LocalDateTime.parse(fields[8]);
+            track = new Track(sourceId, sequence, trackNumber, latitude, longitude, speed, identity, status, createdTime);
 
-            //create track using the fields
-            Track track = new Track(sourceId, sequence, trackNumber, latitude, longitude, speed, identity, status, createdTime);
-
-            // STEP 6: Validate the Track only once.
-            List<ValidationResult> errors = ValidationService.validateTrack(track);
-
-            // If any rule fails, reject the message.
-            if (!errors.isEmpty()) {
-                // Show all validation errors in one message.
-                for(ValidationResult result: errors){
-                    alertService.createAlert(track,result);
-                    System.out.println(result.toString());
-                }
-                throw new IllegalArgumentException(
-                        "Invalid Track: " + errors
-                );
-            }
-
-            return track;
         } catch (NumberFormatException e) {
-            ValidationResult result = new ValidationResult("Invalid number in UDP message", "HIGH");
-            alertService.createAlert(null, result);
-            throw new IllegalArgumentException("Invalid number in UDP message: " +
-                    e.getMessage(), e
-            );
-
+            rejectMalformed(trackNumber, "Malformed message: Invalid number format");
+            throw new IllegalArgumentException(e);
         } catch (DateTimeParseException e) {
-            ValidationResult result = new ValidationResult("Invalid observation time. Expected " + "yyyy-MM-dd'T'HH:mm:ss", "HIGH");
-            alertService.createAlert(null, result);
-            throw new IllegalArgumentException("Invalid observation time. Expected " + "yyyy-MM-dd'T'HH:mm:ss", e
+            rejectMalformed(trackNumber, "Malformed message: Invalid observation time");
+            throw new IllegalArgumentException(e);
+        }
+        // Validate all Track fields.
+        List<ValidationResult> errors = ValidationService.validateTrack(track);
+        if (!errors.isEmpty()) {
+            for (ValidationResult result : errors) {
+                saveAlert(track, result);
+            }
+            throw new IllegalArgumentException("Invalid Track: " + errors);
+        }
+        return track;
+    }
+    // Create an alert for malformed messages.
+    private void rejectMalformed(String trackNumber, String message) {
+        ValidationResult result = new ValidationResult(message, "HIGH");
+        saveAlert(trackNumber, result);
+        throw new IllegalArgumentException(message);
+    }
+
+    // Save validation alerts using a Track.
+    private void saveAlert(Track track, ValidationResult result) {
+        try {
+            alertService.createAlert(track, result);
+            System.out.println(result);
+        } catch (Exception e) {
+            System.err.println("Alert creation failed: " + e.getMessage());
+        }
+    }
+    // Save malformed alerts without a complete Track.
+    private void saveAlert(String trackNumber, ValidationResult result) {
+        try {
+            alertService.createAlert(trackNumber, result);
+            System.out.println(result);
+        } catch (Exception e) {
+            System.err.println(
+                    "Alert creation failed: " + e.getMessage()
             );
         }
     }
 }
-
-

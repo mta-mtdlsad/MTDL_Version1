@@ -1,170 +1,216 @@
 package com.network;
 import com.domain.Track;
+import com.repository.SourceRepository;
+import com.service.SourceHealthService;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+
 public class UDPReceiver {
-
     private static final int PORT = 5000;
-
-    // The queue can hold a maximum of 1000 messages. This prevents unlimited memory usage.
-    private final BlockingQueue<String> queue = new ArrayBlockingQueue<>(1000);
-
+    // Queue holds a maximum of 1000 messages.
+    private final BlockingQueue<ReceivedMessage> queue = new ArrayBlockingQueue<>(1000);
+    // Store each message with its source and receive time.
+    private record ReceivedMessage(String text, String sourceId, LocalDateTime receivedAt) {}
     private final MessageParser parser = new MessageParser();
-    // Checks duplicates and message ordering
     private final MessageProcessor processor = new MessageProcessor();
+    // Source health monitoring.
+    private final SourceHealthService sourceHealth = new SourceHealthService();
+    private final SourceRepository sourceRepo = sourceHealth.getSourceRepository();
 
-    // Counters for monitoring. Health
-    //AtomicLong: allows multiple threads to safely read and modify a long value without the risk of data corruption or race conditions.
+
+    // Runtime counters.
     private final AtomicLong receivedCount = new AtomicLong();
-    private final AtomicLong droppedCount = new AtomicLong();
+    private final AtomicLong acceptedCount = new AtomicLong();
     private final AtomicLong rejectedCount = new AtomicLong();
-    private final AtomicLong processedCount = new AtomicLong();
-
+    private final AtomicLong duplicateCount = new AtomicLong();
+    private final AtomicLong outOfOrderCount = new AtomicLong();
+    private final AtomicLong failureCount = new AtomicLong();
+    private final AtomicLong droppedCount = new AtomicLong();
     private volatile boolean running = false;
-
-    private DatagramSocket socket;
+    private volatile boolean stopRequested = false;
+    private volatile DatagramSocket socket;
     private Thread workerThread;
+    // Extract source ID before full message validation.
+    private String extractSourceId(String message) {
+        if (message == null || message.isBlank()) {
+            return null;
+        }
+        String[] fields = message.split("\\|", -1);
+        if (fields.length > 0) {
+            String sourceId = fields[0].trim();
+            if (sourceId.matches("[A-Za-z0-9_-]{2,30}")) {
+                return sourceId;
+            }
+        }
+        return null;
+    }
 
     public void startReceiving() throws Exception {
-
-        // Open UDP port 5000.
-        socket = new DatagramSocket(PORT);
-        running = true;
-
-        // Start the worker that processes queued messages.
-        workerThread = new Thread(() -> {
-            // Continue until stopped AND queue is empty.
-            while (running || !queue.isEmpty()) {
-                try {
-                    // Take one message from the queue.
-                    String message = queue.poll(200, TimeUnit.MILLISECONDS
-                    );
-                    if (message == null) {
-                        continue;
-                    }
-
-                    // Validate the UDP message.
-                    Track track = parser.parse(message);
-
-                    // Process and save using existing code. DB writes happen in this worker, not in the UDP receiving loop.
-                    boolean saved = processor.process(track);
-
-                    if (saved) {
-                        processedCount.incrementAndGet();
-                        System.out.println("Track saved.");
-                    } else {
-                        rejectedCount.incrementAndGet();
-                        System.out.println("Track not saved (duplicate or error).");
-                    }
-
-                } catch (IllegalArgumentException e) {
-                    // Invalid messages must not stop the worker.
-                    rejectedCount.incrementAndGet();
-                    System.out.println("Invalid message: " + e.getMessage());
-
-                } catch (InterruptedException e) {
-                    // Recheck whether we should continue.
-                    // Do not discard queued messages.
-                } catch (Exception e) {
-                    // Continue processing other messages.
-                    System.err.println("Processing error: " + e.getMessage());
-                }
-            }
-            System.out.println("Processing worker stopped.");
-        }, "UDP-Worker");
-
-        workerThread.start();
-
-        System.out.println("UDP Receiver listening on port " + PORT);
-
+        if (stopRequested) {
+            return;
+        }
+        // Open UDP port.
+        DatagramSocket newSocket = new DatagramSocket(PORT);
+        socket = newSocket;
         try {
-            while (running) {
+            if (stopRequested) {
+                return;
+            }
+            running = true;
+            // Register simulator sources.
+            // Keep these IDs consistent with the simulator.
+//            sourceHealth.registerSource("LINK-A");
+//            sourceHealth.registerSource("LINK-B");
+//            sourceHealth.registerSource("LINK-C");
+            // Start source health monitoring.
+            sourceHealth.startMonitoring();
+            // Start worker for validation and database operations.
+            workerThread = new Thread(this::processQueue, "UDP-Processing-Worker");
 
-                // Buffer for one UDP packet.
+            workerThread.start();
+            System.out.println("UDP Receiver listening on port " + PORT);
+            while (running && !stopRequested) {
                 byte[] buffer = new byte[4096];
-
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-
-                // Receive a message. No dp operation happens here.
-                socket.receive(packet);
-
+                // Receive UDP message.
+                newSocket.receive(packet);
                 receivedCount.incrementAndGet();
-
-                // Convert UDP bytes into UTF-8 text.
-                String message = new String(
-                        packet.getData(),
-                        packet.getOffset(),
-                        packet.getLength(),
-                        StandardCharsets.UTF_8
-                );
-
-                // Put the message into the queue immediately.
-                // offer() does not wait for PostgreSQL.
-                boolean added = queue.offer(message);
-
-                String response;
-
-                if (added) {
-                    // NOT yet saved to PostgreSQL.
-                    response = "queue accepted into memory";
+                LocalDateTime receivedAt = LocalDateTime.now();
+                String message = new String(packet.getData(), packet.getOffset(), packet.getLength(), StandardCharsets.UTF_8);
+                // Extract the source ID.
+                String sourceId = extractSourceId(message);
+                // Update source activity immediately.
+                if (sourceId != null) {
+                    sourceHealth.recordReceived(sourceId, receivedAt);
+                }
+                // Store message and metadata together.
+                ReceivedMessage item = new ReceivedMessage(message, sourceId, receivedAt);
+                // Add message to queue without waiting.
+                boolean queued = queue.offer(item);
+                String reply;
+                if (queued) {
+                    reply = "QUEUED";
                 } else {
                     droppedCount.incrementAndGet();
-                    response = "The receiver accepted the message into its queue";
+                    reply = "QUEUE_FULL";
                 }
-
-                // Send an immediate queue-status response.
-                byte[] responseData = response.getBytes(StandardCharsets.UTF_8);
-
-                DatagramPacket responsePacket =
-                        new DatagramPacket(
-                                responseData,
-                                responseData.length,
-                                packet.getAddress(),
-                                packet.getPort()
-                        );
-                socket.send(responsePacket);
+                // Send acknowledgement to UDP sender.
+                byte[] replyBytes = reply.getBytes(StandardCharsets.UTF_8);
+                DatagramPacket response = new DatagramPacket(replyBytes, replyBytes.length, packet.getAddress(), packet.getPort());
+                newSocket.send(response);
             }
-
         } catch (SocketException e) {
-            // Closing the socket during shutdown is normal.
-            if (running) { throw e;}
-
+            // Closing socket during shutdown is normal.
+            if (!stopRequested) {
+                throw e;
+            }
         } finally {
             running = false;
-            if (socket != null && !socket.isClosed()) {
-                socket.close();
+            newSocket.close();
+            // Finish processing queued messages.
+            if (workerThread != null) {
+                workerThread.join();
             }
-
-            // Finish processing messages already in the queue.
-            if (workerThread != null) {workerThread.join();}
+            // Stop source monitoring.
+            sourceHealth.stopMonitoring();
             printStatistics();
+            sourceHealth.printSourceStatus();
         }
     }
 
-    // Called when Tomcat shuts down.
+    // Worker handles validation and database operations.
+    private void processQueue() {
+        while (running || !queue.isEmpty()) {
+            ReceivedMessage item = null;
+            try {
+                item = queue.poll(
+                        200,
+                        TimeUnit.MILLISECONDS
+                );
+                if (item == null) {
+                    continue;
+                }
+                String outcome;
+                int sequence = 0;
+                try {
+                    // Parse and validate incoming message.
+                    Track track = parser.parse(item.text());
+                    sequence = track.getSequence_number();
+                    // Save Track and classify the outcome.
+                    MessageProcessor.ProcessingResult result = processor.processDetailed(track);
+                    outcome = result.outcome().name();
+                    switch (result.outcome()) {
+                        case ACCEPTED -> {
+                            acceptedCount.incrementAndGet();
+                            System.out.println("Track saved.");
+                            if (result.outOfOrder()) {
+                                outOfOrderCount.incrementAndGet();
+                            }
+                        }
+                        case DUPLICATE -> {
+                            duplicateCount.incrementAndGet();
+                            failureCount.incrementAndGet();
+                            System.out.println("Track not saved (duplicate).");
+                        }
+                        case FAILURE -> {
+                            failureCount.incrementAndGet();
+                            System.out.println("Track not saved (processing failure).");
+                        }
+                    }
+                } catch (IllegalArgumentException e) {
+                    // Invalid or malformed UDP message.
+                    rejectedCount.incrementAndGet();
+                    outcome = "REJECTED";
+                    System.out.println("Rejected UDP message: " + e.getMessage());
+                }
+                // Save processing outcome to sources table.
+                if (item.sourceId() != null) {
+                    sourceRepo.recordOutcome(item.sourceId(), item.receivedAt(), outcome, sequence);
+                }
+            } catch (InterruptedException e) {
+                // Continue until pending messages are processed.
+                if (!running && queue.isEmpty()) {
+                    break;
+                }
+            } catch (Exception e) {
+                // Continue processing other messages.
+                System.err.println(
+                        "Worker error: " + e.getMessage()
+                );
+            }
+        }
+        System.out.println("UDP worker stopped.");
+    }
+    // Stop receiving new UDP messages.
     public void stopReceiving() {
+        stopRequested = true;
         running = false;
-        // Closing the socket unblocks socket.receive().
-        if (socket != null) {
-            socket.close();
+        DatagramSocket current = socket;
+        if (current != null) {
+            current.close();
         }
     }
-
+    // Print UDP statistics.
     public void printStatistics() {
-        System.out.println("\n---- UDP Statistics ----");
+        System.out.println("\n========== UDP STATISTICS ==========");
         System.out.println("Received: " + receivedCount.get());
-        System.out.println("Saved: " + processedCount.get());
+        System.out.println("Accepted: " + acceptedCount.get());
         System.out.println("Rejected: " + rejectedCount.get());
-        System.out.println("Dropped (queue full): " + droppedCount.get());
-        System.out.println("Pending in queue: " + queue.size());
-        System.out.println("Duplicates: " + processor.getDuplicateCount());
-        System.out.println("Out of order: " + processor.getOutOfOrderCount());
+        System.out.println("Duplicates: " + duplicateCount.get());
+        System.out.println("Out of order: " + outOfOrderCount.get());
+        System.out.println("Failures: " + failureCount.get());
+        System.out.println("Dropped: " + droppedCount.get());
+        System.out.println("Pending: " + queue.size());
+    }
+    public SourceHealthService getSourceHealth() {
+        return sourceHealth;
     }
 }

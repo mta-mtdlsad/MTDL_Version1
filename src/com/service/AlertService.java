@@ -27,6 +27,29 @@ public class AlertService {
         );
         alert_repo.saveAlert(alert);
     }
+
+    //using the repo creating a new alert
+    public void createAlert(String trackNo, ValidationResult result) {
+        Alert alert = new Alert(
+                trackNo,
+                result.getMessage(),
+                result.getSeverity(),
+                LocalDateTime.now()
+        );
+        alert_repo.saveAlert(alert);
+    }
+
+    //using the repo creating a new alert
+    public void createAlert(ValidationResult result) {
+        Alert alert = new Alert(
+                null,
+                result.getMessage(),
+                result.getSeverity(),
+                LocalDateTime.now()
+        );
+        alert_repo.saveAlert(alert);
+    }
+
     //using the repo displaying all alerts
     public List<Alert> getAlerts(){
         List<Alert> alerts = alert_repo.getAllAlerts();
