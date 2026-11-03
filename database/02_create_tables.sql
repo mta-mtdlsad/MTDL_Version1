@@ -19,3 +19,16 @@ CREATE TABLE alerts (
 	alert_severity VARCHAR(20),
 	alert_time TIMESTAMP
 );
+
+CREATE TABLE sources (
+                         source_id VARCHAR(30) PRIMARY KEY,
+                         source_status VARCHAR(30),
+                         first_seen TIMESTAMP,
+                         last_seen TIMESTAMP,
+                         highest_sequence INTEGER,
+                         received_count INTEGER,
+                         accepted_count INTEGER,
+                         rejected_count INTEGER,
+                         duplicate_count INTEGER,
+                         processing_failure_count INTEGER
+);
