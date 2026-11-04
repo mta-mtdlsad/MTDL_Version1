@@ -10,6 +10,7 @@ import java.util.List;
 
 public class SourceRepository {
     private static Connection connection = DbConnection.getConnection();
+    private PreparedStatement preparedStatement = null;
 
     // Convert a database row into your existing Source domain.
     private Source mapSource(ResultSet rs) throws SQLException {
@@ -43,16 +44,12 @@ public class SourceRepository {
                 VALUES (?, 'NOT SEEN', 0, 0, 0, 0, 0, 0)
                 ON CONFLICT (source_id) DO NOTHING
                 """;
-        try (Connection con = DbConnection.getConnection()) {
-
-            if (con == null) {
-                throw new SQLException("Database unavailable");
-            }
-
-            try (PreparedStatement ps = con.prepareStatement(sql)) {
-                ps.setString(1, sourceId);
-                ps.executeUpdate();
-            }
+        try {
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, sourceId);
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            throw e;
         }
     }
 
@@ -109,22 +106,19 @@ public class SourceRepository {
                         COALESCE(sources.processing_failure_count, 0)
                         + EXCLUDED.processing_failure_count
                 """;
-
-        try (Connection con = DbConnection.getConnection()) {
-            if (con == null) {
-                throw new SQLException("Database unavailable");
-            }
-            try (PreparedStatement ps = con.prepareStatement(sql)) {
-                ps.setString(1, sourceId);
-                ps.setTimestamp(2, Timestamp.valueOf(receivedAt));
-                ps.setTimestamp(3, Timestamp.valueOf(receivedAt));
-                ps.setInt(4, highest);
-                ps.setInt(5, accepted);
-                ps.setInt(6, rejected);
-                ps.setInt(7, duplicate);
-                ps.setInt(8, failure);
-                ps.executeUpdate();
-            }
+        try {
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, sourceId);
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(receivedAt));
+            preparedStatement.setTimestamp(3, Timestamp.valueOf(receivedAt));
+            preparedStatement.setInt(4, highest);
+            preparedStatement.setInt(5, accepted);
+            preparedStatement.setInt(6, rejected);
+            preparedStatement.setInt(7, duplicate);
+            preparedStatement.setInt(8, failure);
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            throw e;
         }
     }
 
@@ -134,53 +128,42 @@ public class SourceRepository {
     ) throws SQLException {
 
         String sql = "UPDATE sources SET source_status = ? WHERE source_id = ?";
-        try (Connection con = DbConnection.getConnection()) {
-            if (con == null) {
-                throw new SQLException("Database unavailable");
-            }
-            try (PreparedStatement ps = con.prepareStatement(sql)) {
-                ps.setString(1, status);
-                ps.setString(2, sourceId);
-                ps.executeUpdate();
-            }
+        try {
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, status);
+            preparedStatement.setString(2, sourceId);
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            throw e;
         }
     }
 
     // Read one source.
-    public Source getSourceById(String sourceId) {
+    public Source getSourceById(String sourceId) throws SQLException {
         String sql = "SELECT * FROM sources WHERE source_id = ?";
-        try (Connection con = DbConnection.getConnection()) {
-            if (con == null) {
-                throw new SQLException("Database unavailable");
+        try {
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, sourceId);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                return rs.next() ? mapSource(rs) : null;
             }
-            try (PreparedStatement ps = con.prepareStatement(sql)) {
-                ps.setString(1, sourceId);
-                try (ResultSet rs = ps.executeQuery()) {
-                    return rs.next() ? mapSource(rs) : null;
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Read source failed: " + e.getMessage());
-            return null;
+        } catch (Exception e) {
+            throw e;
         }
     }
 
     // Read every registered source.
-    public List<Source> getAllSources() {
+    public List<Source> getAllSources() throws SQLException {
         List<Source> sources = new ArrayList<>();
         String sql = "SELECT * FROM sources ORDER BY source_id";
-        try (Connection con = DbConnection.getConnection()) {
-            if (con == null) {
-                throw new SQLException("Database unavailable");
+        try {
+            preparedStatement = connection.prepareStatement(sql);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                sources.add(mapSource(rs));
             }
-            try (PreparedStatement ps = con.prepareStatement(sql);
-                 ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    sources.add(mapSource(rs));
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Read sources failed: " + e.getMessage());
+        } catch (Exception e) {
+            throw e;
         }
         return sources;
     }

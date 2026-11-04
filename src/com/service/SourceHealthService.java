@@ -1,4 +1,3 @@
-
 package com.service;
 
 import com.domain.Alert;
@@ -6,6 +5,7 @@ import com.domain.Source;
 import com.repository.AlertRepository;
 import com.repository.SourceRepository;
 
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -13,11 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 //This service calculates source health and saves status transitions to PostgreSQL. The receiver calls recordReceived() immediately, but that method does not perform a database operation.
 public class SourceHealthService {
-
     private final SourceRepository sourceRepo = new SourceRepository();
 
     private final Map<String, SourceState> states = new ConcurrentHashMap<>();
-
     private volatile boolean running;
     private Thread monitorThread;
 
@@ -73,6 +71,7 @@ public class SourceHealthService {
 
         return "DISCONNECTED";
     }
+
     // Check source health every second.
     public void checkHealth() {
         for (Map.Entry<String, SourceState> entry : states.entrySet()) {
@@ -173,7 +172,7 @@ public class SourceHealthService {
     }
 
     // Display persisted source information.
-    public void printSourceStatus() {
+    public void printSourceStatus() throws SQLException {
 
         System.out.println("\n===== SOURCE HEALTH =====");
 
@@ -182,8 +181,8 @@ public class SourceHealthService {
         }
     }
 
-    public SourceRepository getSourceRepository() {
-        return sourceRepo;
+    public void recordOutcome(String sourceId, LocalDateTime receivedAt, String outcome, int sequence) throws SQLException {
+        sourceRepo.recordOutcome(sourceId, receivedAt, outcome, sequence);
     }
 }
 

@@ -285,15 +285,16 @@ public class TrackRepository {
                 FROM tracks
                 WHERE source_id = ?
                 """;
-        try (Connection con = DbConnection.getConnection();
-
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, sourceId);
-            try (ResultSet rs = ps.executeQuery()) {
+        try {
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, sourceId);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1);
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return 0;
     }

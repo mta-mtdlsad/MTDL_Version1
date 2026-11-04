@@ -1,7 +1,9 @@
 package com.network;
 import com.domain.Track;
-import com.repository.SourceRepository;
+import com.service.MessageParserService;
+import com.service.MessageProcessorService;
 import com.service.SourceHealthService;
+
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -17,13 +19,14 @@ public class UDPReceiver {
     private static final int PORT = 5000;
     // Queue holds a maximum of 1000 messages.
     private final BlockingQueue<ReceivedMessage> queue = new ArrayBlockingQueue<>(1000);
+
     // Store each message with its source and receive time.
     private record ReceivedMessage(String text, String sourceId, LocalDateTime receivedAt) {}
-    private final MessageParser parser = new MessageParser();
-    private final MessageProcessor processor = new MessageProcessor();
+    private final MessageParserService parser = new MessageParserService();
+    private final MessageProcessorService processor = new MessageProcessorService();
+
     // Source health monitoring.
     private final SourceHealthService sourceHealth = new SourceHealthService();
-    private final SourceRepository sourceRepo = sourceHealth.getSourceRepository();
 
 
     // Runtime counters.
@@ -37,6 +40,7 @@ public class UDPReceiver {
     private volatile boolean stopRequested = false;
     private volatile DatagramSocket socket;
     private Thread workerThread;
+
     // Extract source ID before full message validation.
     private String extractSourceId(String message) {
         if (message == null || message.isBlank()) {
@@ -69,8 +73,10 @@ public class UDPReceiver {
 //            sourceHealth.registerSource("LINK-A");
 //            sourceHealth.registerSource("LINK-B");
 //            sourceHealth.registerSource("LINK-C");
+
             // Start source health monitoring.
             sourceHealth.startMonitoring();
+
             // Start worker for validation and database operations.
             workerThread = new Thread(this::processQueue, "UDP-Processing-Worker");
 
@@ -79,19 +85,24 @@ public class UDPReceiver {
             while (running && !stopRequested) {
                 byte[] buffer = new byte[4096];
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+
                 // Receive UDP message.
                 newSocket.receive(packet);
                 receivedCount.incrementAndGet();
                 LocalDateTime receivedAt = LocalDateTime.now();
                 String message = new String(packet.getData(), packet.getOffset(), packet.getLength(), StandardCharsets.UTF_8);
+
                 // Extract the source ID.
                 String sourceId = extractSourceId(message);
+
                 // Update source activity immediately.
                 if (sourceId != null) {
                     sourceHealth.recordReceived(sourceId, receivedAt);
                 }
+
                 // Store message and metadata together.
                 ReceivedMessage item = new ReceivedMessage(message, sourceId, receivedAt);
+
                 // Add message to queue without waiting.
                 boolean queued = queue.offer(item);
                 String reply;
@@ -101,6 +112,7 @@ public class UDPReceiver {
                     droppedCount.incrementAndGet();
                     reply = "QUEUE_FULL";
                 }
+
                 // Send acknowledgement to UDP sender.
                 byte[] replyBytes = reply.getBytes(StandardCharsets.UTF_8);
                 DatagramPacket response = new DatagramPacket(replyBytes, replyBytes.length, packet.getAddress(), packet.getPort());
@@ -114,10 +126,12 @@ public class UDPReceiver {
         } finally {
             running = false;
             newSocket.close();
+
             // Finish processing queued messages.
             if (workerThread != null) {
                 workerThread.join();
             }
+
             // Stop source monitoring.
             sourceHealth.stopMonitoring();
             printStatistics();
@@ -143,8 +157,9 @@ public class UDPReceiver {
                     // Parse and validate incoming message.
                     Track track = parser.parse(item.text());
                     sequence = track.getSequence_number();
+
                     // Save Track and classify the outcome.
-                    MessageProcessor.ProcessingResult result = processor.processDetailed(track);
+                    MessageProcessorService.ProcessingResult result = processor.processDetailed(track);
                     outcome = result.outcome().name();
                     switch (result.outcome()) {
                         case ACCEPTED -> {
@@ -168,9 +183,10 @@ public class UDPReceiver {
                     outcome = "REJECTED";
                     System.out.println("Rejected UDP message: " + e.getMessage());
                 }
+
                 // Save processing outcome to sources table.
                 if (item.sourceId() != null) {
-                    sourceRepo.recordOutcome(item.sourceId(), item.receivedAt(), outcome, sequence);
+                    sourceHealth.recordOutcome(item.sourceId(), item.receivedAt(), outcome, sequence);
                 }
             } catch (InterruptedException e) {
                 // Continue until pending messages are processed.
@@ -186,6 +202,7 @@ public class UDPReceiver {
         }
         System.out.println("UDP worker stopped.");
     }
+
     // Stop receiving new UDP messages.
     public void stopReceiving() {
         stopRequested = true;
@@ -195,6 +212,7 @@ public class UDPReceiver {
             current.close();
         }
     }
+
     // Print UDP statistics.
     public void printStatistics() {
         long failureCount = rejectedCount.get() + duplicateCount.get();
@@ -208,6 +226,7 @@ public class UDPReceiver {
         System.out.println("Dropped: " + droppedCount.get());
         System.out.println("Pending: " + queue.size());
     }
+
     public SourceHealthService getSourceHealth() {
         return sourceHealth;
     }

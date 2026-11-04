@@ -1,17 +1,13 @@
-package com.network;
+package com.service;
 import com.domain.Track;
 import com.domain.ValidationResult;
-import com.repository.TrackRepository;
-import com.service.AlertService;
 
-
-
-public class MessageProcessor {
+public class MessageProcessorService {
     public enum Outcome {ACCEPTED, DUPLICATE, FAILURE}
     public record ProcessingResult(Outcome outcome, boolean outOfOrder) {}
 
     // Repository handles all database operations.
-    private final TrackRepository trackRepo = new TrackRepository();
+    private final TrackService trackService = new TrackService();
     // Service handles alerts.
     private final AlertService alertService = new AlertService();
     // Counters.
@@ -28,13 +24,13 @@ public class MessageProcessor {
         int sequence = track.getSequence_number();
         try {
             // Find the highest sequence saved for this source.
-            int highest = trackRepo.getHighestSequence(sourceId);
+            int highest = trackService.getHighestSequence(sourceId);
             // Check if the message arrived out of order.
             boolean outOfOrder = sequence < highest;
 
             // Save the Track using the repository.
             // Returns false when the source and sequence already exist.
-            boolean saved = trackRepo.saveTrack(track);
+            boolean saved = trackService.saveTrack(track);
             if (!saved) {
                 duplicateCount++;
                 createAlert(track, "Duplicate message: " + sourceId + " sequence " + sequence);

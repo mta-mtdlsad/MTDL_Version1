@@ -1,10 +1,13 @@
-package com.network;
+package com.main;
 
+import com.network.UDPReceiver;
+import com.network.UDPSender;
 import com.simulator.TrackSimulator;
 
 public class UDPTest {
     public static void main(String[] args) throws Exception {
         UDPReceiver receiver = new UDPReceiver();
+
         // Start the receiver on a separate thread
         Thread receiverThread = new Thread(() -> {
             try {
@@ -13,13 +16,24 @@ public class UDPTest {
                 e.printStackTrace();
             }
         });
+
         // Allow the program to exit when the test finishes
         //receiverThread.setDaemon(true);
         receiverThread.start();
         // Give the receiver time to start
         Thread.sleep(1000);
+
+
         TrackSimulator simulator = new TrackSimulator();
         UDPSender sender = new UDPSender();
+
+        /*// Correlation
+        sender.sendMessage(
+                "LINK-A|1|TRK1001|12.971600|77.594600|450|FRIEND|ACTIVE|2026-11-02T09:15:30"
+        );
+        sender.sendMessage(
+                "LINK-B|5|TRK2001|12.971700|77.594700|455|FRIEND|ACTIVE|2026-11-02T09:15:35"
+        );*/
 
         simulator.startLimited(
                 3,          // Three sources
@@ -33,6 +47,8 @@ public class UDPTest {
         while (simulator.isRunning()){
             Thread.sleep(200);
         }
+
+
         // First observation
         sender.sendMessage(
                 "LINK-A|1|TRK1001|12.971600|77.594600|450|FRIEND|ACTIVE|2026-11-02T09:15:30"

@@ -4,6 +4,7 @@ import com.domain.Track;
 import com.domain.ValidationResult;
 import com.repository.TrackRepository;
 
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,6 +13,12 @@ import java.util.List;
 
 public class TrackService {
     TrackRepository track_repo = new TrackRepository();
+
+    /*
+    * * * * *
+    *  v1.0 *
+    * * * * *
+    */
 
     //Using the track and alert repo to validate tracks and raise alerts
     public void processTracks(List<Track> tracks) {
@@ -33,58 +40,6 @@ public class TrackService {
                 }
             }
         }
-    }
-
-    //Using the track and alert repo to validate one track and raise alerts
-    public boolean processTrack(Track track) {
-        ValidationService val_service = new ValidationService();
-        AlertService alert_service = new AlertService();
-        List<ValidationResult> results;
-        results = val_service.validateTrack(track);
-        if (results.isEmpty()) {
-            try {
-                track_repo.saveTrack(track); //returns confirmation string
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            for (ValidationResult result : results) {
-                alert_service.createAlert(track, result);
-                System.out.println(result.toString());
-            }
-        }
-        return false;
-    }
-
-    public boolean validateTrack(Track track) {
-        ValidationService val_service = new ValidationService();
-        AlertService alert_service = new AlertService();
-        List<ValidationResult> results;
-        results = val_service.validateTrack(track);
-        if (results.isEmpty()) {
-            try {
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            for (ValidationResult result : results) {
-                System.out.println(result.toString());
-                alert_service.createAlert(track, result);
-            }
-        }
-        return false;
-    }
-
-    public boolean saveTrack(Track track) {
-        try {
-            track_repo.saveTrack(track); //returns confirmation string
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
     //printing out all tracks using track repo
@@ -118,6 +73,12 @@ public class TrackService {
         }
     }
 
+    /*
+     * * * * *
+     *  v1.1 *
+     * * * * *
+     */
+
     //clearing all track using track repo
     public void clearTracks() {
         Boolean track = track_repo.clearTracksTable();
@@ -129,9 +90,77 @@ public class TrackService {
         System.out.println("Track table cleared successfully"); //prints confirmation string
     }
 
+    /*
+     * * * * *
+     *  v1.2 *
+     * * * * *
+     */
+
+    //Using the track and alert repo to validate one track and raise alerts
+    public boolean processTrack(Track track) {
+        ValidationService val_service = new ValidationService();
+        AlertService alert_service = new AlertService();
+        List<ValidationResult> results;
+        results = val_service.validateTrack(track);
+        if (results.isEmpty()) {
+            try {
+                track_repo.saveTrack(track); //returns confirmation string
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            for (ValidationResult result : results) {
+                alert_service.createAlert(track, result);
+                System.out.println(result.toString());
+            }
+        }
+        return false;
+    }
+
+    /*
+     * * * * *
+     *  v1.3 *
+     * * * * *
+     */
+
+    public boolean validateTrack(Track track) {
+        ValidationService val_service = new ValidationService();
+        AlertService alert_service = new AlertService();
+        List<ValidationResult> results;
+        results = val_service.validateTrack(track);
+        if (results.isEmpty()) {
+            try {
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            for (ValidationResult result : results) {
+                System.out.println(result.toString());
+                alert_service.createAlert(track, result);
+            }
+        }
+        return false;
+    }
+
+    public boolean saveTrack(Track track) {
+        try {
+            track_repo.saveTrack(track); //returns confirmation string
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public List<Track> filterTracks(List<String> filters, List<String> filter_values, List<String> sort,
                                     LocalDateTime start_time, LocalDateTime end_time) {
         return track_repo.searchAllTracks(filters, filter_values, sort, start_time, end_time);
+    }
+
+    public int getHighestSequence(String sourceId) throws SQLException {
+        return track_repo.getHighestSequence(sourceId);
     }
 
     public List<Track> correlateTrack(Track selected_track) {

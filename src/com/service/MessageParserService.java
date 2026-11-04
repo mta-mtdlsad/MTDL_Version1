@@ -1,26 +1,13 @@
-package com.network;
-
-
+package com.service;
 
 import com.domain.Track;
-
 import com.domain.ValidationResult;
 
-import com.service.AlertService;
-
-import com.service.ValidationService;
-
-
-
 import java.time.LocalDateTime;
-
 import java.time.format.DateTimeParseException;
-
 import java.util.List;
 
-
-
-public class MessageParser {
+public class MessageParserService {
     private final AlertService alertService = new AlertService();
     public Track parse(String message) {
         // Check empty messages.
