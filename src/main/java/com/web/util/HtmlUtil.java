@@ -1,6 +1,7 @@
 package com.web.util;
 
 import com.domain.Alert;
+import com.domain.Source;
 import com.domain.Track;
 
 import java.util.List;
@@ -112,6 +113,51 @@ public class HtmlUtil {
             html.append("      <td>").append(alert.getAlert_message()).append("</td>\n");
             html.append("      <td>").append(alert.getAlert_severity()).append("</td>\n");
             html.append("      <td>").append(alert.getAlert_time()).append("</td>\n");
+            html.append("    </tr>\n");
+        }
+
+        // Close table
+        html.append("  </tbody>\n");
+        html.append("</table>");
+
+        return html.toString();
+    }
+
+    // Converts sources into an HTML table
+    public static String convertSourcesToHtmlTable(List<Source> list) {
+        StringBuilder html = new StringBuilder();
+
+        // Open table and define headers
+        html.append("<table border=\"1\" style=\"border-collapse: collapse;\">\n");
+        html.append("  <thead>\n");
+        html.append("    <tr>\n");
+        html.append("      <th>Source ID</th>\n");
+        html.append("      <th>Source Status</th>\n");
+        html.append("      <th>First Seen</th>\n");
+        html.append("      <th>Last Seen</th>\n");
+        html.append("      <th>Highest Sequence</th>\n");
+        html.append("      <th>Recieved Count</th>\n");
+        html.append("      <th>Accepted Count</th>\n");
+        html.append("      <th>Rejected Count</th>\n");
+        html.append("      <th>Duplicate Count</th>\n");
+        html.append("      <th>Processing Failure Count</th>\n");
+        html.append("    </tr>\n");
+        html.append("  </thead>\n");
+        html.append("  <tbody>\n");
+
+        // Iterate over the list and inject data
+        for (Source source : list) {
+            html.append("    <tr>\n");
+            html.append("      <td>").append(source.getSource_id()).append("</td>\n");
+            html.append("      <td>").append(source.getSource_status()).append("</td>\n");
+            html.append("      <td>").append(source.getFirst_seen()).append("</td>\n");
+            html.append("      <td>").append(source.getLast_seen()).append("</td>\n");
+            html.append("      <td>").append(source.getHighest_sequence()).append("</td>\n");
+            html.append("      <td>").append(source.getReceived_count()).append("</td>\n");
+            html.append("      <td>").append(source.getAccepted_count()).append("</td>\n");
+            html.append("      <td>").append(source.getRejected_count()).append("</td>\n");
+            html.append("      <td>").append(source.getDuplicate_count()).append("</td>\n");
+            html.append("      <td>").append(source.getProcessing_failure_count()).append("</td>\n");
             html.append("    </tr>\n");
         }
 

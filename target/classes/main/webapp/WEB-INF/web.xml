@@ -38,6 +38,16 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>ListSourceRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.SourceListServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ListSourceRelatedServlet</servlet-name>
+        <url-pattern>/sources/list</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>SatisticsRelatedServlet</servlet-name>
         <servlet-class>com.web.sevlet.StatisticsServlet</servlet-class>
     </servlet>

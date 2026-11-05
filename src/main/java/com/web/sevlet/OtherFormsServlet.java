@@ -25,6 +25,8 @@ public class OtherFormsServlet extends BaseServlet {
     HtmlUtil html_util = new HtmlUtil();
     TrackService track_service;
     List<Track> listOfTracks = null;
+    private UDPReceiver receiver;
+    private SourceHealthService sourceHealthService;
 
     @Override
     public void init() throws ServletException {
@@ -34,11 +36,12 @@ public class OtherFormsServlet extends BaseServlet {
             throw new ServletException("Spring context not initialised");
         }
         track_service = context.getBean(TrackService.class);
+        receiver = context.getBean(UDPReceiver.class);
+        sourceHealthService = context.getBean(SourceHealthService.class);
     }
 
     @Override
-    protected void doGet(
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         // Prepare the HTTP response and obtain the PrintWriter
         PrintWriter writer = prepareResponse(response);
@@ -60,23 +63,19 @@ public class OtherFormsServlet extends BaseServlet {
             resultPage.append(html_util.convertTracksToHtmlTable(listOfTracks));
             resultPage.append("</p>");
 
-        } else if (request.getParameter("purpose").equals("simulation")) {
-
-            try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class)) {
-                UDPReceiver receiver = context.getBean(UDPReceiver.class);
-                TrackSimulator simulator_random = new TrackSimulator(context.getBean(SourceHealthService.class));
-                // Start the receiver on a separate thread
-                Thread receiverThread = new Thread(() -> {
-                    try {
-                        receiver.startReceiving();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-
-                receiverThread.start();
-                Thread.sleep(1000);
-
+        } else if ("simulation".equals(request.getParameter("purpose"))) {
+            startPage(writer, "Simulation Result");
+            try {
+                // Use the existing Spring-managed source service.
+                TrackSimulator simulator_random = new TrackSimulator(sourceHealthService);
+//                // Record statistics before simulation.
+//                long receivedBefore = receiver.receivedCount.get();
+//                long acceptedBefore = receiver.acceptedCount.get();
+//                long rejectedBefore = receiver.rejectedCount.get();
+//                long duplicateBefore = receiver.duplicateCount.get();
+//                long outOfOrderBefore = receiver.outOfOrderCount.get();
+//                long failureBefore = receiver.failureCount.get();
+//                long droppedBefore = receiver.droppedCount.get();
 
                 int[] params = {
                         Integer.parseInt(request.getParameter("numberOfSources")),
@@ -84,42 +83,43 @@ public class OtherFormsServlet extends BaseServlet {
                         Integer.parseInt(request.getParameter("numberOfObservations")),
                         Integer.parseInt(request.getParameter("sendingRate"))
                 };
-
                 simulator_random.initializeSimulator(
                         request.getParameter("simulationScenario"),
                         Integer.parseInt(request.getParameter("simulationMode")),
                         12345L,
                         params
                 );
-
                 while (simulator_random.isRunning()) {
                     Thread.sleep(200);
                 }
-
-                receiver.stopReceiving();
-                receiverThread.join();
-
-                System.out.println("---- Test Completed ----");
-                System.out.println("Simulation finished");
-                System.out.println("UDP received");
-                System.out.println("Check PostgreSQL for saved Obs");
+                // The simulator has finished sending.
+//                // The receiver may still be processing queued messages.
+//                long received = receiver.receivedCount.get() - receivedBefore;
+//                long accepted = receiver.acceptedCount.get() - acceptedBefore;
+//                long rejected = receiver.rejectedCount.get() - rejectedBefore;
+//                long duplicate = receiver.duplicateCount.get() - duplicateBefore;
+//                long outOfOrder = receiver.outOfOrderCount.get() - outOfOrderBefore;
+//                long failure = receiver.failureCount.get() - failureBefore;
+//                long dropped = receiver.droppedCount.get() - droppedBefore;
+                writer.println("<h2>Simulation Statistics</h2>");
+                writer.println("<p>Received Count: " + receiver.receivedCount.get() + "</p>");
+                writer.println("<p>Accepted Count: " + receiver.acceptedCount.get() + "</p>");
+                writer.println("<p>Rejected Count: " + receiver.rejectedCount.get() + "</p>");
+                writer.println("<p>Duplicate Count: " + receiver.duplicateCount.get() + "</p>");
+                writer.println("<p>Out Of Order Count: " + receiver.outOfOrderCount.get() + "</p>");
+                writer.println("<p>Failure Count: " + receiver.failureCount.get() + "</p>");
+                writer.println("<p>Dropped Count: " + receiver.droppedCount.get() + "</p>");
+                writer.println("<p>Queue Count: " + receiver.queue.size() + "</p>");
+                writer.println("<p>Simulation sending completed.</p>");
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                Thread.currentThread().interrupt();
+                response.setStatus(500);
+                writer.println("<p>Simulation interrupted.</p>");
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                response.setStatus(500);
+                writer.println("<p>Simulation failed.</p>");
+                e.printStackTrace();
             }
         }
-        startPage(writer, "Simulation Result");
-        resultPage.append("<p>Simulation Completed</p>");
-
-        try {
-            writer.print(resultPage);
-        } catch (Exception e) {
-            // Set the HTTP response status to 500 (Internal Server Error)
-            response.setStatus(500);
-            // Display an error message if retrieval fails
-            writer.println("<p>Unable to get Result.</p>");
-        }
-        endPage(writer, request);// Finish the HTML page and include any common page elements
     }
 }

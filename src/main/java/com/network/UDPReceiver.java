@@ -5,6 +5,7 @@ import com.service.MessageProcessorService;
 import com.service.SourceHealthService;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Array;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -19,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class UDPReceiver {
     private static final int PORT = 5000;
     // Queue holds a maximum of 1000 messages.
-    private final BlockingQueue<ReceivedMessage> queue = new ArrayBlockingQueue<>(1000);
+    public final BlockingQueue<ReceivedMessage> queue = new ArrayBlockingQueue<>(1000);
 
     public UDPReceiver(MessageParserService parser, MessageProcessorService processor, SourceHealthService sourceHealth) {
         this.parser = parser;
@@ -36,12 +37,13 @@ public class UDPReceiver {
 
 
     // Runtime counters.
-    private final AtomicLong receivedCount = new AtomicLong();
-    private final AtomicLong acceptedCount = new AtomicLong();
-    private final AtomicLong rejectedCount = new AtomicLong();
-    private final AtomicLong duplicateCount = new AtomicLong();
-    private final AtomicLong outOfOrderCount = new AtomicLong();
-    private final AtomicLong droppedCount = new AtomicLong();
+    public final AtomicLong receivedCount = new AtomicLong();
+    public final AtomicLong acceptedCount = new AtomicLong();
+    public final AtomicLong rejectedCount = new AtomicLong();
+    public final AtomicLong duplicateCount = new AtomicLong();
+    public final AtomicLong outOfOrderCount = new AtomicLong();
+    public final AtomicLong droppedCount = new AtomicLong();
+    public final AtomicLong failureCount = new AtomicLong();
     private volatile boolean running = false;
     private volatile boolean stopRequested = false;
     private volatile DatagramSocket socket;
@@ -177,6 +179,7 @@ public class UDPReceiver {
                         }
                         case DUPLICATE -> {
                             duplicateCount.incrementAndGet();
+                            failureCount.incrementAndGet();
                             System.out.println("Track not saved (duplicate).");
                         }
                         case FAILURE -> {
@@ -186,6 +189,7 @@ public class UDPReceiver {
                 } catch (IllegalArgumentException e) {
                     // Invalid or malformed UDP message.
                     rejectedCount.incrementAndGet();
+                    failureCount.incrementAndGet();
                     outcome = "REJECTED";
                     System.out.println("Rejected UDP message: " + e.getMessage());
                 }
@@ -221,17 +225,18 @@ public class UDPReceiver {
 
     // Print UDP statistics.
     public void printStatistics() {
-        long failureCount = rejectedCount.get() + duplicateCount.get();
         System.out.println("\n========== UDP STATISTICS ==========");
         System.out.println("Received: " + receivedCount.get());
         System.out.println("Accepted: " + acceptedCount.get());
         System.out.println("Rejected: " + rejectedCount.get());
         System.out.println("Duplicates: " + duplicateCount.get());
         System.out.println("Out of order: " + outOfOrderCount.get());
-        System.out.println("Failures: " + failureCount);
+        System.out.println("Failures: " + failureCount.get());
         System.out.println("Dropped: " + droppedCount.get());
         System.out.println("Pending: " + queue.size());
     }
+
+
 
     public SourceHealthService getSourceHealth() {
         return sourceHealth;

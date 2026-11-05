@@ -28,6 +28,10 @@ public class SourceHealthService {
         this.sourceRepo = sourceRepo;
     }
 
+    public List<Source> getAllSources() throws SQLException {
+        return sourceRepo.getAllSources();
+    }
+
     // Returns SourceIds and their Sequence number
     public Map<String, Long> getSourcesAndSequences() throws SQLException {
         List<Source> listOfSources = sourceRepo.getAllSources();
