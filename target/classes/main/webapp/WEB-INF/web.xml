@@ -95,11 +95,17 @@
     <servlet>
         <servlet-name>OtherFormsRelatedServlet</servlet-name>
         <servlet-class>com.web.sevlet.OtherFormsServlet</servlet-class>
+        <async-supported>true</async-supported>
     </servlet>
 
     <servlet-mapping>
         <servlet-name>OtherFormsRelatedServlet</servlet-name>
         <url-pattern>/tracks/correlation</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>OtherFormsRelatedServlet</servlet-name>
+        <url-pattern>/tracks/simulation</url-pattern>
     </servlet-mapping>
 
 </web-app>
