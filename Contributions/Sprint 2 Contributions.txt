@@ -1,0 +1,35 @@
+---------- Sprint 2 ----------
+
+### Shamma ###
+7.1 Multi-Source Simulation: decoupled simulator 
+	UDPTest.java, Simulator.java, TrackSimulator.java
+7.7 Cross-Source Correlation Candidates: implemented correlation logic
+	TrackService.java, TrackRepository.java, OtherFormsServlet.java, other-forms.html
+7.8 Combined Track Search and Filtering: implemented advanced search and filtering
+	TrackService.java, TrackRepository.java, FilterTracksServlet.java, filter-form.html
+Extra: Updated database structure (tracks and sources tables), Maintained web.xml
+
+
+### Shahad ### 
+7.1 Multi-Source Simulation: implemented simulator 
+	UDPTest.java, TrackSimulator.java
+7.2 UDP Message Sending and Receiving: implemented message transmission
+	UDPTest.java, UDPReceiver.java, UDPSender.java, UDPStartupListener.java
+7.3 Message Parsing and Validation + 7.9 Alerts and Processing Counts: implemented parsing and validation logic
+	UDPReceiver.java, MessageParserService.java, MessageProcessorService.java, ValidationService.java, TrackService.java
+7.4 Duplicate and Out-of-Order Messages: implemented duplicate and out-of-order validation logic
+	MessageParserService.java, MessageProcessorService.java
+7.5 Source Health and Registration: implemented logic to register sources and track source health
+	SourceHealthService.java
+
+
+### Fatima ###
+7.2 UDP Message Sending and Receiving: implemented message transmission
+	UDPTest.java, UDPReceiver.java, UDPSender.java, UDPStartupListener.java
+7.3 Message Parsing and Validation + 7.9 Alerts and Processing Counts: implemented parsing and validation logic
+	UDPReceiver.java, MessageParserService.java, MessageProcessorService.java, ValidationService.java, TrackService.java
+7.4 Duplicate and Out-of-Order Messages: implemented duplicate and out-of-order validation logic
+	MessageParserService.java, MessageProcessorService.java
+7.6 Track History and Current Track View: implemented functionality to view history and get current view
+	TrackService.java, TrackRepository.java, TrackHistoryServlet.java, SerachTrackServlet.java, search-trackNo-form.html
+Extra: Transformed the project into a Maven project with a Spring Framework
