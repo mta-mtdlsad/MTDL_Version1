@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage | Advanced Filters</title>
+</head>
+
+<body>
+
+<h3> Advanced Filter Tracks</h3>
+
+<form action="tracks/advancedfilter" method="get">
+
+
+    <label>Enter Source ID:
+        <input type="text"
+               name="sourceId"
+               placeholder="Enter Source ID: "
+        />
+
+    </label>
+    <br><br>
+
+    <label>Enter Track Number:
+        <input type="text"
+               name="trackNumber"
+               placeholder="Enter Track Number: "
+        />
+
+    </label>
+    <br><br>
+
+
+    <label for="identity">Choose Identity Type:</label>
+    <select name="identity" id="identity">
+        <option value="">Select Identity</option>
+        <option value="FRIEND">FRIEND</option>
+        <option value="NEUTRAL">NEUTRAL</option>
+        <option value="HOSTILE">HOSTILE</option>
+        <option value="UNKNOWN">UNKNOWN</option>
+    </select>
+
+    <br><br>
+
+    <label for="status">Choose Status Type:</label>
+    <select name="status" id="status">
+        <option value="">Select Status</option>
+        <option value="ACTIVE">ACTIVE</option>
+        <option value="INACTIVE">INACTIVE</option>
+    </select>
+
+
+    <br><br>
+
+    <label for="minSpeed">Minimum Speed:</label>
+    <input type="number" name="minSpeed"
+           id="minSpeed" min="0" step="any"
+
+    >
+
+
+    <br><br>
+
+    <label for="maxSpeed">Maximum Speed:</label>
+    <input type="number" name="maxSpeed"
+           id="maxSpeed"  step="any"
+
+    >
+
+    <br><br>
+
+    <label for="startTime"> Enter Start Date & Time: </label>
+    <input type="datetime-local"
+           name="startTime"
+           id="startTime"
+    >
+
+    <br><br>
+
+    <label for="endTime"> Enter End Date & Time: </label>
+    <input type="datetime-local"
+           name="endTime"
+           id="endTime"
+    >
+    <br><br>
+
+    <button type="submit">Search Track</button>
+</form>
+
+<br>
+<a href="index.html">Return Home</a>
+
+</body>
+</html>

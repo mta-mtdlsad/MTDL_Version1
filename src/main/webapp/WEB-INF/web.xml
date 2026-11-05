@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
+         version="6.1">
+
+
+    <display-name>MTMS-Web-1.2</display-name>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+
+    <!--    CreateTrackServlet + track form -->
+    <servlet>
+        <servlet-name>CreateTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.CreateTracksServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CreateTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/create</url-pattern>
+    </servlet-mapping>
+
+
+    <!--    SearchTrack + search form -->
+    <servlet>
+        <servlet-name>SearchTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.SearchTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SearchTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/search</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- FilterTrack + filter form -->
+
+    <servlet>
+        <servlet-name>FilterTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.FilterTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>FilterTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/filter</url-pattern>
+    </servlet-mapping>
+
+    <!--Replay Track + replay form -->
+
+    <servlet>
+        <servlet-name>ReplayTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.ReplayTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ReplayTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/replay</url-pattern>
+    </servlet-mapping>
+
+
+    <!--    DeleteTrack + delete form-->
+
+    <servlet>
+        <servlet-name>DeleteTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.DeleteTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DeleteTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/delete</url-pattern>
+    </servlet-mapping>
+
+    <!--List Track + Track List -->
+
+    <servlet>
+        <servlet-name>ListTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.TrackListServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ListTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/list</url-pattern>
+    </servlet-mapping>
+
+    <!--List Alert + Alert List -->
+
+    <servlet>
+        <servlet-name>ListAlertRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.AlertListServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ListAlertRelatedServlet</servlet-name>
+        <url-pattern>/alerts/list</url-pattern>
+    </servlet-mapping>
+
+    <!-- Statistics -->
+
+    <servlet>
+        <servlet-name>StatisticsRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.StatisticsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>StatisticsRelatedServlet</servlet-name>
+        <url-pattern>/tracks/statistics</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Source Monitor -->
+
+    <servlet>
+        <servlet-name>SourceMonitorRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.SourceMonitorServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SourceMonitorRelatedServlet</servlet-name>
+        <url-pattern>/source/monitor</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Advanced Filters   -->
+
+    <servlet>
+        <servlet-name>AdvancedFiltersRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.AdvancedFiltersServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AdvancedFiltersRelatedServlet</servlet-name>
+        <url-pattern>/tracks/advancedfilter</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Correlation Candidates   -->
+
+    <servlet>
+        <servlet-name>CorrelationCandidatesRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.CorrelationCandidatesServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CorrelationCandidatesRelatedServlet</servlet-name>
+        <url-pattern>/tracks/correlationcandidates</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Current Track   -->
+
+    <servlet>
+        <servlet-name>CurrentTracksRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.CurrentTracksServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CurrentTracksRelatedServlet</servlet-name>
+        <url-pattern>/tracks/current</url-pattern>
+    </servlet-mapping>
+
+    <!-- Full history of Track   -->
+
+    <servlet>
+        <servlet-name>TrackHistoryRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.TrackHistoryServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>TrackHistoryRelatedServlet</servlet-name>
+        <url-pattern>/tracks/history</url-pattern>
+    </servlet-mapping>
+
+
+
+</web-app>
