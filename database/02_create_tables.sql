@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS tracks (
     identity_type VARCHAR(30) NOT NULL,
     track_status VARCHAR(30) NOT NULL,
     created_time TIMESTAMP NOT NULL,
+    recieved_time TIMESTAMP NOT NULL,
     CONSTRAINT unique_source_sequence UNIQUE (source_id, sequence_number)
 );
 

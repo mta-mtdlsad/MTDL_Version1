@@ -18,7 +18,7 @@ public class TrackRepository {
     public Boolean saveTrack(Track track) throws Exception{
         try {
             preparedStatement = connection.prepareStatement(
-                    "INSERT INTO tracks (source_id,sequence_number,track_number,latitude,longitude,speed,identity_type,track_status,created_time) VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT DO NOTHING;");
+                    "INSERT INTO tracks (source_id,sequence_number,track_number,latitude,longitude,speed,identity_type,track_status,created_time,recieved_time) VALUES (?,?,?,?,?,?,?,?,?,?) ON CONFLICT DO NOTHING;");
 
             preparedStatement.setString(1, track.getSource_id());
             preparedStatement.setInt(2, track.getSequence_number());
@@ -29,6 +29,7 @@ public class TrackRepository {
             preparedStatement.setString(7, track.getIdentity_type());
             preparedStatement.setString(8, track.getTrack_status());
             preparedStatement.setTimestamp(9, Timestamp.valueOf(track.getCreated_time()));
+            preparedStatement.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
 
             return preparedStatement.executeUpdate() > 0;
         }catch (Exception e) {
@@ -72,7 +73,9 @@ public class TrackRepository {
                                 resultSet.getDouble(7),
                                 resultSet.getString(8),
                                 resultSet.getString(9),
-                                resultSet.getTimestamp(10).toLocalDateTime()));
+                                resultSet.getTimestamp(10).toLocalDateTime(),
+                                resultSet.getTimestamp(11).toLocalDateTime()));
+
             }
 
             return listOfTracks;
@@ -206,11 +209,25 @@ public class TrackRepository {
         return null;
     }
 
+    // SELECT tracks where speed is greater than certain number
+    public List<Track> getTracksByNumber(String trackNo) {
+        try {
+            String s = " = '" + trackNo + "'";
+            List<String> filter = Arrays.asList("track_number");
+            List<String> filter_values = Arrays.asList(s);
+            List<String> sort = Arrays.asList("created_time");
+            return searchAllTracks(filter, filter_values, sort, null, null);
+        }catch (Exception e) {
+            System.out.println("Unable to fetch all tracks");
+        }
+        return null;
+    }
+
     // SELECT track based on the track_number
     public Track getTrackByNo(String number) {
         try {
             preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM tracks WHERE track_number = ? ORDER BY created_time DESC, track_id DESC LIMIT 1;");
+                    "SELECT * FROM tracks WHERE track_number = ? ORDER BY sequence_number DESC LIMIT 1;");
             preparedStatement.setString(1, number);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -226,7 +243,8 @@ public class TrackRepository {
                         resultSet.getDouble(7),
                         resultSet.getString(8),
                         resultSet.getString(9),
-                        resultSet.getTimestamp(10).toLocalDateTime());
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime());
                 return track;
             }
         }catch (Exception e) {
@@ -234,6 +252,7 @@ public class TrackRepository {
         }
         return null;
     }
+
 
     // SELECT the number of tracks in each identity_type
     public Map<String, Integer> getStatistics() {

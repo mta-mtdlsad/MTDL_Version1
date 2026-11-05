@@ -13,6 +13,7 @@ public class Track{
     String identity_type;
     String track_status;
     LocalDateTime created_time;
+    LocalDateTime recieved_time;
 
     public Track(int track_id, String source_id, int sequence_number, String track_number, double latitude, double longitude, double speed, String identity_type, String track_status, LocalDateTime created_time) {
         this.track_id = track_id;
@@ -25,6 +26,20 @@ public class Track{
         this.identity_type = identity_type;
         this.track_status = track_status;
         this.created_time = created_time;
+    }
+
+    public Track(int track_id, String source_id, int sequence_number, String track_number, double latitude, double longitude, double speed, String identity_type, String track_status, LocalDateTime created_time, LocalDateTime recieved_time) {
+        this.track_id = track_id;
+        this.source_id = source_id;
+        this.sequence_number = sequence_number;
+        this.track_number = track_number;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.speed = speed;
+        this.identity_type = identity_type;
+        this.track_status = track_status;
+        this.created_time = created_time;
+        this.recieved_time = recieved_time;
     }
 
     public Track(String source_id, int sequence_number, String track_number, double latitude, double longitude, double speed, String identity_type, String track_status, LocalDateTime created_time) {
@@ -79,6 +94,10 @@ public class Track{
         return created_time;
     }
 
+    public LocalDateTime getRecieved_time() {
+        return recieved_time;
+    }
+
     @Override
     public String toString() {
         return "Track{" +
@@ -91,7 +110,8 @@ public class Track{
                 ", speed=" + speed +
                 ", identity_type='" + identity_type + '\'' +
                 ", track_status='" + track_status + '\'' +
-                ", created_time=" + created_time +
+                ", created_time=" + created_time + '\'' +
+                ", recieved_time=" + recieved_time +
                 '}';
     }
 }

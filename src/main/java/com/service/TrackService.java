@@ -29,6 +29,14 @@ public class TrackService {
     * * * * *
     */
 
+    public Track getTrackByNo(String track_no){
+        return track_repo.getTrackByNo(track_no);
+    }
+
+    public List<Track> getTracksByNumber(String trackNo){
+        return track_repo.getTracksByNumber(trackNo);
+    }
+
     //Using the track and alert repo to validate tracks and raise alerts
     public void processTracks(List<Track> tracks) {
         List<ValidationResult> results;

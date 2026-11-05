@@ -5,10 +5,14 @@ import com.domain.Track;
 import com.repository.TrackRepository;
 
 import com.service.ReplayService;
+import com.service.TrackService;
 import com.web.util.HtmlUtil;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +22,8 @@ import org.springframework.context.ApplicationContext;
 // the Servlet responsible for searching a track by its track number
 public class SearchTrackServlet extends BaseServlet {
 
-    TrackRepository track_repo;
+    TrackService track_service;
+    private HtmlUtil html_util = new HtmlUtil();
 
     @Override
     public void init() throws ServletException {
@@ -27,7 +32,7 @@ public class SearchTrackServlet extends BaseServlet {
         if (context == null) {
             throw new ServletException("Spring context not initialised");
         }
-        track_repo = context.getBean(TrackRepository.class);
+        track_service = context.getBean(TrackService.class);
     }
 
     // Handles HTTP GET requests
@@ -53,7 +58,11 @@ public class SearchTrackServlet extends BaseServlet {
 
         try {
             // Search for the track using its track number
-            Track track = track_repo.getTrackByNo(trackNumber);
+            String s = " = '" + trackNumber + "'";
+            List<String> filter = Arrays.asList("track_number");
+            List<String> filter_values = Arrays.asList(s);
+            List<String> sort = Arrays.asList("sequence_number DESC LIMIT 1");
+            List<Track> track = track_service.filterTracks(filter, filter_values,  sort,null, null);
 
             // Check whether the requested track exists
             if (track == null) {
@@ -62,17 +71,7 @@ public class SearchTrackServlet extends BaseServlet {
                 out.println("<p>Track not found.</p>");
 
             } else {
-                // Display the track number, HtmlUtil.escape() prevents HTML injection,  Cross-Site Scripting (XSS)
-                out.println("<p>Track Number: " + HtmlUtil.escape(track.getTrack_number()) + "</p>");
-
-                // Display the track's latitude
-                out.println("<p>Latitude: " + track.getLatitude() + "</p>");
-
-                // Display the track's longitude
-                out.println("<p>Longitude: " + track.getLongitude() + "</p>");
-
-                // Display the track's speed
-                out.println("<p>Speed: " + track.getSpeed() + "</p>");
+                out.print(html_util.convertTracksToHtmlTable(track));
             }
 
         } catch (Exception e) {

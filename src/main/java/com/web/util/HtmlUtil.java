@@ -61,6 +61,7 @@ public class HtmlUtil {
         html.append("      <th>Identity Type</th>\n");
         html.append("      <th>Status</th>\n");
         html.append("      <th>Created Time</th>\n");
+        html.append("      <th>Recieved Time</th>\n");
         html.append("    </tr>\n");
         html.append("  </thead>\n");
         html.append("  <tbody>\n");
@@ -77,6 +78,7 @@ public class HtmlUtil {
             html.append("      <td>").append(track.getIdentity_type()).append("</td>\n");
             html.append("      <td>").append(track.getTrack_status()).append("</td>\n");
             html.append("      <td>").append(track.getCreated_time()).append("</td>\n");
+            html.append("      <td>").append(track.getRecieved_time()).append("</td>\n");
             html.append("    </tr>\n");
         }
 

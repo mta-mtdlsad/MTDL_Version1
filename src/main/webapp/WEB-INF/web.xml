@@ -89,6 +89,16 @@
 
     <servlet-mapping>
         <servlet-name>SearchTrackRelatedServlet</servlet-name>
+        <url-pattern>/track/search</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TrackHistroyRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.TrackHistoryServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>TrackHistroyRelatedServlet</servlet-name>
         <url-pattern>/tracks/search</url-pattern>
     </servlet-mapping>
 
