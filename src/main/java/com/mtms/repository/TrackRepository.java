@@ -496,62 +496,68 @@ public class TrackRepository {
     }
 
     public static List<Track> advancedFilter(String sourceId, String trackNumber, String identity, String trackStatus, Double minSpeed, Double maxSpeed, LocalDateTime startTime, LocalDateTime endTime) {
-        try {
-            StringBuilder sql = new StringBuilder ("SELECT * FROM tracks WHERE 1=1");
 
-            List<Object> allParameters = new ArrayList<>();
+        try {
+               // building the sql query using builder
+            String sql = "SELECT * FROM tracks WHERE 1=1";
+
+          // storing parameter values in a list - to then run a loop on it
+            List<Object> parameters = new ArrayList<>();
 
             if (sourceId != null && !sourceId.isEmpty()) {
-                sql.append(" AND source_id = ?");
-                allParameters.add(sourceId);
+                sql += " AND source_id = ?";
+                parameters.add(sourceId);
             }
+
             if (trackNumber != null && !trackNumber.isEmpty()) {
-                sql.append(" AND track_number = ?");
-                allParameters.add(trackNumber);
+                sql += " AND track_number = ?";
+                parameters.add(trackNumber);
             }
+
             if (identity != null && !identity.isEmpty()) {
-                sql.append(" AND identity_type = ?");
-                allParameters.add(identity);
+                sql += " AND identity_type = ?";
+                parameters.add(identity);
             }
 
             if (trackStatus != null && !trackStatus.isEmpty()) {
-                sql.append(" AND track_status = ?");
-                allParameters.add(trackStatus);
+                sql += " AND track_status = ?";
+                parameters.add(trackStatus);
             }
 
             if (minSpeed != null) {
-                sql.append(" AND speed >= ?");
-                allParameters.add(minSpeed);
+                sql += " AND speed >= ?";
+                parameters.add(minSpeed);
             }
 
             if (maxSpeed != null) {
-                sql.append(" AND speed <= ?");
-                allParameters.add(maxSpeed);
+                sql += " AND speed <= ?";
+                parameters.add(maxSpeed);
             }
 
             if (startTime != null) {
-                sql.append(" AND observation_time >= ?");
-                allParameters.add(Timestamp.valueOf(startTime));
+                sql += " AND observation_time >= ?";
+                parameters.add(Timestamp.valueOf(startTime));
             }
 
             if (endTime != null) {
-                sql.append(" AND observation_time <= ?");
-                allParameters.add(Timestamp.valueOf(endTime));
+                sql += " AND observation_time <= ?";
+                parameters.add(Timestamp.valueOf(endTime));
             }
 
-            preparedStatement = connection.prepareStatement(sql.toString());
+             //prep sql query
+            PreparedStatement ps = connection.prepareStatement(sql);
 
-            int parameterIndex = 1;
-
-            for (Object parameter : allParameters) {
-                preparedStatement.setObject(parameterIndex++, parameter);
+           // bind the values to the sql place holders ?
+            for (int i = 0; i < parameters.size(); i++) {
+                ps.setObject(i + 1, parameters.get(i));
             }
 
+            //execute the query
+            ResultSet resultSet = ps.executeQuery();
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+           //store the matching tracks
 
-            listOfTracks = new ArrayList<>();
-
+            List<Track> listOfTracks = new ArrayList<>();
             while (resultSet.next()) {
                 listOfTracks.add(new Track(
                         resultSet.getInt(1),
@@ -566,16 +572,18 @@ public class TrackRepository {
                         resultSet.getTimestamp(10).toLocalDateTime(),
                         resultSet.getTimestamp(11).toLocalDateTime()
                 ));
-            } resultSet.close();
-            preparedStatement.close();
+            }
+
+            resultSet.close();
+            ps.close();
 
             return listOfTracks;
+
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Error Applying Advanced Filter Search", e);
+            throw new RuntimeException(
+                    "Error executing advanced filter query", e); //error handling
         }
     }
 }
-
-
 
