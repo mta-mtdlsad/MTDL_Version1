@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
+         version="6.1">
+    <welcome-file-list>
+        <welcome-file>/index.html</welcome-file>
+    </welcome-file-list>
+
+    <servlet>
+        <servlet-name>CreateTrackRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.CreateTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CreateTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TrackListRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.TrackListServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>TrackListRelatedServlet</servlet-name>
+        <url-pattern>/tracks/list</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ListAlertRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.AlertListServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ListAlertRelatedServlet</servlet-name>
+        <url-pattern>/alerts/list</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SatisticsRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.StatisticsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SatisticsRelatedServlet</servlet-name>
+        <url-pattern>/statistics</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>FilterTracksRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.FilterTracksServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>FilterTracksRelatedServlet</servlet-name>
+        <url-pattern>/tracks/filter</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteTrackRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.DeleteTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DeleteTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/delete</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ReplayTracksRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.ReplayTracksServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ReplayTracksRelatedServlet</servlet-name>
+        <url-pattern>/replayTracks</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ReplayTracksRelatedServlet</servlet-name>
+        <url-pattern>/getTracksTimeFrame</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SearchTrackRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.SearchTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SearchTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/search</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>OtherFormsRelatedServlet</servlet-name>
+        <servlet-class>com.web.sevlet.OtherFormsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>OtherFormsRelatedServlet</servlet-name>
+        <url-pattern>/tracks/correlation</url-pattern>
+    </servlet-mapping>
+
+</web-app>
