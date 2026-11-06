@@ -23,12 +23,17 @@ public class UDPTest {
                 }
             });
 
-// Allow the program to exit when the test finishes
-//receiverThread.setDaemon(true);
+            // Allow the program to exit when the test finishes
+            //receiverThread.setDaemon(true);
             receiverThread.start();
-// Give the receiver time to start
+            // Give the receiver time to start
             Thread.sleep(1000);
 
+            simulator_predefined.initializeSimulator(null, 0, 12345L, null);
+
+            while (simulator_predefined.isRunning()) {
+                Thread.sleep(200);
+            }
 
             int[] params = {
                     3,          // Three sources
@@ -39,12 +44,6 @@ public class UDPTest {
             simulator_random.initializeSimulator("MIXED", 1, 12345L, params);
 
             while (simulator_random.isRunning()) {
-                Thread.sleep(200);
-            }
-
-            simulator_predefined.initializeSimulator(null, 0, 12345L, null);
-
-            while (simulator_predefined.isRunning()) {
                 Thread.sleep(200);
             }
 

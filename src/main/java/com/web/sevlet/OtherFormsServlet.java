@@ -121,5 +121,14 @@ public class OtherFormsServlet extends BaseServlet {
                 e.printStackTrace();
             }
         }
+        try {
+            writer.print(resultPage);
+        } catch (Exception e) {
+            // Set the HTTP response status to 500 (Internal Server Error)
+            response.setStatus(500);
+            // Display an error message if retrieval fails
+            writer.println("<p>Unable to get Result.</p>");
+        }
+        endPage(writer, request);// Finish the HTML page and include any common page elements
     }
 }
