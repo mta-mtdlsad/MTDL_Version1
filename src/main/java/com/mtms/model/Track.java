@@ -1,6 +1,7 @@
 package com.mtms.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Track{
     int trackId;
@@ -97,6 +98,18 @@ public class Track{
 
     public LocalDateTime getRecievedTime() {
         return recievedTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Track track = (Track) o;
+        return trackId == track.trackId && sequenceNumber == track.sequenceNumber && Double.compare(latitude, track.latitude) == 0 && Double.compare(longitude, track.longitude) == 0 && Double.compare(speed, track.speed) == 0 && Objects.equals(sourceId, track.sourceId) && Objects.equals(trackNumber, track.trackNumber) && Objects.equals(identityType, track.identityType) && Objects.equals(trackStatus, track.trackStatus) && Objects.equals(createdTime, track.createdTime) && Objects.equals(recievedTime, track.recievedTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(trackId, sourceId, sequenceNumber, trackNumber, latitude, longitude, speed, identityType, trackStatus, createdTime, recievedTime);
     }
 
     @Override
