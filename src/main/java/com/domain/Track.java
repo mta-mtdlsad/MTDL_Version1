@@ -3,71 +3,72 @@ package com.domain;
 import java.time.LocalDateTime;
 
 public class Track{
-    int track_id;
-    String source_id;
-    int sequence_number;
-    String track_number;
+    int trackId;
+    String sourceId;
+    int sequenceNumber;
+    String trackNumber;
     double latitude;
     double longitude;
     double speed;
-    String identity_type;
-    String track_status;
-    LocalDateTime created_time;
-    LocalDateTime recieved_time;
+    String identityType;
+    String trackStatus;
+    LocalDateTime createdTime;
+    LocalDateTime recievedTime;
 
-    public Track(int track_id, String source_id, int sequence_number, String track_number, double latitude, double longitude, double speed, String identity_type, String track_status, LocalDateTime created_time) {
-        this.track_id = track_id;
-        this.source_id = source_id;
-        this.sequence_number = sequence_number;
-        this.track_number = track_number;
+    public Track(int trackId, String sourceId, int sequenceNumber, String trackNumber, double latitude, double longitude, double speed, String identityType, String trackStatus, LocalDateTime createdTime) {
+        this.trackId = trackId;
+        this.sourceId = sourceId;
+        this.sequenceNumber = sequenceNumber;
+        this.trackNumber = trackNumber;
         this.latitude = latitude;
         this.longitude = longitude;
         this.speed = speed;
-        this.identity_type = identity_type;
-        this.track_status = track_status;
-        this.created_time = created_time;
+        this.identityType = identityType;
+        this.trackStatus = trackStatus;
+        this.createdTime = createdTime;
     }
 
-    public Track(int track_id, String source_id, int sequence_number, String track_number, double latitude, double longitude, double speed, String identity_type, String track_status, LocalDateTime created_time, LocalDateTime recieved_time) {
-        this.track_id = track_id;
-        this.source_id = source_id;
-        this.sequence_number = sequence_number;
-        this.track_number = track_number;
+    public Track(int trackId, String sourceId, int sequenceNumber, String trackNumber, double latitude, double longitude, double speed, String identityType, String trackStatus, LocalDateTime createdTime, LocalDateTime recievedTime) {
+        this.trackId = trackId;
+        this.sourceId = sourceId;
+        this.sequenceNumber = sequenceNumber;
+        this.trackNumber = trackNumber;
         this.latitude = latitude;
         this.longitude = longitude;
         this.speed = speed;
-        this.identity_type = identity_type;
-        this.track_status = track_status;
-        this.created_time = created_time;
-        this.recieved_time = recieved_time;
+        this.identityType = identityType;
+        this.trackStatus = trackStatus;
+        this.createdTime = createdTime;
+        this.recievedTime = recievedTime;
     }
 
-    public Track(String source_id, int sequence_number, String track_number, double latitude, double longitude, double speed, String identity_type, String track_status, LocalDateTime created_time) {
-        this.source_id = source_id;
-        this.sequence_number = sequence_number;
-        this.track_number = track_number;
+    public Track(String sourceId, int sequenceNumber, String trackNumber, double latitude, double longitude, double speed, String identityType, String trackStatus, LocalDateTime createdTime) {
+        this.sourceId = sourceId;
+        this.sequenceNumber = sequenceNumber;
+        this.trackNumber = trackNumber;
         this.latitude = latitude;
         this.longitude = longitude;
         this.speed = speed;
-        this.identity_type = identity_type;
-        this.track_status = track_status;
-        this.created_time = created_time;
+        this.identityType = identityType;
+        this.trackStatus = trackStatus;
+        this.createdTime = createdTime;
+        this.recievedTime = recievedTime;
     }
 
-    public int getTrack_id() {
-        return track_id;
+    public int getTrackId() {
+        return trackId;
     }
 
-    public String getSource_id() {
-        return source_id;
+    public String getSourceId() {
+        return sourceId;
     }
 
-    public String getTrack_number() {
-        return track_number;
+    public String getTrackNumber() {
+        return trackNumber;
     }
 
-    public int getSequence_number() {
-        return sequence_number;
+    public int getSequenceNumber() {
+        return sequenceNumber;
     }
 
     public double getLatitude() {
@@ -82,36 +83,36 @@ public class Track{
         return speed;
     }
 
-    public String getIdentity_type() {
-        return identity_type;
+    public String getIdentityType() {
+        return identityType;
     }
 
-    public String getTrack_status() {
-        return track_status;
+    public String getTrackStatus() {
+        return trackStatus;
     }
 
-    public LocalDateTime getCreated_time() {
-        return created_time;
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
     }
 
-    public LocalDateTime getRecieved_time() {
-        return recieved_time;
+    public LocalDateTime getRecievedTime() {
+        return recievedTime;
     }
 
     @Override
     public String toString() {
         return "Track{" +
-                "track_id=" + track_id +
-                ", source_id='" + source_id + '\'' +
-                ", sequence_number=" + sequence_number +
-                ", track_number='" + track_number + '\'' +
+                "trackId=" + trackId +
+                ", sourceId='" + sourceId + '\'' +
+                ", sequenceNumber=" + sequenceNumber +
+                ", trackNumber='" + trackNumber + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", speed=" + speed +
-                ", identity_type='" + identity_type + '\'' +
-                ", track_status='" + track_status + '\'' +
-                ", created_time=" + created_time + '\'' +
-                ", recieved_time=" + recieved_time +
+                ", identityType='" + identityType + '\'' +
+                ", trackStatus='" + trackStatus + '\'' +
+                ", createdTime=" + createdTime +
+                ", recievedTime=" + recievedTime +
                 '}';
     }
 }

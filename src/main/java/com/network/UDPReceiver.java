@@ -5,7 +5,6 @@ import com.service.MessageProcessorService;
 import com.service.SourceHealthService;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Array;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -164,7 +163,7 @@ public class UDPReceiver {
                 try {
                     // Parse and validate incoming message.
                     Track track = parser.parse(item.text());
-                    sequence = track.getSequence_number();
+                    sequence = track.getSequenceNumber();
 
                     // Save Track and classify the outcome.
                     MessageProcessorService.ProcessingResult result = processor.processDetailed(track);

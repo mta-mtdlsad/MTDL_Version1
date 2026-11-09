@@ -70,16 +70,16 @@ public class HtmlUtil {
         // Iterate over the list and inject data
         for (Track track : list) {
             html.append("    <tr>\n");
-            html.append("      <td>").append(track.getSource_id()).append("</td>\n");
-            html.append("      <td>").append(track.getSequence_number()).append("</td>\n");
-            html.append("      <td>").append(track.getTrack_number()).append("</td>\n");
+            html.append("      <td>").append(track.getSourceId()).append("</td>\n");
+            html.append("      <td>").append(track.getSequenceNumber()).append("</td>\n");
+            html.append("      <td>").append(track.getTrackNumber()).append("</td>\n");
             html.append("      <td>").append(track.getLatitude()).append("</td>\n");
             html.append("      <td>").append(track.getLongitude()).append("</td>\n");
             html.append("      <td>").append(track.getSpeed()).append("</td>\n");
-            html.append("      <td>").append(track.getIdentity_type()).append("</td>\n");
-            html.append("      <td>").append(track.getTrack_status()).append("</td>\n");
-            html.append("      <td>").append(track.getCreated_time()).append("</td>\n");
-            html.append("      <td>").append(track.getRecieved_time()).append("</td>\n");
+            html.append("      <td>").append(track.getIdentityType()).append("</td>\n");
+            html.append("      <td>").append(track.getTrackStatus()).append("</td>\n");
+            html.append("      <td>").append(track.getCreatedTime()).append("</td>\n");
+            html.append("      <td>").append(track.getRecievedTime()).append("</td>\n");
             html.append("    </tr>\n");
         }
 
@@ -109,10 +109,10 @@ public class HtmlUtil {
         // Iterate over the list and inject data
         for (Alert alert : list) {
             html.append("    <tr>\n");
-            html.append("      <td>").append(alert.getTrack_number()).append("</td>\n");
-            html.append("      <td>").append(alert.getAlert_message()).append("</td>\n");
-            html.append("      <td>").append(alert.getAlert_severity()).append("</td>\n");
-            html.append("      <td>").append(alert.getAlert_time()).append("</td>\n");
+            html.append("      <td>").append(alert.getTrackNumber()).append("</td>\n");
+            html.append("      <td>").append(alert.getAlertMessage()).append("</td>\n");
+            html.append("      <td>").append(alert.getAlertSeverity()).append("</td>\n");
+            html.append("      <td>").append(alert.getAlertTime()).append("</td>\n");
             html.append("    </tr>\n");
         }
 
@@ -148,16 +148,16 @@ public class HtmlUtil {
         // Iterate over the list and inject data
         for (Source source : list) {
             html.append("    <tr>\n");
-            html.append("      <td>").append(source.getSource_id()).append("</td>\n");
-            html.append("      <td>").append(source.getSource_status()).append("</td>\n");
-            html.append("      <td>").append(source.getFirst_seen()).append("</td>\n");
-            html.append("      <td>").append(source.getLast_seen()).append("</td>\n");
-            html.append("      <td>").append(source.getHighest_sequence()).append("</td>\n");
-            html.append("      <td>").append(source.getReceived_count()).append("</td>\n");
-            html.append("      <td>").append(source.getAccepted_count()).append("</td>\n");
-            html.append("      <td>").append(source.getRejected_count()).append("</td>\n");
-            html.append("      <td>").append(source.getDuplicate_count()).append("</td>\n");
-            html.append("      <td>").append(source.getProcessing_failure_count()).append("</td>\n");
+            html.append("      <td>").append(source.getSourceId()).append("</td>\n");
+            html.append("      <td>").append(source.getSourceStatus()).append("</td>\n");
+            html.append("      <td>").append(source.getFirstSeen()).append("</td>\n");
+            html.append("      <td>").append(source.getLastSeen()).append("</td>\n");
+            html.append("      <td>").append(source.getHighestSequence()).append("</td>\n");
+            html.append("      <td>").append(source.getReceivedCount()).append("</td>\n");
+            html.append("      <td>").append(source.getAcceptedCount()).append("</td>\n");
+            html.append("      <td>").append(source.getRejectedCount()).append("</td>\n");
+            html.append("      <td>").append(source.getDuplicateCount()).append("</td>\n");
+            html.append("      <td>").append(source.getProcessingFailureCount()).append("</td>\n");
             html.append("    </tr>\n");
         }
 

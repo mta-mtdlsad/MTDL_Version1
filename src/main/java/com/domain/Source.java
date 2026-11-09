@@ -3,85 +3,83 @@ package com.domain;
 import java.time.LocalDateTime;
 
 public class Source {
-    String source_id;
-    String source_status;
-    LocalDateTime first_seen;
-    LocalDateTime last_seen;
-    int highest_sequence;
-    int received_count;
-    int accepted_count;
-    int rejected_count;
-    int duplicate_count;
-    int processing_failure_count;
+    String sourceId;
+    String sourceStatus;
+    LocalDateTime firstSeen;
+    LocalDateTime lastSeen;
+    int highestSequence;
+    int receivedCount;
+    int acceptedCount;
+    int rejectedCount;
+    int duplicateCount;
+    int processingFailureCount;
 
-    public Source(String source_id, String source_status, LocalDateTime first_seen, LocalDateTime last_seen,
-                  int highest_sequence, int received_count, int accepted_count, int rejected_count, int duplicate_count,
-                  int processing_failure_count) {
-        this.source_id = source_id;
-        this.source_status = source_status;
-        this.first_seen = first_seen;
-        this.last_seen = last_seen;
-        this.highest_sequence = highest_sequence;
-        this.received_count = received_count;
-        this.accepted_count = accepted_count;
-        this.rejected_count = rejected_count;
-        this.duplicate_count = duplicate_count;
-        this.processing_failure_count = processing_failure_count;
+    public Source(String sourceId, String sourceStatus, LocalDateTime firstSeen, LocalDateTime lastSeen, int highestSequence, int receivedCount, int acceptedCount, int rejectedCount, int duplicateCount, int processingFailureCount) {
+        this.sourceId = sourceId;
+        this.sourceStatus = sourceStatus;
+        this.firstSeen = firstSeen;
+        this.lastSeen = lastSeen;
+        this.highestSequence = highestSequence;
+        this.receivedCount = receivedCount;
+        this.acceptedCount = acceptedCount;
+        this.rejectedCount = rejectedCount;
+        this.duplicateCount = duplicateCount;
+        this.processingFailureCount = processingFailureCount;
     }
 
-    public String getSource_id() {
-        return source_id;
+    public String getSourceId() {
+        return sourceId;
     }
 
-    public String getSource_status() {
-        return source_status;
+    public String getSourceStatus() {
+        return sourceStatus;
     }
 
-    public LocalDateTime getFirst_seen() {
-        return first_seen;
+    public LocalDateTime getFirstSeen() {
+        return firstSeen;
     }
 
-    public LocalDateTime getLast_seen() {
-        return last_seen;
+    public LocalDateTime getLastSeen() {
+        return lastSeen;
     }
 
-    public int getHighest_sequence() {
-        return highest_sequence;
+    public int getHighestSequence() {
+        return highestSequence;
     }
 
-    public int getReceived_count() {
-        return received_count;
+    public int getReceivedCount() {
+        return receivedCount;
     }
 
-    public int getAccepted_count() {
-        return accepted_count;
+    public int getAcceptedCount() {
+        return acceptedCount;
     }
 
-    public int getRejected_count() {
-        return rejected_count;
+    public int getRejectedCount() {
+        return rejectedCount;
     }
 
-    public int getDuplicate_count() {
-        return duplicate_count;
+    public int getDuplicateCount() {
+        return duplicateCount;
     }
 
-    public int getProcessing_failure_count() {
-        return processing_failure_count;
+    public int getProcessingFailureCount() {
+        return processingFailureCount;
     }
 
     @Override
     public String toString() {
         return "Source{" +
-                "source_id='" + source_id + '\'' +
-                ", source_status='" + source_status + '\'' +
-                ", first_seen=" + first_seen +
-                ", last_seen=" + last_seen +
-                ", highest_sequence=" + highest_sequence +
-                ", received_count=" + received_count +
-                ", accepted_count=" + accepted_count +
-                ", rejected_count=" + rejected_count +
-                ", duplicate_count=" + duplicate_count +
-                ", processing_failure_count=" + processing_failure_count +
+                "sourceId='" + sourceId + '\'' +
+                ", sourceStatus='" + sourceStatus + '\'' +
+                ", firstSeen=" + firstSeen +
+                ", lastSeen=" + lastSeen +
+                ", highestSequence=" + highestSequence +
+                ", receivedCount=" + receivedCount +
+                ", acceptedCount=" + acceptedCount +
+                ", rejectedCount=" + rejectedCount +
+                ", duplicateCount=" + duplicateCount +
+                ", processingFailureCount=" + processingFailureCount +
                 '}';
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 public class ValidationService {
     // 1. Source ID: 2 to 30 permitted characters.
     public static ValidationResult validateSource_id(Track track){
-        String sourceId = track.getSource_id();
+        String sourceId = track.getSourceId();
         if(sourceId == null || !sourceId.matches("[A-Za-z0-9_-]{2,30}")){
             return new ValidationResult("Invalid source_id: not matching [A-Za-z0-9_-]{2,30}", "LOW");
         }
@@ -19,7 +19,7 @@ public class ValidationService {
     }
 
     public static ValidationResult validateSequence_number(Track track){
-        if (track.getSequence_number()<= 0) {
+        if (track.getSequenceNumber()<= 0) {
             return new ValidationResult("Invalid sequence number: is negative", "MEDIUM");
         }
         return null;
@@ -28,7 +28,7 @@ public class ValidationService {
     // 3. Track number: keep the existing minimum length.
     public static ValidationResult validateTrack_number(Track track) {
 
-        String number = track.getTrack_number();
+        String number = track.getTrackNumber();
 
         if (number == null || number.length() < 5) {
 
@@ -95,7 +95,7 @@ public class ValidationService {
     // 7. Identity must match an allowed value.
     public static ValidationResult validateIdentity_type(Track track) {
 
-        String identity = track.getIdentity_type();
+        String identity = track.getIdentityType();
 
         if (!List.of(
                 "FRIEND", "HOSTILE", "NEUTRAL", "UNKNOWN"
@@ -113,7 +113,7 @@ public class ValidationService {
     // 8. Status must be ACTIVE or INACTIVE.
     public static ValidationResult validateTrack_status(Track track) {
 
-        String status = track.getTrack_status();
+        String status = track.getTrackStatus();
 
         if (!List.of(
                 "ACTIVE", "INACTIVE"
@@ -131,7 +131,7 @@ public class ValidationService {
     // 9. Observation time must exist.
     public static ValidationResult validateCreated_time(Track track) {
 
-        if (track.getCreated_time() == null) {
+        if (track.getCreatedTime() == null) {
 
             return new ValidationResult( "Observation time is missing",  "MEDIUM"
             );

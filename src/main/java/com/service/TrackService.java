@@ -174,8 +174,8 @@ public class TrackService {
     }
 
     public List<Track> correlateTrack(Track selected_track) {
-        String s1 = " != '" + selected_track.getSource_id() + "'";
-        String s2 = " = '" + selected_track.getIdentity_type() + "'";
+        String s1 = " != '" + selected_track.getSourceId() + "'";
+        String s2 = " = '" + selected_track.getIdentityType() + "'";
         List<String> filter = Arrays.asList("source_id", "identity_type");
         List<String> filter_values = Arrays.asList(s1, s2);
         List<Track> listOfTracks = track_repo.searchAllTracks(filter, filter_values, null, null, null);
@@ -185,7 +185,7 @@ public class TrackService {
         long time;
         for (Track track : listOfTracks) {
             if (Math.abs(selected_track.getSpeed() - track.getSpeed()) <= 100) {
-                time = Math.abs(Duration.between(selected_track.getCreated_time(), track.getCreated_time()).getSeconds());
+                time = Math.abs(Duration.between(selected_track.getCreatedTime(), track.getCreatedTime()).getSeconds());
                 if (time <= 30) {
                     distance = calculate_distance(selected_track.getLatitude(), selected_track.getLongitude(),
                             track.getLatitude(), track.getLongitude());

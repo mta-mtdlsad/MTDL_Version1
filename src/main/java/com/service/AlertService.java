@@ -23,7 +23,7 @@ public class AlertService {
         String trackNumber = null;
         // Malformed UDP messages may not have a Track object.
         if (track != null) {
-            trackNumber = track.getTrack_number();
+            trackNumber = track.getTrackNumber();
         }
         Alert alert = new Alert(
                 trackNumber,

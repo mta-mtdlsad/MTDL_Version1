@@ -25,10 +25,10 @@ public class AlertRepository {
             preparedStatement = connection.prepareStatement(
                     "INSERT INTO alerts (track_number,alert_message,alert_severity,alert_time) VALUES (?,?,?,?);");
 
-            preparedStatement.setString(1, alert.getTrack_number());
-            preparedStatement.setString(2, alert.getAlert_message());
-            preparedStatement.setString(3, alert.getAlert_severity());
-            preparedStatement.setTimestamp(4, Timestamp.valueOf(alert.getAlert_time()));
+            preparedStatement.setString(1, alert.getTrackNumber());
+            preparedStatement.setString(2, alert.getAlertMessage());
+            preparedStatement.setString(3, alert.getAlertSeverity());
+            preparedStatement.setTimestamp(4, Timestamp.valueOf(alert.getAlertTime()));
 
             preparedStatement.executeUpdate();
             return "Alert added successfully";

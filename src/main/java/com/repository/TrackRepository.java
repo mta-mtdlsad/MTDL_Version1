@@ -20,15 +20,15 @@ public class TrackRepository {
             preparedStatement = connection.prepareStatement(
                     "INSERT INTO tracks (source_id,sequence_number,track_number,latitude,longitude,speed,identity_type,track_status,created_time,recieved_time) VALUES (?,?,?,?,?,?,?,?,?,?) ON CONFLICT DO NOTHING;");
 
-            preparedStatement.setString(1, track.getSource_id());
-            preparedStatement.setInt(2, track.getSequence_number());
-            preparedStatement.setString(3, track.getTrack_number());
+            preparedStatement.setString(1, track.getSourceId());
+            preparedStatement.setInt(2, track.getSequenceNumber());
+            preparedStatement.setString(3, track.getTrackNumber());
             preparedStatement.setDouble(4, track.getLatitude());
             preparedStatement.setDouble(5, track.getLongitude());
             preparedStatement.setDouble(6, track.getSpeed());
-            preparedStatement.setString(7, track.getIdentity_type());
-            preparedStatement.setString(8, track.getTrack_status());
-            preparedStatement.setTimestamp(9, Timestamp.valueOf(track.getCreated_time()));
+            preparedStatement.setString(7, track.getIdentityType());
+            preparedStatement.setString(8, track.getTrackStatus());
+            preparedStatement.setTimestamp(9, Timestamp.valueOf(track.getCreatedTime()));
             preparedStatement.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
 
             return preparedStatement.executeUpdate() > 0;

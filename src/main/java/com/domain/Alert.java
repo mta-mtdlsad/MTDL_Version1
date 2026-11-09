@@ -3,55 +3,55 @@ package com.domain;
 import java.time.LocalDateTime;
 
 public class Alert {
-    int alert_id;
-    String track_number;
-    String alert_message;
-    String alert_severity;
-    LocalDateTime alert_time;
+    int alertId;
+    String trackNumber;
+    String alertMessage;
+    String alertSeverity;
+    LocalDateTime alertTime;
 
-    public Alert(int alert_id, String track_number, String alert_message, String alert_severity, LocalDateTime alert_time) {
-        this.alert_id = alert_id;
-        this.track_number = track_number;
-        this.alert_message = alert_message;
-        this.alert_severity = alert_severity;
-        this.alert_time = alert_time;
+    public Alert(int alertId, String trackNumber, String alertMessage, String alertSeverity, LocalDateTime alertTime) {
+        this.alertId = alertId;
+        this.trackNumber = trackNumber;
+        this.alertMessage = alertMessage;
+        this.alertSeverity = alertSeverity;
+        this.alertTime = alertTime;
     }
 
-    public Alert(String track_number, String alert_message, String alert_severity, LocalDateTime alert_time) {
-        this.track_number = track_number;
-        this.alert_message = alert_message;
-        this.alert_severity = alert_severity;
-        this.alert_time = alert_time;
+    public Alert(String trackNumber, String alertMessage, String alertSeverity, LocalDateTime alertTime) {
+        this.trackNumber = trackNumber;
+        this.alertMessage = alertMessage;
+        this.alertSeverity = alertSeverity;
+        this.alertTime = alertTime;
     }
 
-    public int getAlert_id() {
-        return alert_id;
+    public int getAlertId() {
+        return alertId;
     }
 
-    public String getTrack_number() {
-        return track_number;
+    public String getTrackNumber() {
+        return trackNumber;
     }
 
-    public String getAlert_message() {
-        return alert_message;
+    public String getAlertMessage() {
+        return alertMessage;
     }
 
-    public String getAlert_severity() {
-        return alert_severity;
+    public String getAlertSeverity() {
+        return alertSeverity;
     }
 
-    public LocalDateTime getAlert_time() {
-        return alert_time;
+    public LocalDateTime getAlertTime() {
+        return alertTime;
     }
 
     @Override
     public String toString() {
         return "Alert{" +
-                "alert_id=" + alert_id +
-                ", track_number='" + track_number + '\'' +
-                ", alert_message='" + alert_message + '\'' +
-                ", alert_severity='" + alert_severity + '\'' +
-                ", alert_time=" + alert_time +
+                "alertId=" + alertId +
+                ", trackNumber='" + trackNumber + '\'' +
+                ", alertMessage='" + alertMessage + '\'' +
+                ", alertSeverity='" + alertSeverity + '\'' +
+                ", alertTime=" + alertTime +
                 '}';
     }
 }

@@ -1,7 +1,6 @@
 package com.service;
 import com.domain.Track;
 import com.domain.ValidationResult;
-import com.repository.TrackRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,8 +25,8 @@ public class MessageProcessorService {
             return new ProcessingResult(Outcome.FAILURE, false);
         }
 
-        String sourceId = track.getSource_id();
-        int sequence = track.getSequence_number();
+        String sourceId = track.getSourceId();
+        int sequence = track.getSequenceNumber();
         try {
             // Find the highest sequence saved for this source.
             int highest = trackService.getHighestSequence(sourceId);

@@ -4,7 +4,6 @@ import com.domain.Alert;
 import com.domain.Source;
 import com.repository.AlertRepository;
 import com.repository.SourceRepository;
-import com.repository.TrackRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -37,7 +36,7 @@ public class SourceHealthService {
         List<Source> listOfSources = sourceRepo.getAllSources();
         Map<String, Long> sourcesAndSequences = new HashMap<>();
         for(Source source : listOfSources)
-            sourcesAndSequences.put(source.getSource_id(), (long) source.getHighest_sequence());
+            sourcesAndSequences.put(source.getSourceId(), (long) source.getHighestSequence());
         return sourcesAndSequences;
     }
 
@@ -54,8 +53,8 @@ public class SourceHealthService {
         Source saved = sourceRepo.getSourceById(sourceId);
         SourceState state = new SourceState();
         if (saved != null) {
-            state.lastReceived = saved.getLast_seen();
-            state.status = saved.getSource_status() == null ? "NOT SEEN" : saved.getSource_status();
+            state.lastReceived = saved.getLastSeen();
+            state.status = saved.getSourceStatus() == null ? "NOT SEEN" : saved.getSourceStatus();
         }
 
         states.putIfAbsent(sourceId, state);
