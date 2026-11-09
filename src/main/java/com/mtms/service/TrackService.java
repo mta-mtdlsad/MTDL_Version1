@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class TrackService {
@@ -70,7 +68,7 @@ public class TrackService {
         return track_repo.getHighestSequence(sourceId);
     }
 
-    public List<Track> correlateTrack(Track selected_track) {
+    public List<Track> correlateTrack(Track selected_track, List<Track> search_pool) {
         String s1 = " != '" + selected_track.getSourceId() + "'";
         String s2 = " = '" + selected_track.getIdentityType() + "'";
         List<String> filter = Arrays.asList("source_id", "identity_type");
@@ -81,6 +79,9 @@ public class TrackService {
         double distance;
         long time;
         for (Track track : listOfTracks) {
+            if(search_pool != null) {
+                if(search_pool.isEmpty() || !search_pool.contains(track)) continue;
+            }
             if (Math.abs(selected_track.getSpeed() - track.getSpeed()) <= 100) {
                 time = Math.abs(Duration.between(selected_track.getCreatedTime(), track.getCreatedTime()).getSeconds());
                 if (time <= 30) {
@@ -117,6 +118,27 @@ public class TrackService {
         return EARTH_RADIUS_KM * c;
     }
 
+    public Map<Track, List<Track>> correlateTracks() {
+        List<String> filter = Arrays.asList("track_status");
+        List<String> filter_values = Arrays.asList(" = 'ACTIVE'");
+        List<Track> allActiveTracks = track_repo.searchAllTracks(filter, filter_values, null, null, null);
+        Map<Track, List<Track>> correlationMap = new HashMap<>();
+        List<Track> updatedActiveTracks = new ArrayList<>(allActiveTracks);
+        List<Track> listOfTracks;
+        for(Track track : allActiveTracks) {
+            if(!updatedActiveTracks.contains(track)) continue;
+            listOfTracks = correlateTrack(track, updatedActiveTracks);
+            if (!listOfTracks.isEmpty()) {
+                correlationMap.put(track, listOfTracks);
+                for(Track correlatedTrack : listOfTracks)
+                    updatedActiveTracks.remove(correlatedTrack);
+            }
+            updatedActiveTracks.remove(track);
+            if(updatedActiveTracks.isEmpty()) break;
+        }
+        return correlationMap;
+    }
+
     //printing out all tracks using track repo
     public List<Track> displayTracks() {
         List<Track> tracks = track_repo.getAllTracks();
@@ -131,8 +153,8 @@ public class TrackService {
         return track_repo.getTracksByNumber(trackNo);
     }
 
-    public List<Track> getAllTrackHistory(String track_number, String source_id){
-        return track_repo.getAllTrackHistory(track_number, source_id);
+    public List<Track> getAllTrackHistory(String trackNo, String source_id){
+        return track_repo.getAllTrackHistory(trackNo, source_id);
     }
 
 }
