@@ -116,4 +116,23 @@ public class TrackService {
         // Return final distance in kilometers
         return EARTH_RADIUS_KM * c;
     }
+
+    //printing out all tracks using track repo
+    public List<Track> displayTracks() {
+        List<Track> tracks = track_repo.getAllTracks();
+        if (tracks.isEmpty()) {
+            System.out.println("No Tracks found in the database");
+        }
+        System.out.println(tracks);
+        return tracks;
+    }
+
+    public List<Track> getTracksByNumber(String trackNo){
+        return track_repo.getTracksByNumber(trackNo);
+    }
+
+    public List<Track> getAllTrackHistory(String track_number, String source_id){
+        return track_repo.getAllTrackHistory(track_number, source_id);
+    }
+
 }

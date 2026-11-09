@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>EDGE | Other Forms</title>
+</head>
+<body>
+<div class="">
+    <h3>Correlation Form</h3>
+
+    <form method="get" action="tracks/correlation">
+        <label>Enter Source ID</label>
+        <input type="text" name="correlationSource" required><br><br>
+        <label>Enter Sequence Number</label>
+        <input type="text" name="correlationSequence" required><br><br>
+        <input type="hidden" name="purpose" value="correlation">
+        <input type="submit">
+    </form>
+
+    <h3>Simulation Form</h3>
+
+    <form method="get" action="tracks/simulation">
+        <label>Enter Simulation Mode: </label>
+        <select name="simulationMode">
+            <option value=1>Limited</option>
+            <option value=2>Continuous</option>
+        </select><br><br>
+        <label>Enter Simulation Scenario: </label>
+        <select name="simulationScenario">
+            <option value="NORMAL">Normal Traffic</option>
+            <option value="HOSTILE">Hostile Activity Traffic</option>
+            <option value="MIXED">Mixed Active/Inactive Traffic</option>
+        </select><br><br>
+        <label>Enter Number of Sources (3 to 20): </label>
+        <input type="number" name="numberOfSources" min="3" max="20" required><br><br>
+        <label>Enter Number of Tracks per Source (1 to 100): </label>
+        <input type="number" name="numberOfTracks" min="1" max="100" required><br><br>
+        <label>Enter Number of Total Observations: </label>
+        <input type="number" name="numberOfObservations" min="1" required><br><br>
+        <label>Enter Message Sending Rate per Second (1 to 1000): </label>
+        <input type="number" name="sendingRate" min="1"  max="1000" required><br><br>
+        <input type="hidden" name="purpose" value="simulation">
+        <input type="submit" value="Start Simulation">
+    </form>
+
+</div>
+
+</body>
+</html>

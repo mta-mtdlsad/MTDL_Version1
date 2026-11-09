@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Tracks by Track Number</title>
+</head>
+<body>
+
+<h1>Search Track Number</h1>
+
+<form action="/api/tracks/history" method="GET">
+    <label>Track Number:</label>
+    <input type="text" name="track_number" required>
+    <label>Source ID:</label>
+    <input type="text" name="source_id" required>
+    <input type="hidden" name="search" value="true">
+    <button type="submit">Search</button>
+</form>
+<p><a href="index.html">Return Home</a></p>
+</body>
+</html>

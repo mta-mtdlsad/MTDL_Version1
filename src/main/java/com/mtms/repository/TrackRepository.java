@@ -141,6 +141,18 @@ public class TrackRepository {
         return null;
     }
 
+    public List<Track> getAllTrackHistory(String track_number, String source_id) {
+        try {
+            List<String> filters  = Arrays.asList("track_number = ","source_id = ");
+            List<String> values  = Arrays.asList("'" + track_number + "'", "'" + source_id + "'");
+            List<String> sort = Arrays.asList("created_time");
+            return searchAllTracks(filters, values, sort, null, null);
+        }catch (Exception e) {
+            System.out.println("Unable to fetch all tracks");
+        }
+        return null;
+    }
+
     // SELECT all tracks where the identity_type is HOSTILE
     public List<Track> getAllHostileTracks() {
         try {

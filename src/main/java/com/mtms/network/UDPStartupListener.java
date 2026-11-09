@@ -53,9 +53,9 @@ public class UDPStartupListener implements ServletContextListener {
 //                Thread.currentThread().interrupt();
 //            }
 //        }
-        if(springContext !=null){
-            springContext.close();
-        }
+//        if(springContext !=null){
+//            springContext.close();
+//        }
         System.out.println("UDP Receiver stopped.");
     }
 }
