@@ -58,6 +58,7 @@ public class TrackController {
         return tracks.getAllTrackHistory(track_number, source_id);
     }
 
+
     @GetMapping(value = "/search", params = "!track_number")
     public ModelAndView showSearchForm(){
         return new ModelAndView("forward:/search-form.html");
@@ -176,4 +177,15 @@ public class TrackController {
 
         return null;
     }
+
+    @GetMapping(value = "/maintenance")
+    public ModelAndView showDeleteForm(){
+        return new ModelAndView("forward:/delete-form.html");
+    }
+
+    @PostMapping(value = "/maintenance")
+    public boolean deleteTrack(@RequestParam("track_number") String track_number){
+        return tracks.deleteTrack(track_number);
+    }
+
 }
