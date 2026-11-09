@@ -2,6 +2,8 @@ package com.mtms.repository;
 
 import com.mtms.domain.Alert;
 import com.mtms.util.DbConnection;
+import org.springframework.stereotype.Repository;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public class AlertRepository {
 
     private static Connection connection = DbConnection.getConnection();

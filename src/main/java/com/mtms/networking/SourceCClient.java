@@ -1,10 +1,13 @@
 package com.mtms.networking;
 
 import com.mtms.simulator.TrackSimulator;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.net.*;
 import java.util.List;
 
+@Component
 public class SourceCClient {
     static List<String> listOfTracks = null;
     public static void sendingDataToServer() {

@@ -3,10 +3,12 @@ package com.mtms.service;
 import com.mtms.domain.ReplaySpeed;
 import com.mtms.domain.Track;
 import com.mtms.repository.TrackRepository;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class ReplayService {
     private static List<Track> listOfTracks = null;
 

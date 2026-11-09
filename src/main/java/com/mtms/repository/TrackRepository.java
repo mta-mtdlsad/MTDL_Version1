@@ -2,11 +2,13 @@ package com.mtms.repository;
 
 import com.mtms.domain.Track;
 import com.mtms.util.DbConnection;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Repository
 public class TrackRepository {
     private static Connection connection = DbConnection.getConnection();
     private static PreparedStatement preparedStatement = null;
@@ -583,6 +585,71 @@ public class TrackRepository {
             e.printStackTrace();
             throw new RuntimeException(
                     "Error executing advanced filter query", e); //error handling
+        }
+    }
+
+    //Basic filter
+    public static List<Track> filterTracks(String identity, String status, Double minSpeed) {
+        try {
+            // building the sql query using builder
+            String sql = "SELECT * FROM tracks WHERE 1=1";
+
+            // storing parameter values in a list - to then run a loop on it
+            List<Object> parameters = new ArrayList<>();
+
+            if (identity != null && !identity.isEmpty()) {
+                sql += " AND identity_type = ?";
+                parameters.add(identity);
+            }
+
+            if (status != null && !status.isEmpty()) {
+                sql += " AND track_status = ?";
+                parameters.add(status);
+            }
+
+            if (minSpeed != null) {
+                sql += " AND speed >= ?";
+                parameters.add(minSpeed);
+            }
+
+            //prep sql query
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            // bind the values to the sql placeholders ?
+            for (int i = 0; i < parameters.size(); i++) {
+                ps.setObject(i + 1, parameters.get(i));
+            }
+
+            //execute the query
+            ResultSet resultSet = ps.executeQuery();
+
+            //store the matching tracks
+            List<Track> listOfTracks = new ArrayList<>();
+            while (resultSet.next()) {
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+
+            resultSet.close();
+            ps.close();
+
+            return listOfTracks;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(
+                    "Error executing basic filter query", e); //error handling
         }
     }
 }

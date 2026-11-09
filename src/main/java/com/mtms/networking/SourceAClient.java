@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.net.*;
 import java.util.List;
 import com.mtms.simulator.TrackSimulator;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SourceAClient {
     static List<String> listOfTracks = null;
 

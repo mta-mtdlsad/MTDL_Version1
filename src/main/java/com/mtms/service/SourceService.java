@@ -5,10 +5,13 @@ import com.mtms.domain.Alert;
 import com.mtms.domain.Track;
 import com.mtms.repository.SourceRepository;
 import com.mtms.repository.AlertRepository;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.time.Duration;
 import java.util.List;
 
+@Service
 public class SourceService {
 
     // Main method to process incoming tracking data

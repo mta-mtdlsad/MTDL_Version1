@@ -3,6 +3,8 @@ package com.mtms.repository;
 import com.mtms.domain.Source;
 import com.mtms.domain.Alert;
 import com.mtms.util.DbConnection;
+import org.springframework.stereotype.Repository;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,7 +14,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Repository
 public class SourceRepository {
 
     private static Connection connection = DbConnection.getConnection();

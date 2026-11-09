@@ -1,25 +1,20 @@
 
 package com.mtms.main;
 
-import com.mtms.domain.ReplaySpeed;
-import com.mtms.domain.Track;
 import com.mtms.networking.Server;
 import com.mtms.networking.SourceAClient;
 import com.mtms.networking.SourceBClient;
 import com.mtms.networking.SourceCClient;
 import com.mtms.service.*;
-import com.mtms.simulator.TrackSimulator;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import static java.lang.Thread.sleep;
 
-
+@SpringBootApplication(scanBasePackages = "com.mtms")
 public class MTMSApplication {
     public static void main(String[] args) throws InterruptedException {
+        SpringApplication.run(MTMSApplication.class, args);
 
         Thread serverThread = new Thread(Server::recevingDataFromClient);
         serverThread.start();
@@ -33,14 +28,14 @@ public class MTMSApplication {
         Thread clientCThread = new Thread(SourceCClient::sendingDataToServer);
         clientCThread.start();
 
-        // waiting for tracks to be processed and saved
-        sleep(1000);
-
-        // generating processing counters
-        TrackService.processingCounter();
-
-        // generate matching tracks
-        TrackService.getCorrelatedTracks();
+//        // waiting for tracks to be processed and saved
+//        sleep(1000);
+//
+//        // generating processing counters
+//        TrackService.processingCounter();
+//
+//        // generate matching tracks
+//        TrackService.getCorrelatedTracks();
 
 
 //        //APPLICATION STARTS HERE

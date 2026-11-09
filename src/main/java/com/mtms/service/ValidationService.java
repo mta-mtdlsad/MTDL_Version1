@@ -1,11 +1,13 @@
 package com.mtms.service;
 
 import com.mtms.domain.Track;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ValidationService {
 
     public static List<String> parseTrackString(String trackString) {

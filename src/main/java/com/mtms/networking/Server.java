@@ -5,7 +5,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import com.mtms.service.TrackService;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Server {
     public static void recevingDataFromClient()  {
 

@@ -10,7 +10,15 @@
 
 <h3> Search History of a Track </h3>
 <br>
-<form action="tracks/history" method="get">
+<form action="api/tracks/history" method="get">
+
+  <label>Enter Source Id:
+    <input type="text"
+           name="sourceId"
+           placeholder="Enter Source Id: "
+    />
+
+  </label><br><br>
 
   <label>Enter Track Number:
     <input type="text"
@@ -21,12 +29,6 @@
   </label><br><br>
 
   <button type="submit">Get Track History</button>
-
-
-  <br><br>
-
-
-  <a href="index.html">Return Home</a>
 
 </form>
 </body>
