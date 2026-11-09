@@ -1,4 +1,5 @@
 package com.mtms.controller;
+import com.mtms.model.FilterParameters;
 import com.mtms.model.Track;
 import com.mtms.service.TrackService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +17,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/tracks")
 public class TrackController {
-
 
     @Autowired
     private TrackService tracks;
@@ -81,24 +81,7 @@ public class TrackController {
 
 
     @GetMapping("/filter")
-    public List<Track> filterTracks(@RequestParam("observationType") String observationType,
-                                    @RequestParam("startTime") String startTime,
-                                    @RequestParam("endTime") String endTime,
-                                    @RequestParam("timeSort") String timeSort,
-                                    @RequestParam("timeSortDirection") String timeSortDirection,
-                                    @RequestParam("speedSort") String speedSort,
-                                    @RequestParam("speedSortDirection") String speedSortDirection,
-                                    @RequestParam("trackNumberSort") String trackNumberSort,
-                                    @RequestParam("trackNumberSortDirection") String trackNumberSortDirection,
-                                    HttpServletRequest request) {
-        Map<String, String> filterParameters = Map.of(
-                "sourceId", "source_id = ",
-                "trackNumber", "track_number = ",
-                "identity", "identity_type = ",
-                "status", "track_status = ",
-                "minSpeed", "speed >= ",
-                "maxSpeed", "speed <= ");
-
+    public List<Track> filterTracks(@ModelAttribute FilterParameters filterParams) {
         List<String> filters = new ArrayList<>();
         List<String> filter_values = new ArrayList<>();
         List<String> sort = new ArrayList<>();
@@ -107,18 +90,33 @@ public class TrackController {
         LocalDateTime end_time = null;
 
         try {
-            for (Map.Entry<String, String> entry : filterParameters.entrySet()) {
-                input_value = request.getParameter(entry.getKey());
-                if (!input_value.isEmpty()) {
-                    filters.add(entry.getValue());
-                    if (!entry.getKey().equals("minSpeed") && !entry.getKey().equals("maxSpeed"))
-                        input_value = "'" + input_value + "'";
-                    filter_values.add(input_value);
-                }
+            if(!filterParams.getSourceId().equals("")) {
+                filters.add("sourceId = ");
+                filter_values.add("'" + filterParams.getSourceId() + "'");
+            }
+            if(!filterParams.getTrackNumber().equals("")) {
+                filters.add("trackNumber = ");
+                filter_values.add("'" + filterParams.getTrackNumber() + "'");
+            }
+            if(!filterParams.getIdentity().equals("")) {
+                filters.add("identity = ");
+                filter_values.add("'" + filterParams.getIdentity() + "'");
+            }
+            if(!filterParams.getStatus().equals("")) {
+                filters.add("status = ");
+                filter_values.add("'" + filterParams.getStatus() + "'");
+            }
+            if(!filterParams.getMinSpeed().equals("")) {
+                filters.add("speed >= ");
+                filter_values.add(filterParams.getMinSpeed() + "'");
+            }
+            if(!filterParams.getMaxSpeed().equals("")) {
+                filters.add("speed <= ");
+                filter_values.add(filterParams.getMaxSpeed() + "'");
             }
 
-            input_value = observationType;
-            if (!input_value.isEmpty()) {
+            input_value = filterParams.getObservationType();
+            if (!input_value.equals("")) {
                 if (input_value.equals("current")) {
                     start_time = LocalDateTime.now().minusMinutes(5);
                     filters.add("created_time");
@@ -132,36 +130,36 @@ public class TrackController {
                     filter_values.add(" <= ?");
                 }
             } else {
-                input_value = startTime;
-                if (input_value != null && !input_value.isBlank()) {
+                input_value = filterParams.getStartTime();
+                if (input_value != null && !input_value.equals("")) {
                     start_time = LocalDateTime.parse(input_value);
                     filters.add("created_time");
                     filter_values.add(" >= ?");
                 }
-                input_value = endTime;
-                if (input_value != null && !input_value.isBlank()) {
+                input_value = filterParams.getEndTime();
+                if (input_value != null && !input_value.equals("")) {
                     end_time = LocalDateTime.parse(input_value);
                     filters.add("created_time");
                     filter_values.add(" <= ?");
                 }
             }
 
-            if (timeSort != null) {
-                if (timeSortDirection.equals("DESC"))
+            if (!filterParams.getTimeSort().equals("")) {
+                if (filterParams.getTimeSortDirection().equals("DESC"))
                     sort.add("created_time DESC");
                 else
                     sort.add("created_time");
             }
 
-            if (speedSort != null) {
-                if (speedSortDirection.equals("DESC"))
+            if (!filterParams.getSpeedSort().equals("")) {
+                if (filterParams.getSpeedSortDirection().equals("DESC"))
                     sort.add("speed DESC");
                 else
                     sort.add("speed");
             }
 
-            if (trackNumberSort != null) {
-                if (trackNumberSortDirection.equals("DESC"))
+            if (!filterParams.getTrackNumber().equals("")) {
+                if (filterParams.getTrackNumberSortDirection().equals("DESC"))
                     sort.add("track_number DESC");
                 else
                     sort.add("track_number");
