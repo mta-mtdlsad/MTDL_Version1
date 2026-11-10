@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MTMS - All Tracks</title>
+</head>
+<body>
+<h1>MTMS - All Tracks</h1>
+<table border="1" id="tracksTable">
+    <thead>
+    <tr>
+        <th>Track ID</th>
+        <th>Source ID</th>
+        <th>Sequnence Number</th>
+        <th>Track Number</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Speed</th>
+        <th>Identity Type</th>
+        <th>Track Status</th>
+        <th>Created Time</th>
+        <th>Recieved Time</th>
+    </tr>
+    </thead>
+    <tbody id="tracksBody"></tbody>
+</table>
+<script>
+    fetch('/api/tracks/list')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to retrieve tracks");
+            }
+            return response.json();
+        })
+        .then(tracks => {
+            const tableBody = document.getElementById("tracksBody");
+            tracks.forEach(track => {
+                const row = document.createElement("tr");
+                const values = [
+                    track.trackId,
+                    track.sourceId,
+                    track.sequenceNumber,
+                    track.trackNumber,
+                    track.latitude,
+                    track.longitude,
+                    track.speed,
+                    track.identityType,
+                    track.trackStatus,
+                    track.createdTime,
+                    track.recievedTime
+                ];
+                values.forEach(value => {
+                    const cell = document.createElement("td");
+                    cell.textContent = value ?? "";
+                    row.appendChild(cell);
+                });
+                tableBody.appendChild(row);
+            });
+        }).catch(error => {
+            console.error(error);
+            alert("Unable to load tracks");
+        });
+</script>
+</body>
+</html>
