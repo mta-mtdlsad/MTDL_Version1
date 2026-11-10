@@ -91,28 +91,28 @@ public class TrackController {
 
         try {
             if(!filterParams.getSourceId().equals("")) {
-                filters.add("sourceId = ");
+                filters.add("source_id = ");
                 filter_values.add("'" + filterParams.getSourceId() + "'");
             }
             if(!filterParams.getTrackNumber().equals("")) {
-                filters.add("trackNumber = ");
+                filters.add("track_number = ");
                 filter_values.add("'" + filterParams.getTrackNumber() + "'");
             }
             if(!filterParams.getIdentity().equals("")) {
-                filters.add("identity = ");
+                filters.add("identity_type = ");
                 filter_values.add("'" + filterParams.getIdentity() + "'");
             }
             if(!filterParams.getStatus().equals("")) {
-                filters.add("status = ");
+                filters.add("track_status = ");
                 filter_values.add("'" + filterParams.getStatus() + "'");
             }
             if(!filterParams.getMinSpeed().equals("")) {
                 filters.add("speed >= ");
-                filter_values.add(filterParams.getMinSpeed() + "'");
+                filter_values.add(filterParams.getMinSpeed());
             }
             if(!filterParams.getMaxSpeed().equals("")) {
                 filters.add("speed <= ");
-                filter_values.add(filterParams.getMaxSpeed() + "'");
+                filter_values.add(filterParams.getMaxSpeed());
             }
 
             input_value = filterParams.getObservationType();
@@ -144,21 +144,21 @@ public class TrackController {
                 }
             }
 
-            if (!filterParams.getTimeSort().equals("")) {
+            if (filterParams.getTimeSort() != null && !filterParams.getTimeSort().equals("")) {
                 if (filterParams.getTimeSortDirection().equals("DESC"))
                     sort.add("created_time DESC");
                 else
                     sort.add("created_time");
             }
 
-            if (!filterParams.getSpeedSort().equals("")) {
+            if (filterParams.getSpeedSort() != null && !filterParams.getSpeedSort().equals("")) {
                 if (filterParams.getSpeedSortDirection().equals("DESC"))
                     sort.add("speed DESC");
                 else
                     sort.add("speed");
             }
 
-            if (!filterParams.getTrackNumber().equals("")) {
+            if (filterParams.getTrackNumber() != null && !filterParams.getTrackNumber().equals("")) {
                 if (filterParams.getTrackNumberSortDirection().equals("DESC"))
                     sort.add("track_number DESC");
                 else
