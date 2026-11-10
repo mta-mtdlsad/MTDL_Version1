@@ -1,0 +1,3919 @@
+Code Ownership : scrumTeamB
+
+========================================= Muhra =========================================
+
+****DOMAIN CLASSES****
+=======================Alert.java=======================
+package com.mtms.domain;
+
+
+import java.time.LocalDateTime;
+
+public class Alert {
+    //Attributes
+    private int alertId;
+    private String trackNumber;
+    private String alertMessage;
+    private String alertSeverity;
+    private LocalDateTime alertTime;
+    private String sourceId;
+    private String eventType;
+
+    // Constructor with alertId object
+    public Alert(int alertId, String trackNumber, String alertMessage, String alertSeverity, LocalDateTime alertTime, String sourceId, String eventType) {
+        this.alertId = alertId;
+        this.trackNumber = trackNumber;
+        this.alertMessage = alertMessage;
+        this.alertSeverity = alertSeverity;
+        this.alertTime = alertTime;
+        this.sourceId = sourceId;
+        this.eventType = eventType;
+    }
+
+    // Constructor without alertId object
+    public Alert(String trackNumber, String alertMessage, String alertSeverity, LocalDateTime alertTime, String sourceId, String eventType) {
+        this.trackNumber = trackNumber;
+        this.alertMessage = alertMessage;
+        this.alertSeverity = alertSeverity;
+        this.alertTime = alertTime;
+        this.sourceId = sourceId;
+        this.eventType = eventType;
+    }
+
+    // Getters
+    public int getAlertId() {
+        return alertId;
+    }
+    public String getTrackNumber() {
+        return trackNumber;
+    }
+    public String getAlertMessage() {
+        return alertMessage;
+    }
+    public String getAlertSeverity() {
+        return alertSeverity;
+    }
+    public LocalDateTime getAlertTime() {
+        return alertTime;
+    }
+    public String getEventType() {return eventType;}
+    public String getSourceId() {return sourceId;}
+
+    @Override
+    public String toString() {
+        return "Alert{" +
+                "alertId=" + alertId +
+                ", trackNumber='" + trackNumber + '\'' +
+                ", alertMessage='" + alertMessage + '\'' +
+                ", alertSeverity='" + alertSeverity + '\'' +
+                ", alertTime=" + alertTime +
+                ", sourceId='" + sourceId + '\'' +
+                ", eventType='" + eventType + '\'' +
+                '}';
+    }
+}
+
+=======================Source.java=======================
+package com.mtms.domain;
+
+import java.time.LocalDateTime;
+
+public class Source {
+    //Attributes
+    private String sourceId;
+    private LocalDateTime firstSeenAt;
+    private LocalDateTime lastReceivedAt;
+    private long latestSequence;
+    private String sourceStatus;
+
+    //Constructor
+    public Source(String sourceId, LocalDateTime firstSeenAt, LocalDateTime lastReceivedAt, long latestSequence, String sourceStatus) {
+        this.sourceId = sourceId;
+        this.firstSeenAt = firstSeenAt;
+        this.lastReceivedAt = lastReceivedAt;
+        this.latestSequence = latestSequence;
+        this.sourceStatus = sourceStatus;
+    }
+
+    //getter
+    public String getSourceId() {return sourceId;}
+    public LocalDateTime getFirstSeenAt() {return firstSeenAt;}
+    public LocalDateTime getLastReceivedAt() {return lastReceivedAt;}
+    public long getLatestSequence() {return latestSequence;}
+    public String getSourceStatus() {return sourceStatus;}
+
+    //setter
+    public void setSourceStatus(String sourceStatus) {
+        this.sourceStatus = sourceStatus;
+    }
+
+    //toString
+    @Override
+    public String toString() {
+        return "Source{" +
+                "sourceId='" + sourceId + '\'' +
+                ", firstSeenAt=" + firstSeenAt +
+                ", lastReceivedAt=" + lastReceivedAt +
+                ", latestSequence=" + latestSequence +
+                ", sourceStatus='" + sourceStatus + '\'' +
+                '}';
+    }
+}
+
+=======================Track.java=======================
+package com.mtms.domain;
+
+import java.time.LocalDateTime;
+
+public class Track {
+    //Attributes
+    private int trackId;
+    private String trackNumber;
+    private double latitude;
+    private double longitude;
+    private double speed;
+    private String identity;
+    private String trackStatus;
+    private String sourceId;
+    private int sequenceNumber;
+    private LocalDateTime observationTime;
+    private LocalDateTime receivedTime;
+
+    // Constructor with trackId object
+    public Track(int trackId, String trackNumber, double latitude, double longitude,
+                 double speed, String identity, String trackStatus, String sourceId, int sequenceNumber,
+                 LocalDateTime observationTime,  LocalDateTime receivedTime) {
+        this.trackId = trackId;
+        this.trackNumber = trackNumber;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.speed = speed;
+        this.identity = identity;
+        this.trackStatus = trackStatus;
+        this.sourceId = sourceId;
+        this.sequenceNumber = sequenceNumber;
+        this.observationTime = observationTime;
+        this.receivedTime = receivedTime;
+    }
+
+    // Constructor without trackId object
+    public Track(String trackNumber, double latitude, double longitude,
+                 double speed, String identity, String trackStatus, String sourceId, int sequenceNumber,
+                 LocalDateTime observationTime,  LocalDateTime receivedTime) {
+        this.trackNumber = trackNumber;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.speed = speed;
+        this.identity = identity;
+        this.trackStatus = trackStatus;
+        this.sourceId = sourceId;
+        this.sequenceNumber = sequenceNumber;
+        this.observationTime = observationTime;
+        this.receivedTime = receivedTime;
+    }
+
+    // Getters
+    public int getTrackId() {
+        return trackId;
+    }
+    public String getTrackNumber() {
+        return trackNumber;
+    }
+    public double getLatitude() {
+        return latitude;
+    }
+    public double getLongitude() {
+        return longitude;
+    }
+    public double getSpeed() {
+        return speed;
+    }
+    public String getIdentity() {
+        return identity;
+    }
+    public String getTrackStatus() {
+        return trackStatus;
+    }
+    public String getSourceId() {return sourceId;}
+    public int getSequenceNumber() {return sequenceNumber;}
+    public LocalDateTime getObservationTime() {return observationTime;}
+    public LocalDateTime getReceivedTime() {return receivedTime;}
+
+    @Override
+    public String toString() {
+        return "Track{" +
+                "trackId=" + trackId +
+                ", trackNumber='" + trackNumber + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", speed=" + speed +
+                ", identity='" + identity + '\'' +
+                ", trackStatus='" + trackStatus + '\'' +
+                ", sourceId='" + sourceId + '\'' +
+                ", sequenceNumber=" + sequenceNumber +
+                ", observationTime=" + observationTime +
+                ", receivedTime=" + receivedTime +
+                '}';
+    }
+}
+====================================================================================================================================================================
+****REPOSITORY CLASSES****
+=======================AlertRepository.java=======================
+package com.mtms.repository;
+
+import com.mtms.domain.Alert;
+import com.mtms.util.DbConnection;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+public class AlertRepository {
+
+    private static Connection connection = DbConnection.getConnection();
+    private static PreparedStatement preparedStatement = null;
+    private static List<Alert> listOfAlerts = null;
+
+
+    // Insert an alert into the database
+    public static void addAlert(Alert alert) {
+        try {
+            preparedStatement = connection.prepareStatement("INSERT INTO ALERTS " + "(track_number, alert_message, alert_severity, alert_time, source_id, event_type) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)");
+
+            preparedStatement.setString(1, alert.getTrackNumber());
+            preparedStatement.setString(2, alert.getAlertMessage());
+            preparedStatement.setString(3, alert.getAlertSeverity());
+            preparedStatement.setTimestamp(4, Timestamp.valueOf(alert.getAlertTime()));
+            preparedStatement.setString(5, alert.getSourceId());
+            preparedStatement.setString(6, alert.getEventType());
+            preparedStatement.executeUpdate();
+            System.out.println("Alert added successfully");
+        } catch (Exception e) {
+            System.out.println("Alert details not inserted: " + e);
+            e.printStackTrace();
+        }
+    }
+
+
+    // Insert an alert using an existing database transaction
+    public static void addAlert(Connection transactionConnection, Alert alert) throws SQLException {
+
+        PreparedStatement alertStatement = transactionConnection.prepareStatement("INSERT INTO ALERTS " + "(track_number, alert_message, alert_severity, alert_time, source_id, event_type) " +
+                "VALUES (?, ?, ?, ?, ?, ?)");
+        try {
+            alertStatement.setString(1, alert.getTrackNumber());
+            alertStatement.setString(2, alert.getAlertMessage());
+            alertStatement.setString(3, alert.getAlertSeverity());
+            alertStatement.setTimestamp(4, Timestamp.valueOf(alert.getAlertTime()));
+            alertStatement.setString(5, alert.getSourceId());
+            alertStatement.setString(6, alert.getEventType());
+            alertStatement.executeUpdate();
+            System.out.println("Alert added successfully");
+        } finally {
+            alertStatement.close();
+        }
+    }
+
+    // Retrieve all alerts
+    public static List<Alert> getAllAlerts() {
+        try {
+            preparedStatement = connection.prepareStatement("SELECT * FROM ALERTS");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            listOfAlerts = new ArrayList<Alert>();
+            while (resultSet.next()) {
+                listOfAlerts.add(
+                        new Alert(
+                                resultSet.getInt("alert_id"),
+                                resultSet.getString("track_number"),
+                                resultSet.getString("alert_message"),
+                                resultSet.getString("alert_severity"),
+                                resultSet.getTimestamp("alert_time").toLocalDateTime(),
+                                resultSet.getString("source_id"),
+                                resultSet.getString("event_type")
+                        ));
+            }
+
+            if (!listOfAlerts.isEmpty())
+                return listOfAlerts;
+        } catch (Exception exy) {
+            System.out.println("Unable to fetch all alerts");
+            exy.printStackTrace();
+        }
+        return null;
+    }
+
+
+    // Select to count alerts by severity
+    public Map<String, Integer> getAlertSeverity() {
+        Map<String, Integer> severitiesCount = new LinkedHashMap<>();
+        try {
+            preparedStatement = connection.prepareStatement("SELECT alert_severity, COUNT(*) FROM ALERTS GROUP BY alert_severity");
+            ResultSet resultSetAlert = preparedStatement.executeQuery();
+            while (resultSetAlert.next()) {
+                String alertSeverity = resultSetAlert.getString(1);
+                Integer severityCount = resultSetAlert.getInt(2);
+                severitiesCount.put(alertSeverity, severityCount);
+            }
+        } catch (Exception exs) {
+            System.out.println("Unable to fetch alert severity details");
+            exs.printStackTrace();
+        }
+        return severitiesCount;
+    }
+}
+
+=======================SourceRepository.java=======================
+package com.mtms.repository;
+
+import com.mtms.domain.Source;
+import com.mtms.domain.Alert;
+import com.mtms.util.DbConnection;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class SourceRepository {
+
+    private static Connection connection = DbConnection.getConnection();
+    private static PreparedStatement preparedStatement = null;
+    private static List<Source> listOfSources = null;
+
+    // Register a new source
+    public static void registerSource(Source source) {
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "INSERT INTO SOURCE " +
+                    "(source_id, first_seen_at, last_received_at, latest_sequence, source_status) "
+                    + "VALUES (?, ?, ?, ?, ?) ON CONFLICT (source_id) DO NOTHING");
+            preparedStatement.setString(1, source.getSourceId());
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(source.getFirstSeenAt()));
+            // last_received_at by default is null, that's why we use if statement
+            if (source.getLastReceivedAt() != null) {
+                preparedStatement.setTimestamp(3, Timestamp.valueOf(source.getLastReceivedAt()));
+            } else {
+                preparedStatement.setTimestamp(3, null);
+            }
+            preparedStatement.setLong(4, source.getLatestSequence());
+            preparedStatement.setString(5, source.getSourceStatus());
+            preparedStatement.executeUpdate();
+            System.out.println("Source registered successfully");
+        } catch (Exception e) {
+            System.out.println("Source details not inserted: " + e);
+            e.printStackTrace();
+        }
+    }
+
+    // Retrieve all registered sources
+    public static List<Source> getAllSources() {
+        try {
+            preparedStatement = connection.prepareStatement("SELECT * FROM SOURCE");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            listOfSources = new ArrayList<Source>();
+
+            while (resultSet.next()) {
+                Timestamp lastReceived = resultSet.getTimestamp("last_received_at");
+                listOfSources.add(new Source(
+                        resultSet.getString("source_id"),
+                        resultSet.getTimestamp("first_seen_at").toLocalDateTime(), lastReceived != null ? lastReceived.toLocalDateTime() : null,
+                        resultSet.getLong("latest_sequence"),
+                        resultSet.getString("source_status")));
+            }
+            if (!listOfSources.isEmpty())
+                return listOfSources;
+        } catch (Exception exy) {
+            System.out.println("Unable to fetch all sources");
+            exy.printStackTrace();
+        }
+        return null;
+    }
+
+    // Retrieve a source using its ID
+    public static Source getSourceById(String sourceId) {
+        try {
+            preparedStatement = connection.prepareStatement("SELECT * FROM SOURCE WHERE source_id = ?");
+            preparedStatement.setString(1, sourceId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                Timestamp lastReceived = resultSet.getTimestamp("last_received_at");
+                return new Source(
+                        resultSet.getString("source_id"),
+                        resultSet.getTimestamp("first_seen_at").toLocalDateTime(), lastReceived != null ? lastReceived.toLocalDateTime() : null,
+                        resultSet.getLong("latest_sequence"),
+                        resultSet.getString("source_status"));
+            }
+        } catch (Exception e) {
+            System.out.println("Unable to retrieve source: " + e);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Update the last received time
+    public static void updateLastReceivedTime(String sourceId, LocalDateTime receivedTime) {
+        try {
+            preparedStatement = connection.prepareStatement("UPDATE SOURCE SET last_received_at = ?, source_status = 'ACTIVE' " + "WHERE source_id = ?");
+            preparedStatement.setTimestamp(1, Timestamp.valueOf(receivedTime));
+            preparedStatement.setString(2, sourceId);
+            preparedStatement.executeUpdate();
+            System.out.println("Source receive time updated successfully");
+        } catch (Exception e) {
+            System.out.println("Unable to update receive time: " + e);
+            e.printStackTrace();
+        }
+    }
+
+    // Update sequence number only if it is greater than the latest sequence
+    public static boolean updateLatestSequenceIfValid(String sourceId, long sequenceNumber) {
+        try {
+            preparedStatement = connection.prepareStatement("UPDATE SOURCE SET latest_sequence = ? " + "WHERE source_id = ? AND latest_sequence < ?");
+            preparedStatement.setLong(1, sequenceNumber);
+            preparedStatement.setString(2, sourceId);
+            preparedStatement.setLong(3, sequenceNumber);
+            int rowsUpdated = preparedStatement.executeUpdate();
+            return rowsUpdated == 1;
+        } catch (Exception e) {
+            System.out.println("Unable to update sequence number: " + e);
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Calculate source status using the latest receive time
+    private static String calculateStatus(LocalDateTime lastReceived, LocalDateTime checkTime) {
+        if (lastReceived == null) {
+            return "NOT SEEN";
+        }
+        Duration timeDifference = Duration.between(lastReceived, checkTime);
+        if (timeDifference.compareTo(Duration.ofSeconds(15)) <= 0) {
+            return "ACTIVE";
+        } else if (timeDifference.compareTo(Duration.ofSeconds(60)) <= 0) {
+            return "STALE";
+        } else {
+            return "DISCONNECTED";
+        }
+    }
+
+    // Update source status and insert its alert in one transaction
+    public static boolean updateSourceStatus(String sourceId, String oldStatus, String newStatus, LocalDateTime checkTime, Alert alert) {
+        try {
+            // Disable auto-commit to start a database transaction
+            // This allows the source status update and alert insertion to be saved together
+            connection.setAutoCommit(false);
+            // Retrieve the last received time and current status of the source
+            // FOR UPDATE locks the selected row to prevent simultaneous status changes
+            preparedStatement = connection.prepareStatement("SELECT last_received_at, source_status FROM SOURCE WHERE source_id = ? FOR UPDATE");
+            preparedStatement.setString(1, sourceId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            // Check whether the source exists in the database
+            // If it does not exist, close resources, cancel the transaction and return false
+            if (!resultSet.next()) {
+                resultSet.close();
+                preparedStatement.close();
+                connection.rollback();
+                return false;
+            }
+            // Retrieve the last received time and current source status
+            Timestamp timestamp = resultSet.getTimestamp("last_received_at");
+            String currentStatus = resultSet.getString("source_status");
+            // Convert the last received time into LocalDateTime
+            // If it is NULL, the source has never received a message
+            LocalDateTime lastReceived = null;
+            if (timestamp != null) {
+                lastReceived = timestamp.toLocalDateTime();
+            }
+            resultSet.close();
+            preparedStatement.close();
+            // Check whether the current database status matches the old status
+            // If another operation has already changed the status, cancel the transaction
+            if (currentStatus == null || !currentStatus.equals(oldStatus)) {
+                connection.rollback();
+                return false;
+            }
+            // Recalculate the source status using its latest receive time
+            // This ensures that the new status is still correct
+            String actualStatus = calculateStatus(lastReceived, checkTime);
+            // Check whether the calculated status matches the expected new status
+            // If they are different, cancel the transaction
+            if (!actualStatus.equals(newStatus)) {
+                connection.rollback();
+                return false;
+            }
+            // Update the source status in the SOURCE table
+            preparedStatement = connection.prepareStatement("UPDATE SOURCE SET source_status = ? WHERE source_id = ?");
+            preparedStatement.setString(1, newStatus);
+            preparedStatement.setString(2, sourceId);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            // Insert an alert if one was provided
+            // The alert uses the same database transaction as the source update
+            // alert only when the source changes to STALE or DISCONNECTED
+            if (alert != null &&
+                    (newStatus.equals("STALE") || newStatus.equals("DISCONNECTED")) &&
+                    !oldStatus.equals(newStatus)) {
+
+                AlertRepository.addAlert(connection, alert);
+            }
+            // Commit the transaction
+            // Save the source status update and alert insertion together
+            connection.commit();
+            System.out.println("Source status updated successfully");
+            return true;
+        } catch (Exception e) {
+            // If an error occurs, cancel all uncommitted database changes
+            try {
+                connection.rollback();
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
+            System.out.println("Unable to update source status");
+            return false;
+        }
+    }
+}
+
+====================================================================================================================================================================
+****SERVICE CLASSES****
+=======================AlertAnalyticsService.java=======================
+package com.mtms.service;
+
+import com.mtms.repository.AlertRepository;
+import java.util.Map;
+
+public class AlertAnalyticsService {
+    static AlertRepository alertRepository = new AlertRepository();
+
+    //retrieve the total number of alerts for each severity
+    public Map<String, Integer> getSeveritySummary() {
+        return alertRepository.getAlertSeverity();
+    }
+}
+
+=======================AlertService.java=======================
+package com.mtms.service;
+
+import com.mtms.domain.Alert;
+import com.mtms.repository.AlertRepository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Locale;
+
+public class AlertService {
+
+    static AlertRepository alertRepository = new AlertRepository();
+
+
+    // Process alert and save in repository
+    public static void processAlert(String sourceId, String trackNumber, String alertMessage, String eventType) {
+
+        // processes short track number
+        if (alertMessage.contains("short"))
+            trackNumber = "INVALID(" + trackNumber + ")";
+
+        // create alert object and save to repository
+        createAlertObject(
+                trackNumber,
+                alertMessage,
+                chooseSeverity(eventType), // assigning severity base on event type
+                sourceId,
+                eventType);
+
+    }
+
+    // Choose severity based on track event
+    private static String chooseSeverity(String eventType) {
+        return switch (eventType) {
+            case "Malformed message", "Source becomes disconnected"  -> "HIGH";
+            case "Track validation failure", "Source becomes stale" -> "MEDIUM";
+            case "Duplicate message", "Out-of-order message" -> "LOW";
+            default -> null;
+        };
+    }
+
+    // Create the Alert object and send the alert to AlertRepository
+    public static void createAlertObject(String trackNumber, String alertMessage, String severity, String sourceId, String eventType){
+        Alert alert = new Alert(
+                trackNumber,
+                alertMessage,
+                severity,
+                LocalDateTime.now(),
+                sourceId,
+                eventType
+        );
+        AlertRepository.addAlert(alert);
+    }
+
+    // Retrieve all alerts
+    public static List<Alert> getAllAlerts() {
+        List <Alert> listOfAlerts = alertRepository.getAllAlerts();
+//        System.out.println("\nRetrieving all alerts: ");
+//        if (listOfAlerts != null)
+//            for (Alert alert : listOfAlerts) {
+//                System.out.println(alert);
+//            }
+//        else
+//            System.out.println("No available alerts");
+        return listOfAlerts;
+    }
+}
+
+
+=======================SourceService.java=======================
+package com.mtms.service;
+
+import com.mtms.domain.Source;
+import com.mtms.domain.Alert;
+import com.mtms.domain.Track;
+import com.mtms.repository.SourceRepository;
+import com.mtms.repository.AlertRepository;
+import java.time.LocalDateTime;
+import java.time.Duration;
+import java.util.List;
+
+public class SourceService {
+
+    // Main method to process incoming tracking data
+    public static void processSources(Track track) {
+        if (track == null) {
+            System.out.println("Track data is null");
+            return;
+        }
+
+        // Extract source information from Track
+        String sourceId = track.getSourceId();
+        long sequenceNumber = track.getSequenceNumber();
+        String trackNumber = track.getTrackNumber();
+
+        // Process the received message
+        boolean received = receiveMessage(sourceId, sequenceNumber);
+        if (!received) {
+            System.out.println("Unable to process message from: " + sourceId);
+        }
+        // Check the health of all registered sources
+        checkSourceHealth(trackNumber);
+    }
+
+    // Register a new source
+    public static void registerSource(String sourceId) {
+        Source existingSource = SourceRepository.getSourceById(sourceId);
+        if (existingSource == null) {
+            Source source = new Source(sourceId, LocalDateTime.now(), null, 0, "NOT SEEN");
+            SourceRepository.registerSource(source);
+            System.out.println("New source registered: " + sourceId);
+        } else {
+            System.out.println("Source already registered: " + sourceId);
+        }
+    }
+
+    // Handle a received message from a source
+    public static boolean receiveMessage(String sourceId, long sequenceNumber) {
+        LocalDateTime receivedTime = LocalDateTime.now();
+        Source source = SourceRepository.getSourceById(sourceId);
+
+        // Automatically register new sources
+        if (source == null) {
+            registerSource(sourceId);
+            source = SourceRepository.getSourceById(sourceId);
+            if (source == null) {
+                System.out.println("Unable to register source");
+                return false;
+            }
+        }
+
+        // Validate sequence number before updating receive time
+        if (sequenceNumber <= 0) {
+            System.out.println("Invalid sequence number from: " + sourceId);
+            return false;
+        }
+
+        // Update sequence number atomically
+        boolean sequenceUpdated =
+                SourceRepository.updateLatestSequenceIfValid(sourceId, sequenceNumber);
+
+        if (!sequenceUpdated) {
+            System.out.println("Duplicate or out-of-order message from: " + sourceId);
+            return false;
+        }
+
+        // Update receive time after successful validation
+        SourceRepository.updateLastReceivedTime(sourceId, receivedTime);
+        System.out.println("Message received successfully from: " + sourceId);
+        return true;
+    }
+
+    // Calculate source health status
+    private static String calculateSourceStatus(Source source, LocalDateTime checkTime) {
+        if (source.getLastReceivedAt() == null) {
+            return "NOT SEEN";
+        }
+
+        Duration timeDifference = Duration.between(source.getLastReceivedAt(), checkTime);
+        if (timeDifference.compareTo(Duration.ofSeconds(15)) <= 0) {
+            return "ACTIVE";
+        } else if (timeDifference.compareTo(Duration.ofSeconds(60)) <= 0) {
+            return "STALE";
+        } else {
+            return "DISCONNECTED";
+        }
+    }
+
+    // Check health of all registered sources
+    public static void checkSourceHealth(String trackNumber) {
+        List<Source> sources = SourceRepository.getAllSources();
+        if (sources == null || sources.isEmpty()) {
+            return;
+        }
+        LocalDateTime checkTime = LocalDateTime.now();
+        for (Source source : sources) {
+            String oldStatus = source.getSourceStatus();
+            String newStatus = calculateSourceStatus(source, checkTime);
+            if (!newStatus.equals(oldStatus)) {
+                Alert alert = null;
+                if (newStatus.equals("STALE")) {
+                    alert = new Alert(trackNumber, "Source " + source.getSourceId() + " has become stale.", "MEDIUM", checkTime, source.getSourceId(), "Source becomes stale");
+                } else if (newStatus.equals("DISCONNECTED")) {
+                    alert = new Alert(trackNumber, "Source " + source.getSourceId() + " has become disconnected.", "HIGH", checkTime, source.getSourceId(), "Source becomes disconnected");
+                }
+
+                // Update status and create alert transactionally
+                boolean updated = SourceRepository.updateSourceStatus(source.getSourceId(), oldStatus, newStatus, checkTime, alert);
+                if (updated) {
+                    source.setSourceStatus(newStatus);
+                    System.out.println("Source " + source.getSourceId() + " changed status from " + oldStatus + " to " + newStatus);
+                }
+            }
+        }
+    }
+
+    // Retrieve all alerts
+    public static List<Source> getAllSources() {
+        List <Source> listOfSources = SourceRepository.getAllSources();
+        System.out.println("\nRetrieving all sources: ");
+        if (listOfSources != null)
+            for (Source source : listOfSources) {
+                System.out.println(source);
+            }
+        else
+            System.out.println("No available sources");
+        return listOfSources;
+    }
+}
+====================================================================================================================================================================
+****UTIL CLASS****
+=======================DbConnection.java======================= 
+package com.mtms.util;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class DbConnection {
+    public static Connection getConnection() {
+        try{
+            Class.forName("org.postgresql.Driver");
+            return DriverManager.getConnection(
+                    "jdbc:postgresql://localhost:5432/MTMS?currentSchema=public",
+                    "postgres",
+                    "admin");
+        }catch(Exception ex){
+            System.out.println("Exception occured while establishing DB Connection"+ex);
+            ex.printStackTrace();
+            return null;
+        }
+    }
+}
+====================================================================================================================================================================
+****SERVLET CLASSES****
+=======================AlertListServlet.java=======================
+package com.mtms.web.servlet;
+
+import com.mtms.domain.Alert;
+import com.mtms.service.AlertService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+
+//@WebServlet("/alerts/list")
+public class AlertListServlet extends BaseServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        // Set response content type
+        response.setContentType("text/plain;charset=UTF-8");
+
+        // Retrieve all alerts from AlertService
+        List<Alert> alerts = AlertService.getAllAlerts();
+
+        // Create PrintWriter
+        PrintWriter out = response.getWriter();
+
+
+        out.println("========== LIST OF ALL ALERTS ==========");
+        if (alerts == null || alerts.isEmpty()) {
+            sendBadRequest(response, "No alert available");
+        } else {
+            for (Alert alert : alerts) {
+                out.println("------------------------------");
+                out.println("Alert ID: " + alert.getAlertId());
+                out.println("Track Number: " + alert.getTrackNumber());
+                out.println("Alert Message: " + alert.getAlertMessage());
+                out.println("Alert Severity: " + alert.getAlertSeverity());
+                out.println("Alert Time: " + alert.getAlertTime());
+                out.println("Alert Time: " + alert.getSourceId());
+                out.println("Alert Time: " + alert.getEventType());
+                out.println("------------------------------");
+            }
+        }
+        out.close();
+    }
+}
+
+=======================BaseServlet.java=======================
+package com.mtms.web.servlet;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+public abstract class BaseServlet extends HttpServlet {
+
+    // Set UTF-8 request encoding before reading POST parameters
+    protected void setRequestEncoding(HttpServletRequest request) throws IOException {
+        request.setCharacterEncoding("UTF-8");
+    }
+
+    // Set UTF-8 response encoding
+    protected void setResponseEncoding(HttpServletResponse response) {
+        response.setCharacterEncoding("UTF-8");
+    }
+
+    // Handle bad input (HTTP 400)
+    protected void sendBadRequest(HttpServletResponse response, String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        response.setContentType("text/plain;charset=UTF-8");
+        response.getWriter().println("Bad Request: " + message);
+    }
+
+    // Handle unexpected server errors (HTTP 500)
+    protected void sendServerError(HttpServletResponse response, String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        response.setContentType("text/plain;charset=UTF-8");
+        response.getWriter().println("Internal Server Error: " + message);
+    }
+
+    // Set the default response encoding for all requests
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        setResponseEncoding(response);
+        super.service(request, response);
+    }
+}
+
+=======================StatisticsServlet.java=======================
+package com.mtms.web.servlet;
+
+import com.mtms.service.AlertAnalyticsService;
+import com.mtms.service.TrackAnalyticsService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
+
+
+//@WebServlet("/statistics")
+public class StatisticsServlet extends HttpServlet {
+
+    private AlertAnalyticsService alertAnalyticsService = new AlertAnalyticsService();
+    private TrackAnalyticsService TrackAnalyticsService = new TrackAnalyticsService();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        // Set response content type
+        response.setContentType("text/plain;charset=UTF-8");
+
+        // Retrieve statistics from AlertAnalyticsService
+        Map<String, Integer> identityCount = TrackAnalyticsService.getIdentitySummary();
+        Map<String, Integer> severityCount = alertAnalyticsService.getSeveritySummary();
+
+        // Create PrintWriter
+        PrintWriter out = response.getWriter();
+
+        // Display identity statistics
+        out.println("========== TRACK IDENTITY STATISTICS ==========");
+        out.println("FRIEND: " + identityCount.getOrDefault("FRIEND", 0));
+        out.println("NEUTRAL: " + identityCount.getOrDefault("NEUTRAL", 0));
+        out.println("HOSTILE: " + identityCount.getOrDefault("HOSTILE", 0));
+        out.println("UNKNOWN: " + identityCount.getOrDefault("UNKNOWN", 0));
+
+        // Display severity statistics
+        out.println("\n========== ALERT SEVERITY STATISTICS ==========");
+        out.println("LOW: " + severityCount.getOrDefault("LOW", 0));
+        out.println("MEDIUM: " + severityCount.getOrDefault("MEDIUM", 0));
+        out.println("HIGH: " + severityCount.getOrDefault("HIGH", 0));
+    }
+}
+
+=======================SourceMonitorServlet.java=======================
+package com.mtms.web.servlet;
+
+import com.mtms.domain.Source;
+import com.mtms.service.SourceService;
+import com.mtms.service.TrackService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.Map;
+
+public class SourceMonitorServlet extends BaseServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        //Set response content type
+        response.setContentType("text/plain;charset=UTF-8");
+
+        // Retrieve all sources from SourceService
+        List<Source> sources = SourceService.getAllSources();
+
+        // Create PrintWriter
+        PrintWriter out = response.getWriter();
+
+
+        out.println("========== LIST OF ALL SOURCES AND COUNTER ==========");
+        if (sources == null || sources.isEmpty()) {
+            sendBadRequest(response, "No source available");
+        } else {
+            for (Source source : sources) {
+                out.println("------------------------------");
+                out.println("Source ID: " + source.getSourceId());
+                out.println("First Seen At: " + source.getFirstSeenAt());
+                out.println("Last Received At: " + source.getLastReceivedAt());
+                out.println("Latest Sequence: " + source.getLatestSequence());
+                out.println("Source Status: " + source.getSourceStatus());
+                out.println("------------------------------");
+            }
+        }
+
+        // getting process counters
+        Map<String, Integer> counter = TrackService.processingCounter();
+
+        // Displaying counter
+        if (counter != null) {
+            out.println("\nDisplaying Processing Count:- ");
+            for (Map.Entry<String, Integer> entry : counter.entrySet()) {
+                out.println(entry.getKey() + ": " + entry.getValue());
+            }
+        }
+        out.close();
+    }
+
+}
+
+=======================MODIFIED CLASSES=======================
+=======================AdvancedFiltersServlet.java=======================
+//Displaying search results
+
+            out.println("\n========== ADVANCED FILTER RESULTS ==========\n");
+
+            if (tracks == null || tracks.isEmpty()) {
+                out.println("No Matching Tracks Found");
+            } else {
+                for (Track track : tracks) {
+                    out.println("---------------------------------------------");
+                    out.println("Track Number      : " + track.getTrackNumber());
+                    out.println("Source ID         : " + track.getSourceId());
+                    out.println("Latitude          : " + track.getLatitude());
+                    out.println("Longitude         : " + track.getLongitude());
+                    out.println("Speed             : " + track.getSpeed());
+                    out.println("Identity          : " + track.getIdentity());
+                    out.println("Track Status      : " + track.getTrackStatus());
+                    out.println("Sequence Number   : " + track.getSequenceNumber());
+                    out.println("Observation Time  : " + track.getObservationTime());
+                }
+
+                out.println("---------------------------------------------");
+            }
+
+=======================TrackListServlet.java=======================
+out.println("========== LIST OF ALL TRACKS ==========");
+        if (tracks == null || tracks.isEmpty()) {
+            out.println("No tracks available.");
+        } else {
+            for (Track track : tracks) {
+                out.println("------------------------------");
+                out.println("Track ID: " + track.getTrackId());
+                out.println("Track Number: " + track.getTrackNumber());
+                out.println("Latitude: " + track.getLatitude());
+                out.println("Longitude: " + track.getLongitude());
+                out.println("Speed: " + track.getSpeed());
+                out.println("Identity: " + track.getIdentity());
+                out.println("Track Status: " + track.getTrackStatus());
+                out.println("Source Id: " + track.getSourceId());
+                out.println("Sequence Number: " + track.getSequenceNumber());
+                out.println("Observation Time: " + track.getObservationTime());
+                out.println("Received Time: " + track.getReceivedTime());
+                out.println("------------------------------");
+            }
+        }
+        out.close();
+    }
+
+=======================FilterTrackServlet.java=======================
+// print conformation message and list of tracks
+        PrintWriter writer = resp.getWriter();
+        if (listOfTracks!=null || !identity.equals("DEFAULT") || !status.equals("DEFAULT") || minimumSpeed!=0){
+            writer.println("Displaying tracks filtered tracks: ");
+            for (Track track : listOfTracks) {
+                writer.println("------------------------------");
+                writer.println("Track ID: " + track.getTrackId());
+                writer.println("Track Number: " + track.getTrackNumber());
+                writer.println("Latitude: " + track.getLatitude());
+                writer.println("Longitude: " + track.getLongitude());
+                writer.println("Speed: " + track.getSpeed());
+                writer.println("Identity: " + track.getIdentity());
+                writer.println("Track Status: " + track.getTrackStatus());
+                writer.println("Source Id: " + track.getSourceId());
+                writer.println("Sequence Number: " + track.getSequenceNumber());
+                writer.println("Observation Time: " + track.getObservationTime());
+                writer.println("Received Time: " + track.getReceivedTime());
+                writer.println("------------------------------");
+            }
+        } else {
+            writer.print("Unable to display filtered tracks");
+        }
+
+=======================ReplayTrackServlet.java=======================
+ // print conformation message and list of tracks
+        PrintWriter writer = resp.getWriter();
+        if (listOfTracks != null){
+            writer.println("Displaying tracks with " + speed + " speed");
+            for (Track track : listOfTracks) {
+                writer.println("------------------------------");
+                writer.println("Track ID: " + track.getTrackId());
+                writer.println("Track Number: " + track.getTrackNumber());
+                writer.println("Latitude: " + track.getLatitude());
+                writer.println("Longitude: " + track.getLongitude());
+                writer.println("Speed: " + track.getSpeed());
+                writer.println("Identity: " + track.getIdentity());
+                writer.println("Track Status: " + track.getTrackStatus());
+                writer.println("Source Id: " + track.getSourceId());
+                writer.println("Sequence Number: " + track.getSequenceNumber());
+                writer.println("Observation Time: " + track.getObservationTime());
+                writer.println("Received Time: " + track.getReceivedTime());
+                writer.println("------------------------------");
+            }
+        } else {
+            writer.print("Tracks cannot be displayed");
+        }
+
+=======================SearchTrackServlet.java=======================
+// print conformation message and list of tracks
+        PrintWriter writer = resp.getWriter();
+
+        writer.println("========== LIST OF TRACK NUMBER " + trackNumber + "==========");
+        if (listOfTracks == null || listOfTracks.isEmpty()) {
+            writer.println("No tracks available.");
+        } else {
+            for (Track track : listOfTracks) {
+                writer.println("------------------------------");
+                writer.println("Track ID: " + track.getTrackId());
+                writer.println("Track Number: " + track.getTrackNumber());
+                writer.println("Latitude: " + track.getLatitude());
+                writer.println("Longitude: " + track.getLongitude());
+                writer.println("Speed: " + track.getSpeed());
+                writer.println("Identity: " + track.getIdentity());
+                writer.println("Track Status: " + track.getTrackStatus());
+                writer.println("Source Id: " + track.getSourceId());
+                writer.println("Sequence Number: " + track.getSequenceNumber());
+                writer.println("Observation Time: " + track.getObservationTime());
+                writer.println("Received Time: " + track.getReceivedTime());
+                writer.println("------------------------------");
+            }
+        }
+        writer.close();
+    }
+
+=======================TrackHistoryServlet.java=======================
+// Retrieve complete history
+        List<Track> trackHistory = trackService.getFullHistory(sourceId, trackNumber);
+
+
+        out.println("========== FULL HISTORY OF TRACK : " + trackNumber + " ==========");
+
+
+        if (trackHistory == null && trackHistory.isEmpty()) {
+            out.println("No tracks available.");
+        } else {
+            System.out.println("Source ID: " + sourceId);
+            for (Track track : trackHistory) {
+                out.println("Track Number: " + track.getTrackNumber());
+                out.println("Source ID: " + track.getSourceId());
+                out.println("Latitude: " + track.getLatitude());
+                out.println("Longitude: " + track.getLongitude());
+                out.println("Speed: " + track.getSpeed());
+                out.println("Identity: " + track.getIdentity());
+                out.println("Track Status: " + track.getTrackStatus());
+                out.println("Sequence Number: " + track.getSequenceNumber());
+                out.println("Observation Time: " + track.getObservationTime());
+                out.println("------------------------------");
+            }
+        }
+        out.close();
+
+    }
+
+
+
+
+========================================= Shamsa =========================================
+
+--- main.MTMSApplication ---------------------------------
+
+public class MTMSApplication {
+    public static void main(String[] args) throws InterruptedException {
+
+        Thread serverThread = new Thread(Server::recevingDataFromClient);
+        serverThread.start();
+
+        Thread clientAThread = new Thread(SourceAClient::sendingDataToServer);
+        clientAThread.start();
+
+        Thread clientBThread = new Thread(SourceBClient::sendingDataToServer);
+        clientBThread.start();
+
+        Thread clientCThread = new Thread(SourceCClient::sendingDataToServer);
+        clientCThread.start();
+
+        // waiting for tracks to be processed and saved
+        sleep(1000);
+
+        // generating processing counters
+        TrackService.processingCounter();
+
+        // generate matching tracks
+        TrackService.getCorrelatedTracks();
+
+    }
+}
+
+
+--- networking.Server  ---------------------------------
+
+public class Server {
+    public static void recevingDataFromClient()  {
+
+        // creating socket to listen for data
+        DatagramSocket datagramSocket = null;
+        try {
+            datagramSocket = new DatagramSocket(1234);
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+
+        // creating buffer
+        byte[] receive = new byte[65535];
+
+        // creating packet to receive data
+        DatagramPacket datagramPacket = null;
+
+        while (true) {
+            datagramPacket = new DatagramPacket(receive, receive.length);
+
+            //retrieving data
+            try {
+                datagramSocket.receive(datagramPacket);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (byteToString(receive).toString().equals("end")){
+                break;
+            }
+
+            TrackService.processTrackString(byteToString(receive));
+
+            // clear buffer
+            receive = new byte[65535];
+        }
+    }
+
+    // convert
+    private static String byteToString(byte[] data) {
+        if (data == null)
+            return null;
+        StringBuilder string = new StringBuilder();
+        int i = 0;
+        while(data[i] != 0){
+            string.append((char) data[i]);
+            i++;
+        }
+        return string.toString();
+    }
+}
+
+
+--- networking.SourceAClient   ---------------------------------
+
+public class SourceAClient {
+    static List<String> listOfTracks = null;
+
+    public static void sendingDataToServer() {
+
+        // generate tracks from source
+        listOfTracks = TrackSimulator.generateTracksA();
+
+        // socket object to carry data
+        DatagramSocket datagramSocket;
+        try {
+            datagramSocket = new DatagramSocket();
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+
+        // get local host ip
+        InetAddress ip = null;
+        try {
+            ip = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+
+        // create buffer
+        byte[] buff = null;
+
+        // create datagram packet to send the data
+        DatagramPacket datagramPacket = null;
+        listOfTracks.add("end");
+
+        // sending simulated tracks
+        for (String track : listOfTracks) {
+            buff = track.getBytes();
+            datagramPacket = new DatagramPacket(buff, buff.length, ip, 1234);
+            try {
+                datagramSocket.send(datagramPacket);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
+}
+
+
+--- networking.SourceBClient    ---------------------------------
+
+public class SourceBClient {
+    static List<String> listOfTracks = null;
+    public static void sendingDataToServer() {
+
+        // generate tracks from source
+        listOfTracks = TrackSimulator.generateTracksB();
+
+        // socket object to carry data
+        DatagramSocket datagramSocket;
+        try {
+            datagramSocket = new DatagramSocket();
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+
+        // get local host ip
+        InetAddress ip = null;
+        try {
+            ip = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+
+        // create buffer
+        byte[] buff = null;
+
+        // create datagram packet to send the data
+        DatagramPacket datagramPacket = null;
+        listOfTracks.add("end");
+
+        // sending simulated tracks
+        for (String track : listOfTracks) {
+            buff = track.getBytes();
+            datagramPacket = new DatagramPacket(buff, buff.length, ip, 1234);
+            try {
+                datagramSocket.send(datagramPacket);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
+}
+
+
+--- networking.SourceCClient     ---------------------------------
+
+public class SourceCClient {
+    static List<String> listOfTracks = null;
+    public static void sendingDataToServer() {
+
+        // generate tracks from source
+        listOfTracks = TrackSimulator.generateTracksC();
+
+        // socket object to carry data
+        DatagramSocket datagramSocket;
+        try {
+            datagramSocket = new DatagramSocket();
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+
+        // get local host ip
+        InetAddress ip = null;
+        try {
+            ip = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+
+        // create buffer
+        byte[] buff = null;
+
+        // create datagram packet to send the data
+        DatagramPacket datagramPacket = null;
+        listOfTracks.add("end");
+
+        // sending simulated tracks
+        for (String track : listOfTracks) {
+            buff = track.getBytes();
+            datagramPacket = new DatagramPacket(buff, buff.length, ip, 1234);
+            try {
+                datagramSocket.send(datagramPacket);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
+}
+
+
+--- simulator.TrackSimulator      ---------------------------------
+
+public class TrackSimulator {
+    static List<String> listOfTracks = null;
+    public static List<String> generateTracksA(){
+        listOfTracks = new ArrayList<>(
+                Arrays.asList(
+                        "LINK-A|1|TRK1001|12.971600|77.594600|450|FRIEND|ACTIVE|2026-11-02T09:10:00",
+                        "LINK-A|2|TRK1001|15.971600|90.594600|500|FRIEND|ACTIVE|2026-11-02T10:20:00",
+                        "LINK-A|2|TRK1001|15.971600|90.594600|500|FRIEND|ACTIVE|2026-11-02T10:20:00",
+                        "LINK-A|3|TRK1001|30.971600|120.594600|650|FRIEND|ACTIVE|2026-11-02T11:30:00",
+                        "LINK-A|4|TRK1002|0.971600|30.594600|900|UNKNOWN|ACTIVE|2026-11-02T09:15:00",
+                        "LINK-A|5|TRK1002|2.971600|50.594600|1000|HOSTILE|ACTIVE|2026-11-02T10:30:00"
+                        )
+        );
+        return listOfTracks;
+    }
+
+    public static List<String> generateTracksB(){
+        listOfTracks = new ArrayList<>(
+                Arrays.asList(
+                        "LINK-B|1|TRK1002|20.971600|70.594600|200|UNKNOWN|ACTIVE|2026-11-01T09:10:00",
+                        "LINK-B|3|TRK1002|25.971600|75.594600|300|FRIEND|ACTIVE|2026-11-01T10:20:00",
+                        "LINK-B|2|TRK1002|30.971600|80.594600|400|FRIEND|ACTIVE|2026-11-01T11:30:00",
+                        "LINK-B|4|TRK1002|30.971600|80.594600|400|FRIEND|INACTIVE|2026-11-01T12:00:00",
+                        "LINK-B|5|TRK1001|12.987650|77.594600|500|FRIEND|ACTIVE|2026-11-02T09:10:10"
+                )
+        );
+        return listOfTracks;
+    }
+
+    public static List<String> generateTracksC(){
+        listOfTracks = new ArrayList<>(
+                Arrays.asList(
+                        "LINK-C|1|TRK1003|80.971600|100.594600|700|UNKNOWN|ACTIVE|2026-11-02T09:15:00",
+                        "LINK-C|2|TRK1003|70.971600|110.594600|0|HOSTILE|ACTIVE|2026-11-02T10:25:00",
+                        "LINK-C|3|TRK1003|60.971600|120.594600|900|HOSTILE|ACTIVE|2026-11-02T11:35:00",
+                        "LINK-C|4|TRK1002|30.971600|80.594600|470|FRIEND|INACTIVE|2026-11-01T12:00:20",
+                        "LINK-C|5|TRK1004|60.971600|170.594600|450|UNKNOWN|ACTIVE|2026-11-02T07:10:00"
+                )
+        );
+        return listOfTracks;
+    }
+}
+
+
+--- Domain.ReplaySpeed       ---------------------------------
+
+public enum ReplaySpeed {
+    HALF, NORMAL, DOUBLE;
+
+    // Assigning speed to each enum
+    public int getReplaySpeed(){
+        return switch (this) {
+            case HALF -> 2000;
+            case NORMAL -> 1000;
+            case DOUBLE -> 500;
+        };
+    }
+}
+
+
+--- service.TrackService     ---------------------------------
+
+public class TrackService {
+    static TrackRepository trackRepository = new TrackRepository();
+    static TrackAnalyticsService trackAnalyticsService = new TrackAnalyticsService();
+    private static List<Track> listOfTracks = null;
+    private static List<Track> outOfOrderTracks = new ArrayList<Track>();
+    // calculating duplicates and out-of-order messages
+    private static int duplicatesCount = 0;
+    private static int orderCount = 0;
+
+    // Validate and process each track
+    public static void processTrackString(String trackString) {
+
+        // parsing track from string
+        List<String> malformedErrors = ValidationService.parseTrackString(trackString);
+
+        // getting source id and track number from malformed track
+        if (!malformedErrors.isEmpty()) {
+            String sourceId = null;
+            String trackNumber = null;
+            try{
+                sourceId = trackString.substring(trackString.indexOf("LINK"), trackString.indexOf("LINK")+6);
+            } catch (Exception e) {
+                malformedErrors.add("Source Id not found");
+            }
+            try{
+                trackNumber = trackString.substring(trackString.indexOf("TRK"), trackString.indexOf("TRK")+7);
+            } catch (Exception e) {
+                malformedErrors.add("Track Number not found");
+            }
+            // creating alert
+            AlertService.processAlert(sourceId, trackNumber, String.join(", ", malformedErrors), "Malformed message");
+        } else {
+
+            // parsing and sending track object to processing
+            Track track = parsingTrackString(trackString);
+            processTrack(track);
+        }
+    }
+
+    //overloading
+    // Validate and process each track object
+    public static boolean processTrack(Track track) {
+
+        List<String> validationErrors = ValidationService.validateTrack(track);
+
+        if (validationErrors.isEmpty()) {
+            if (!hasDuplicates(track)) {
+                if(!isOutOfOrder(track)) {
+                    trackRepository.addTrack(track);
+                    SourceService.processSources(track);
+                    return true;
+                }
+            }
+        } else {
+            // creating alert
+            AlertService.processAlert(track.getSourceId(), track.getTrackNumber(), String.join(", ", validationErrors), "Track validation failure");
+        }
+        return false;
+    }
+
+    // Checking for duplicate tracks
+    public static boolean hasDuplicates(Track track){
+        listOfTracks = findAllTracks();
+        if (listOfTracks != null)
+            for (Track oldTrack : listOfTracks){
+                if ((oldTrack.getSourceId().equals(track.getSourceId())) &&
+                        (oldTrack.getSequenceNumber() == track.getSequenceNumber())){
+                    String alertMessage = "Message with the same Source Id and Sequence Number as an existing Track";
+                    AlertService.processAlert(track.getSourceId(), track.getTrackNumber(), alertMessage, "Duplicate message");
+                    duplicatesCount++;
+                    return true;
+                }
+            }
+        return false;
+    }
+
+    // storing out of order tracks
+    public static boolean isOutOfOrder(Track track){
+        Track latestTrack = trackRepository.getLatestTrackFromSource(track.getSourceId());
+        if (latestTrack != null)
+            if (latestTrack.getSequenceNumber() > track.getSequenceNumber()){
+                String alertMessage = "Message with the same Source Id has a higher Sequence Number than an existing Track";
+                AlertService.processAlert(track.getSourceId(), track.getTrackNumber(), alertMessage, "Out-of-order message");
+                outOfOrderTracks.add(track);
+                orderCount++;
+                return true;
+            }
+        return false;
+    }
+
+    // getting list of out of order tracks
+    public static List<Track> GetOutOfOrderTracks(){
+        return outOfOrderTracks;
+    }
+
+    public static Track parsingTrackString (String trackString){
+        // splitting string into segments
+        String[] stringSeg = trackString.split("\\|");
+        return new Track(
+            stringSeg[2].trim(), //trackNumber
+            Double.parseDouble(stringSeg[3].trim()), //latitude
+            Double.parseDouble(stringSeg[4].trim()), //longitude
+            Double.parseDouble(stringSeg[5].trim()), //speed
+            stringSeg[6].trim(), //identity
+            stringSeg[7].trim(), //trackStatus
+            stringSeg[0].trim(), //sourceId
+            Integer.parseInt(stringSeg[1].trim()), //sequenceNumber
+            LocalDateTime.parse(stringSeg[8].trim()), //observationTime
+            LocalDateTime.now()); //receivedTime
+    }
+
+    // Generate processing counter
+    public static Map<String, Integer> processingCounter (){
+        Map<String, Integer> processCounter = new LinkedHashMap<>();
+
+        // calculating accepted unique messages
+        int acceptedCount = 0;
+        try{
+            acceptedCount  = findAllTracks().size() + orderCount;
+        } catch (Exception ignored) {}
+        processCounter.put("Accepted Messages", acceptedCount);
+
+        // calculating rejected messages
+        int rejectedCount = 0;
+        try{
+            rejectedCount  = AlertService.getAllAlerts().size();
+        } catch (Exception ignored) {
+
+        }
+        processCounter.put("Rejected Messages", rejectedCount);
+
+        // calculating received messages
+        processCounter.put("Received Messages", acceptedCount + rejectedCount + duplicatesCount);
+
+        // add duplicate count
+        processCounter.put("Duplicate Messages", duplicatesCount);
+
+        // calculating processing failure
+        processCounter.put("Processing Failure", duplicatesCount + rejectedCount);
+
+        // Displaying counter
+        if (processCounter != null) {
+            System.out.println("\nDisplaying Processing Count: ");
+            for (Map.Entry<String, Integer> entry : processCounter.entrySet()) {
+                System.out.println(entry.getKey() + ": " + entry.getValue());
+            }
+        }
+
+        return processCounter;
+    }
+
+    // Generating cross-source correlation tracks
+    public static List<String> getCorrelatedTracks(){
+        List<String> correlatedTracksInfo = new ArrayList<String>();
+        listOfTracks = findAllTracks();
+        // each track compared to other tracks
+        for (Track track : listOfTracks) {
+            for (Track track1 : listOfTracks) {
+                if (track != track1) {
+                    Duration timeDifference = Duration.between(track.getObservationTime(),
+                            track1.getObservationTime());
+                    double speedDifference = Math.abs(track.getSpeed() - track1.getSpeed());
+                    double distanceDifference = calculateDistance(track.getLatitude(), track.getLongitude(),
+                            track1.getLatitude(), track1.getLongitude());
+
+                    // filtering tracks to find matches
+                    // not yet done: fixing time and double results
+                    if(
+                            (track.getTrackNumber().equals(track1.getTrackNumber())) &&
+                            (!track.getSourceId().equals(track1.getSourceId())) &&
+                            (track.getIdentity().equals(track1.getIdentity())) &&
+                            (speedDifference < 100) &&
+                            (distanceDifference < 2) &&
+                            ((timeDifference.compareTo(Duration.ofSeconds(30)) <= 0) && timeDifference.getSeconds()>=0)
+                    ){
+                        correlatedTracksInfo.add(
+                                "\nTracks SourceId: " + track.getSourceId() + ", " + track1.getSourceId() +
+                                "\nTrack Number: " + track.getTrackNumber() +
+                                "\nFirst Track Position: " + track.getLatitude() + ", " + track.getLongitude() +
+                                "\nSecond Track Position: " + track1.getLatitude() + ", " + track1.getLongitude() +
+                                "\nTime Difference: " + timeDifference.getSeconds()+ " seconds" +
+                                "\nSpeed Difference: " + speedDifference +
+                                "\nDistance: " + distanceDifference + " km"
+                        );
+                    }
+                }
+            }
+        }
+        System.out.println("Displaying matching tracks");
+        for(String matches : correlatedTracksInfo)
+            System.out.println(matches);
+
+        return correlatedTracksInfo;
+    }
+
+    // calculation to find the distance between two points
+    public static double calculateDistance(double latitude1, double longtitude1, double latitude2, double longtitude2){
+        double radLatitude1 = Math.toRadians(latitude1);
+        double radLongtitude1 = Math.toRadians(longtitude1);
+        double radLatitude2 = Math.toRadians(latitude2);
+        double radLongtitude2 = Math.toRadians(longtitude2);
+        double xAxis = (radLongtitude2 - radLongtitude1) * Math.cos((radLatitude1 + radLatitude2)/2);
+        double yAxis = (radLatitude2 - radLatitude1);
+        return Math.sqrt(xAxis*xAxis + yAxis*yAxis) * 6371; //earth radius
+    }
+
+}
+
+
+--- service.TrackAnalyticsService     ---------------------------------
+
+
+public class TrackAnalyticsService {
+    static TrackRepository trackRepository = new TrackRepository();
+    private static List<Track> listOfTracks = null;
+
+    // Display report statistics
+    public static void showReportStat() {
+
+        System.out.println("\nHostile Tracks:");
+        showHostileTracks();
+
+        System.out.println("\nHigh Speed Tracks:");
+        showHighSpeedTracks();
+
+        System.out.println("\nIdentity Count:");
+        showIdentityCount();
+
+        System.out.println("\nActive tracks:");
+        showActiveTracks();
+
+        System.out.println("\nInactive tracks:");
+        showInactiveTracks();
+    }
+
+// Retrieve tracks with minimum speed
+    public static List<Track> showTracksByMinimumSpeed(int minimumSpeed) {
+        return trackRepository.getTracksByMinimumSpeed(minimumSpeed);
+    }
+}
+
+
+--- service.ReplayService      ---------------------------------
+
+public class ReplayService {
+    private static List<Track> listOfTracks = null;
+
+    // Display tracks ordered by time and added speed control
+    public static void replayTracks (ReplaySpeed speed){
+        TrackRepository trackRepository = new TrackRepository();
+        listOfTracks = trackRepository.tracksOrderedByTime();
+        try {
+            for (Track track : listOfTracks) {
+                Thread.sleep(speed.getReplaySpeed());
+                System.out.println(track);
+            }
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    // Overloading
+    // Display tracks ordered by time and added speed control and time frame
+    public static List<Track> replayTracks (ReplaySpeed speed, LocalDateTime startTime, LocalDateTime endTime){
+        TrackRepository trackRepository = new TrackRepository();
+        listOfTracks = trackRepository.tracksFilterdByTime(startTime, endTime);
+//        try {
+//            for (Track track : listOfTracks) {
+//                Thread.sleep(speed.getReplaySpeed());
+//                System.out.println(track);
+//            }
+//        } catch (InterruptedException ie) {
+//            Thread.currentThread().interrupt();
+//        }
+        return listOfTracks;
+    }
+
+//    // Overloading
+//    // Display tracks ordered by time with a filtered time frame (default NORMAL)
+//    public static void replayTracks (LocalDateTime startTime, LocalDateTime endTime){
+//        TrackRepository trackRepository = new TrackRepository();
+//        listOfTracks = trackRepository.tracksFilterdByTime(startTime, endTime);
+//        try {
+//            for (Track track : listOfTracks) {
+//                Thread.sleep(ReplaySpeed.NORMAL.getReplaySpeed());
+//                System.out.println(track);
+//            }
+//        } catch (InterruptedException ie) {
+//            Thread.currentThread().interrupt();
+//        }
+//    }
+}
+
+
+--- service.ValidationService       ---------------------------------
+
+public static List<String> parseTrackString(String trackString) {
+        List<String> errors = new ArrayList<>();
+
+        // splitting string into segments
+        String[] stringSeg = trackString.split("\\|");
+
+        // checking the use of correct partitioning
+        if (!trackString.contains("|")) {
+            errors.add("Message format is invalid");
+        }
+
+
+        // checking number of segments
+        if (stringSeg.length != 9) {
+            errors.add("Message missing fields");
+        }
+
+        try{
+            Double.parseDouble(stringSeg[3].trim()); //latitude
+        } catch (Exception e) {
+            errors.add("Invalid latitude format");
+        }
+
+        try{
+            Double.parseDouble(stringSeg[4].trim()); //longitude
+        } catch (Exception e) {
+            errors.add("Invalid longitude format");
+        }
+
+        try{
+            Double.parseDouble(stringSeg[5].trim()); //speed
+        } catch (Exception e) {
+            errors.add("Invalid speed format");
+        }
+
+        try{
+            LocalDateTime.parse(stringSeg[8].trim()); //observationTime
+        } catch (Exception e) {
+            errors.add("Invalid observation time format");
+        }
+
+        return errors;
+    }
+
+
+--- service.AlertService        ---------------------------------
+
+// Choose severity based on track event
+    private static String chooseSeverity(String eventType) {
+        return switch (eventType) {
+            case "Malformed message", "Source becomes disconnected"  -> "HIGH";
+            case "Track validation failure", "Source becomes stale" -> "MEDIUM";
+            case "Duplicate message", "Out-of-order message" -> "LOW";
+            default -> null;
+        };
+    }
+
+
+--- repository.TrackRepository         ---------------------------------
+
+public class TrackRepository {
+    private static Connection connection = DbConnection.getConnection();
+    private static PreparedStatement preparedStatement = null;
+    private ResultSet resultSet = null;
+    private static List<Track> listOfTracks = null;
+
+    // Adds a track to the database
+    public void addTrack(Track track) {
+        try {
+            preparedStatement = connection.prepareStatement("INSERT INTO tracks (" +
+                    "track_number, latitude, longtitude, speed, identity_type, " +
+                    "track_status, source_id, sequence_number, observation_time, received_time)"+
+                    "VALUES (?,?,?,?,?,?,?,?,?,?)");
+            preparedStatement.setString(1, track.getTrackNumber());
+            preparedStatement.setDouble(2, track.getLatitude());
+            preparedStatement.setDouble(3, track.getLongitude());
+            preparedStatement.setDouble(4, track.getSpeed());
+            preparedStatement.setString(5, track.getIdentity());
+            preparedStatement.setString(6, track.getTrackStatus());
+            preparedStatement.setString(7, track.getSourceId());
+            preparedStatement.setInt(8, track.getSequenceNumber());
+            preparedStatement.setTimestamp(9, Timestamp.valueOf(track.getObservationTime()));
+            preparedStatement.setTimestamp(10, Timestamp.valueOf(track.getReceivedTime()));
+            preparedStatement.executeUpdate();
+            System.out.println("Track added successfully");
+        } catch (Exception e) {
+            System.out.println("Track are not added"+ e);
+        }
+    }
+
+    // Retrieves all tracks from the database
+    public List<Track> getAllTracks(){
+        try{
+            preparedStatement = connection.prepareStatement("SELECT * FROM tracks");
+            resultSet = preparedStatement.executeQuery();
+            listOfTracks = new ArrayList<Track>();
+            while (resultSet.next()){
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+            if (!listOfTracks.isEmpty())
+                return listOfTracks;
+        } catch (Exception e) {
+            System.out.println("Unable to fetch all tracks");
+        }
+        return null;
+    }
+
+    // Retrieves tracks by its track number from the database
+    public List<Track> getTrackByNumber(String trackNumber){
+        try{
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks WHERE track_number=? ORDER BY observation_time DESC, track_id DESC");
+            preparedStatement.setString(1, trackNumber);
+            resultSet = preparedStatement.executeQuery();
+            listOfTracks = new ArrayList<Track>();
+            while (resultSet.next()){
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+            if (!listOfTracks.isEmpty())
+                return listOfTracks;
+        } catch (Exception e) {
+            System.out.println("Unable to fetch all tracks");
+        }
+        return null;
+    }
+
+    // Deletes a track by its track number in the database
+    public Boolean deleteTrackByNumber(String trackNumber){
+        try{
+            preparedStatement = connection.prepareStatement(
+                    "DELETE FROM tracks WHERE track_number=?");
+            preparedStatement.setString(1, trackNumber);
+            preparedStatement.execute();
+            return true;
+        } catch (Exception e) {
+            System.out.println("Track " + trackNumber + " cannot be deleted");
+        }
+        return false;
+    }
+
+    // Orders the tracks by the time its created
+    public List<Track> tracksOrderedByTime(){
+        try{
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks ORDER BY observation_time, track_id");
+
+            resultSet = preparedStatement.executeQuery();
+            listOfTracks = new ArrayList<Track>();
+            while (resultSet.next()){
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+            if (!listOfTracks.isEmpty())
+                return listOfTracks;
+        } catch (Exception e) {
+            System.out.println("Unable to fetch all tracks");
+        }
+        return null;
+    }
+
+    // Retrieves hostile tracks
+    public List<Track> getHostileTracks(){
+        try{
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks WHERE identity_type = 'HOSTILE' ORDER BY observation_time");
+            resultSet = preparedStatement.executeQuery();
+            listOfTracks = new ArrayList<Track>();
+            while (resultSet.next()){
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+            if (!listOfTracks.isEmpty())
+                return listOfTracks;
+        } catch (Exception e) {
+            System.out.println("Unable to fetch hostile tracks");
+        }
+        return null;
+    }
+
+    // Retrieves all tracks with high speed (>700)
+    public List<Track> getHighSpeedTracks(){
+        try{
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks WHERE speed > 700 ORDER BY speed DESC");
+            resultSet = preparedStatement.executeQuery();
+            listOfTracks = new ArrayList<Track>();
+            while (resultSet.next()){
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+            if (!listOfTracks.isEmpty())
+                return listOfTracks;
+        } catch (Exception e) {
+            System.out.println("Unable to fetch high speed tracks");
+        }
+        return null;
+    }
+
+    // Retrieves active tracks
+    public List<Track> getActiveTracks(){
+        try{
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks WHERE track_status = 'ACTIVE' ORDER BY observation_time");
+            resultSet = preparedStatement.executeQuery();
+            listOfTracks = new ArrayList<Track>();
+            while (resultSet.next()){
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+            if (!listOfTracks.isEmpty())
+                return listOfTracks;
+        } catch (Exception e) {
+            System.out.println("Unable to fetch active tracks");
+        }
+        return null;
+    }
+
+    // Retrieves inactive tracks
+    public List<Track> getInactiveTracks(){
+        try{
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks WHERE track_status = 'INACTIVE' ORDER BY observation_time");
+            resultSet = preparedStatement.executeQuery();
+            listOfTracks = new ArrayList<Track>();
+            while (resultSet.next()){
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+            if (!listOfTracks.isEmpty())
+                return listOfTracks;
+        } catch (Exception e) {
+            System.out.println("Unable to fetch inactive tracks");
+        }
+        return null;
+    }
+
+    // Retrieves the tracks filtered by the start and end time, ordered by time and trackId
+    public List<Track> tracksFilterdByTime(LocalDateTime startTime, LocalDateTime endTime) {
+        try{
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks WHERE observation_time BETWEEN ? AND ? ORDER BY observation_time, track_id");
+            preparedStatement.setTimestamp(1, Timestamp.valueOf(startTime));
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(endTime));
+            resultSet = preparedStatement.executeQuery();
+            listOfTracks = new ArrayList<Track>();
+            while (resultSet.next()){
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+            if (!listOfTracks.isEmpty())
+                return listOfTracks;
+        } catch (Exception e) {
+            System.out.println("Unable to fetch all tracks filtered by time" + e);
+        }
+        return null;
+    }
+
+    // Retrieves tracks based on idinttiy
+    public List<Track> getTracksByIdentity(String identityType){
+        try{
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks WHERE identity_type = ? ORDER BY observation_time");
+            preparedStatement.setString(1, identityType);
+            resultSet = preparedStatement.executeQuery();
+            listOfTracks = new ArrayList<Track>();
+            while (resultSet.next()){
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+            if (!listOfTracks.isEmpty())
+                return listOfTracks;
+        } catch (Exception e) {
+            System.out.println("Unable to fetch tracks by identity");
+        }
+        return null;
+    }
+
+    // Retrieves all above a minimum speed
+    public List<Track> getTracksByMinimumSpeed(int minimumSpeed){
+        try{
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks WHERE speed > ? ORDER BY speed DESC");
+            preparedStatement.setInt(1, minimumSpeed);
+            resultSet = preparedStatement.executeQuery();
+            listOfTracks = new ArrayList<Track>();
+            while (resultSet.next()){
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+            if (!listOfTracks.isEmpty())
+                return listOfTracks;
+        } catch (Exception e) {
+            System.out.println("Unable to fetch tracks");
+        }
+        return null;
+    }
+
+    // Retrieves latest track from the database
+    public Track getLatestTrackFromSource(String sourceId){
+        Track track = null;
+        try{
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks WHERE source_id=? ORDER BY sequence_number DESC LIMIT 1");
+            preparedStatement.setString(1, sourceId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                track = new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                );
+            }
+        } catch (Exception e) {
+            System.out.println("Unable to fetch latest track");
+        }
+        return track;
+    }
+}
+
+
+--- servlet.CreateTracksServlet         ---------------------------------
+
+public class CreateTracksServlet extends BaseServlet {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setRequestEncoding(req);
+        // creating new track object from the
+        Track track = new Track(
+                req.getParameter("trackNumber"),
+                Double.parseDouble(req.getParameter("latitude")),
+                Double.parseDouble(req.getParameter("longitude")),
+                Double.parseDouble(req.getParameter("speedNumber")),
+                req.getParameter("identity").toUpperCase(Locale.ROOT),
+                req.getParameter("status").toUpperCase(Locale.ROOT),
+                req.getParameter("sourceId"),
+                Integer.parseInt(req.getParameter("sequenceNumber")),
+                LocalDateTime.parse(req.getParameter("observationTime")),
+                LocalDateTime.now()
+        );
+
+
+        // processing and validating track
+        boolean saved = TrackService.processTrack(track);
+
+        // print conformation message
+        PrintWriter out = resp.getWriter();
+        if (saved){
+            out.println("===== Track details saved =====");
+            out.println("Track Number: " + track.getTrackNumber());
+            out.println("Latitude: " + track.getLatitude());
+            out.println("Longitude: " + track.getLongitude());
+            out.println("Speed: " + track.getSpeed());
+            out.println("Identity: " + track.getIdentity());
+            out.println("Track Status: " + track.getTrackStatus());
+            out.println("Source ID: " + track.getSourceId());
+            out.println("Sequence Number: " + track.getSequenceNumber());
+            out.println("Observation Time: " + track.getObservationTime());
+            out.println("Received Time: " + track.getReceivedTime());
+        } else {
+            out.print("Track invalid, an alert has been created");
+        }
+
+    }
+}
+
+
+--- servlet.DeleteTrackServlet          ---------------------------------
+
+public class DeleteTrackServlet extends BaseServlet {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setRequestEncoding(req);
+
+        // getting track number from the user
+        String trackNumber = req.getParameter("trackNumber");
+
+        // checks if track has been deleted
+        boolean deleted = TrackService.deleteTrackByNum(trackNumber);
+
+        // print conformation message
+        PrintWriter writer = resp.getWriter();
+        if (deleted){
+            writer.print("Track " + trackNumber + " has been deleted");
+        } else {
+            writer.print("Track " + trackNumber + " could not be deleted");
+        }
+    }
+
+}
+
+
+--- servlet.CorrelationCandidatesServlet          ---------------------------------
+
+public class CorrelationCandidatesServlet extends BaseServlet{
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setRequestEncoding(req);
+
+        // Set response content type
+        resp.setContentType("text/plain;charset=UTF-8");
+
+        // get list of matching tracks
+        List<String> matchingTracks = TrackService.getCorrelatedTracks();
+
+        // Create PrintWriter
+        PrintWriter out = resp.getWriter();
+
+        out.println("========== LIST OF Cross-Source Correlation Candidates ==========");
+        if (matchingTracks == null || matchingTracks.isEmpty()) {
+            sendBadRequest(resp, "No alert available");
+        } else {
+            for (String tracks : matchingTracks) {
+                out.println(tracks);
+                out.println("------------------------------");
+            }
+        }
+        out.close();
+    }
+}
+
+
+--- servlet.FilterTrackServlet          ---------------------------------
+
+public class FilterTrackServlet extends BaseServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<Track> listOfTracks = null;
+
+        String identity = req.getParameter("identity").toUpperCase(Locale.ROOT);
+        String status = req.getParameter("status").toUpperCase(Locale.ROOT);
+        int minimumSpeed = Integer.parseInt(req.getParameter("minimumSpeed"));
+
+        if (!identity.equals("DEFAULT")){
+            listOfTracks = TrackAnalyticsService.showTracksByIdentity(identity);
+        } else if (!status.equals("DEFAULT")){
+            if (status.equals("ACTIVE"))
+                listOfTracks = TrackAnalyticsService.showActiveTracks();
+            else
+                listOfTracks = TrackAnalyticsService.showInactiveTracks();
+        }
+        if (minimumSpeed!=0){
+            listOfTracks = TrackAnalyticsService.showTracksByMinimumSpeed(minimumSpeed);
+        }
+        // print conformation message and list of tracks
+        PrintWriter writer = resp.getWriter();
+        if (listOfTracks!=null || !identity.equals("DEFAULT") || !status.equals("DEFAULT") || minimumSpeed!=0){
+            writer.println("Displaying tracks filtered tracks: ");
+            for (Track track : listOfTracks) {
+                writer.println("------------------------------");
+                writer.println("Track ID: " + track.getTrackId());
+                writer.println("Track Number: " + track.getTrackNumber());
+                writer.println("Latitude: " + track.getLatitude());
+                writer.println("Longitude: " + track.getLongitude());
+                writer.println("Speed: " + track.getSpeed());
+                writer.println("Identity: " + track.getIdentity());
+                writer.println("Track Status: " + track.getTrackStatus());
+                writer.println("Source Id: " + track.getSourceId());
+                writer.println("Sequence Number: " + track.getSequenceNumber());
+                writer.println("Observation Time: " + track.getObservationTime());
+                writer.println("Received Time: " + track.getReceivedTime());
+                writer.println("------------------------------");
+            }
+        } else {
+            writer.print("Unable to display filtered tracks");
+        }
+
+
+    }
+}
+
+
+--- servlet.ReplayTrackServlet          ---------------------------------
+
+public class ReplayTrackServlet extends BaseServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        // converting user input to enum
+        ReplaySpeed speed;
+        switch (req.getParameter("speed")) {
+            case "half":
+                speed = ReplaySpeed.HALF;
+            case "double":
+                speed = ReplaySpeed.DOUBLE;
+            default:
+                speed = ReplaySpeed.NORMAL;
+        };
+
+        // retrieving list of tracks with speed
+        List<Track> listOfTracks =  ReplayService.replayTracks(speed,
+                LocalDateTime.parse(req.getParameter("start")),
+                LocalDateTime.parse(req.getParameter("end")));
+
+        // print conformation message and list of tracks
+        PrintWriter writer = resp.getWriter();
+        if (listOfTracks != null){
+            writer.println("Displaying tracks with " + speed + " speed");
+            for (Track track : listOfTracks) {
+                writer.println("------------------------------");
+                writer.println("Track ID: " + track.getTrackId());
+                writer.println("Track Number: " + track.getTrackNumber());
+                writer.println("Latitude: " + track.getLatitude());
+                writer.println("Longitude: " + track.getLongitude());
+                writer.println("Speed: " + track.getSpeed());
+                writer.println("Identity: " + track.getIdentity());
+                writer.println("Track Status: " + track.getTrackStatus());
+                writer.println("Source Id: " + track.getSourceId());
+                writer.println("Sequence Number: " + track.getSequenceNumber());
+                writer.println("Observation Time: " + track.getObservationTime());
+                writer.println("Received Time: " + track.getReceivedTime());
+                writer.println("------------------------------");
+            }
+        } else {
+            writer.print("Tracks cannot be displayed");
+        }
+
+    }
+}
+
+
+--- servlet.SearchTrackServlet          ---------------------------------
+
+public class SearchTrackServlet extends BaseServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        // getting track number from the user
+        String trackNumber = req.getParameter("trackNumber");
+
+        // retrieving tracks with the specified track number
+        List<Track> listOfTracks = TrackService.findTrackByNum(trackNumber);
+
+        // print conformation message and list of tracks
+        PrintWriter writer = resp.getWriter();
+
+        writer.println("========== LIST OF TRACK NUMBER " + trackNumber + "==========");
+        if (listOfTracks == null || listOfTracks.isEmpty()) {
+            writer.println("No tracks available.");
+        } else {
+            for (Track track : listOfTracks) {
+                writer.println("------------------------------");
+                writer.println("Track ID: " + track.getTrackId());
+                writer.println("Track Number: " + track.getTrackNumber());
+                writer.println("Latitude: " + track.getLatitude());
+                writer.println("Longitude: " + track.getLongitude());
+                writer.println("Speed: " + track.getSpeed());
+                writer.println("Identity: " + track.getIdentity());
+                writer.println("Track Status: " + track.getTrackStatus());
+                writer.println("Source Id: " + track.getSourceId());
+                writer.println("Sequence Number: " + track.getSequenceNumber());
+                writer.println("Observation Time: " + track.getObservationTime());
+                writer.println("Received Time: " + track.getReceivedTime());
+                writer.println("------------------------------");
+            }
+        }
+        writer.close();
+    }
+}
+
+
+
+========================================= Shamma =========================================
+
+
+TrackRepo:
+
+  // Retrieves active tracks
+    public List<Track> getActiveTracks(){
+        try{
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks WHERE track_status = 'ACTIVE' ORDER BY observation_time");
+            resultSet = preparedStatement.executeQuery();
+            listOfTracks = new ArrayList<Track>();
+            while (resultSet.next()){
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+            if (!listOfTracks.isEmpty())
+                return listOfTracks;
+        } catch (Exception e) {
+            System.out.println("Unable to fetch active tracks");
+        }
+        return null;
+    }
+
+    // Retrieves inactive tracks
+    public List<Track> getInactiveTracks(){
+        try{
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks WHERE track_status = 'INACTIVE' ORDER BY observation_time");
+            resultSet = preparedStatement.executeQuery();
+            listOfTracks = new ArrayList<Track>();
+            while (resultSet.next()){
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+            if (!listOfTracks.isEmpty())
+                return listOfTracks;
+        } catch (Exception e) {
+            System.out.println("Unable to fetch inactive tracks");
+        }
+        return null;
+    }
+
+  // list of the latest track from each source
+    public List<Track> getCurrentView() {
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "SELECT DISTINCT ON (source_id, track_number)  * FROM tracks  " +
+                            "ORDER BY source_id, track_number, observation_time DESC;");
+
+            resultSet = preparedStatement.executeQuery();
+            listOfTracks = new ArrayList<Track>();
+            while (resultSet.next()) {
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+            if (!listOfTracks.isEmpty())
+                return listOfTracks;
+        } catch (Exception e) {
+            System.out.println("Unable to fetch current view of track");
+        }
+        return null;
+    }
+
+    // get full history of a track
+    public List<Track> getFullHistory( String sourceId , String trackNumber) {
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM tracks WHERE source_id =? AND track_number =? ORDER BY observation_time ASC ;");
+            preparedStatement.setString(1,sourceId);
+            preparedStatement.setString(2,trackNumber);
+
+            resultSet = preparedStatement.executeQuery();
+            listOfTracks = new ArrayList<Track>();
+            while (resultSet.next()) {
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+            if (!listOfTracks.isEmpty())
+                return listOfTracks;
+        } catch (Exception e) {
+            System.out.println("Unable to fetch all history of tracks");
+        }
+        return null;
+    }
+
+    public static List<Track> advancedFilter(String sourceId, String trackNumber, String identity, String trackStatus, Double minSpeed, Double maxSpeed, LocalDateTime startTime, LocalDateTime endTime) {
+
+        try {
+// building the sql query using builder
+            String sql = "SELECT * FROM tracks WHERE 1=1";
+
+// storing parameter values in a list - to then run a loop on it
+            List<Object> parameters = new ArrayList<>();
+
+            if (sourceId != null && !sourceId.isEmpty()) {
+                sql += " AND source_id = ?";
+                parameters.add(sourceId);
+            }
+
+            if (trackNumber != null && !trackNumber.isEmpty()) {
+                sql += " AND track_number = ?";
+                parameters.add(trackNumber);
+            }
+
+            if (identity != null && !identity.isEmpty()) {
+                sql += " AND identity_type = ?";
+                parameters.add(identity);
+            }
+
+            if (trackStatus != null && !trackStatus.isEmpty()) {
+                sql += " AND track_status = ?";
+                parameters.add(trackStatus);
+            }
+
+            if (minSpeed != null) {
+                sql += " AND speed >= ?";
+                parameters.add(minSpeed);
+            }
+
+            if (maxSpeed != null) {
+                sql += " AND speed <= ?";
+                parameters.add(maxSpeed);
+            }
+
+            if (startTime != null) {
+                sql += " AND observation_time >= ?";
+                parameters.add(Timestamp.valueOf(startTime));
+            }
+
+            if (endTime != null) {
+                sql += " AND observation_time <= ?";
+                parameters.add(Timestamp.valueOf(endTime));
+            }
+
+//prep sql query
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+// bind the values to the sql place holders ?
+            for (int i = 0; i < parameters.size(); i++) {
+                ps.setObject(i + 1, parameters.get(i));
+            }
+
+//execute the query
+ResultSet resultSet = ps.executeQuery();
+
+//store the matching tracks
+//
+List<Track> listOfTracks = new ArrayList<>();
+            while (resultSet.next()) {
+                listOfTracks.add(new Track(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDouble(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getInt(9),
+                        resultSet.getTimestamp(10).toLocalDateTime(),
+                        resultSet.getTimestamp(11).toLocalDateTime()
+                ));
+            }
+
+            resultSet.close();
+            ps.close();
+
+            return listOfTracks;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(
+                    "Error executing advanced filter query", e); //error handling
+        }
+    }
+}
+
+TrackService:
+
+  / Retrieve all tracks
+    public static List<Track> findAllTracks() {
+        listOfTracks = trackRepository.getAllTracks();
+//        System.out.println("\nRetrieving all tracks:");
+//        if (listOfTracks != null)
+//            for (Track track : listOfTracks) {
+//                System.out.println(track);
+//            }
+//        else
+//            System.out.println("No available tracks");
+        return listOfTracks;
+    }
+
+    // Find tracks by track number
+    public static List<Track> findTrackByNum(String trackNumber) {
+        listOfTracks = trackRepository.getTrackByNumber(trackNumber);
+        System.out.println("\nRetrieving all tracks with track number " + trackNumber + " :");
+        if (listOfTracks != null) {
+            for (Track track : listOfTracks) {
+                System.out.println(track);
+            }
+        }
+        else
+            System.out.println("No available tracks with track number " + trackNumber);
+        return listOfTracks;
+    }
+
+    // Delete tracks by track number
+    public static boolean deleteTrackByNum(String trackNumber) {
+        System.out.println("\nDeleting tracks with track number " + trackNumber + " :");
+        Boolean trackDeleted =  trackRepository.deleteTrackByNumber(trackNumber);
+        if (trackDeleted == true) {
+            System.out.println("Track number " + trackNumber + " deleted successfully");
+            return true;
+        } else {
+            System.out.println("Track number " + trackNumber + " not available");
+            return false;
+        }
+    }
+
+    // getting latest tracks from each source
+    public List<Track> getCurrentView() {
+        System.out.println("\nCurrent View of Tracks: ");
+        listOfTracks = trackRepository.getCurrentView();
+
+        if (listOfTracks != null) {
+            for (Track track : listOfTracks) {
+                System.out.println(track);
+            }
+        }
+        return listOfTracks;
+    }
+
+    //calling get full history view method
+    public List<Track> getFullHistory(String sourceId, String trackNumber) {
+        System.out.println("\nFull History of a Track: ");
+
+        listOfTracks = trackRepository.getFullHistory(sourceId, trackNumber);
+
+        if (listOfTracks != null) {
+            for (Track track : listOfTracks) {
+                System.out.println(track);
+            }
+        }
+        return listOfTracks;
+    }    }
+
+
+TrackAnalytics Service (shamma's part):
+
+    // function to show hostile tracks
+    public static void showHostileTracks() {
+        listOfTracks = trackRepository.getHostileTracks();
+
+        if (listOfTracks != null) {
+            for (Track track : listOfTracks) {
+                System.out.println(track);
+            }
+        } else {
+            System.out.println("No hostile tracks available");
+        }
+    }
+
+    // function to show high-speed tracks
+    public static void showHighSpeedTracks() {
+        listOfTracks = trackRepository.getHighSpeedTracks();
+
+        if (listOfTracks != null) {
+            for (Track track : listOfTracks) {
+                System.out.println(track);
+            }
+        } else
+            System.out.println("No available tracks with high speed ");
+    }
+
+
+    // function to show identity counts
+    public static void showIdentityCount() {
+        Map<String, Integer> counts = trackRepository.getIdentityCount();
+
+        if (counts != null) {
+            for (Map.Entry<String, Integer> entry : counts.entrySet()) {
+                System.out.println(entry.getKey() + ": " + entry.getValue());
+            }
+        }
+    }
+
+    // function to show tracks by identity
+    public static List<Track> showTracksByIdentity(String identity) {
+        List<Track> listOfTracks = trackRepository.getTracksByIdentity(identity);
+
+        if (listOfTracks != null) {
+            for (Track track : listOfTracks) {
+                System.out.println(track);
+            }
+        } else {
+            System.out.println("No tracks available");
+        }
+        return listOfTracks;
+    }
+
+    // Retrieve active tracks
+    public static List<Track> showActiveTracks() {
+        listOfTracks = trackRepository.getActiveTracks();
+        if (listOfTracks != null)
+            for (Track track : listOfTracks) {
+                System.out.println(track);
+            }
+        else
+            System.out.println("No available active tracks");
+        return listOfTracks;
+    }
+
+    // Retrieve inactive tracks
+    public static List<Track> showInactiveTracks() {
+        listOfTracks = trackRepository.getInactiveTracks();
+        if (listOfTracks != null)
+            for (Track track : listOfTracks) {
+                System.out.println(track);
+            }
+        else
+            System.out.println("No available inactive tracks");
+        return listOfTracks;
+    }
+
+
+AdvancedFilters Servlet:
+
+package com.mtms.web.servlet;
+
+import com.mtms.domain.Track;
+import com.mtms.repository.TrackRepository;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.util.List;
+
+public class AdvancedFiltersServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response)
+            throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+
+        PrintWriter out = response.getWriter();
+
+        try {
+            // get all filter values
+            String sourceId = request.getParameter("sourceId");
+            String trackNumber = request.getParameter("trackNumber");
+            String identity = request.getParameter("identity");
+            String trackStatus = request.getParameter("status");
+            String minSpeedValue = request.getParameter("minSpeed");
+            String maxSpeedValue = request.getParameter("maxSpeed");
+            String startTimeValue = request.getParameter("startTime");
+            String endTimeValue = request.getParameter("endTime");
+
+            // converting empty values into null
+            if (sourceId != null && sourceId.trim().isEmpty())
+                sourceId = null;
+
+            if (trackNumber != null && trackNumber.trim().isEmpty())
+                trackNumber = null;
+
+            if (identity != null && identity.trim().isEmpty())
+                identity = null;
+
+            if (trackStatus != null && trackStatus.trim().isEmpty())
+                trackStatus = null;
+
+            // converting speed into double
+            Double minSpeed = null;
+            Double maxSpeed = null;
+
+            if (minSpeedValue != null && !minSpeedValue.trim().isEmpty())
+                minSpeed = Double.parseDouble(minSpeedValue.trim());
+
+            if (maxSpeedValue != null && !maxSpeedValue.trim().isEmpty())
+                maxSpeed = Double.parseDouble(maxSpeedValue.trim());
+
+            // converting date values into LocalDateTime
+            LocalDateTime startTime = null;
+            LocalDateTime endTime = null;
+
+            if (startTimeValue != null && !startTimeValue.trim().isEmpty())
+                startTime = LocalDateTime.parse(startTimeValue.trim());
+
+            if (endTimeValue != null && !endTimeValue.trim().isEmpty())
+                endTime = LocalDateTime.parse(endTimeValue.trim());
+
+            // checking to ensure at least one filter is selected by user
+            if (sourceId == null && trackNumber == null &&
+                    identity == null && trackStatus == null &&
+                    minSpeed == null && maxSpeed == null &&
+                    startTime == null && endTime == null) {
+
+                out.println("Please select at least one filter");
+                return;
+            }
+
+            // validation to make sure minimum speed is not above maximum speed
+            if (minSpeed != null && maxSpeed != null &&
+                    minSpeed > maxSpeed) {
+
+                out.println("Minimum speed is more than maximum speed");
+                return;
+            }
+
+            // validation to make sure that start time is not after end time
+            if (startTime != null && endTime != null &&
+                    startTime.isAfter(endTime)) {
+
+                out.println("Start time is after end time");
+                return;
+            }
+
+// calling repo to check matching tracks
+
+            List<Track> tracks = TrackRepository.advancedFilter(sourceId, trackNumber, identity, trackStatus, minSpeed, maxSpeed, startTime, endTime);
+
+            //Displaying search results
+
+            out.println("\n========== ADVANCED FILTER RESULTS ==========\n");
+
+            if (tracks == null || tracks.isEmpty()) {
+                out.println("No Matching Tracks Found");
+            } else {
+                for (Track track : tracks) {
+                    out.println("---------------------------------------------");
+                    out.println("Track Number      : " + track.getTrackNumber());
+                    out.println("Source ID         : " + track.getSourceId());
+                    out.println("Latitude          : " + track.getLatitude());
+                    out.println("Longitude         : " + track.getLongitude());
+                    out.println("Speed             : " + track.getSpeed());
+                    out.println("Identity          : " + track.getIdentity());
+                    out.println("Track Status      : " + track.getTrackStatus());
+                    out.println("Sequence Number   : " + track.getSequenceNumber());
+                    out.println("Observation Time  : " + track.getObservationTime());
+                }
+
+                out.println("---------------------------------------------");
+            }
+
+            out.println("=============================================\n");
+
+        } catch (NumberFormatException e) {
+
+            out.println("Please enter valid speed values");
+
+        } catch (java.time.format.DateTimeParseException e) {
+
+            out.println("Please enter valid date and time values");
+
+        } catch (Exception e) {
+
+            System.out.println("Cannot apply advanced track search: " + e);
+            e.printStackTrace();
+
+            out.println("Cannot apply track search");
+        }
+    }
+}
+
+Current Tracks Servlet:
+
+package com.mtms.web.servlet;
+
+
+import com.mtms.domain.Track;
+import com.mtms.service.TrackService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+public class CurrentTracksServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        TrackService trackService = new TrackService();
+
+        List<Track> currentTracks = trackService.getCurrentView();
+
+        resp.setContentType("text/plain");
+        resp.setCharacterEncoding("UTF-8");
+
+        PrintWriter out = resp.getWriter();
+
+        out.println(" ========== LIST OF CURRENT TRACKS ============");
+
+        if (currentTracks == null || currentTracks.isEmpty()) {
+            out.println("No tracks available.");
+        } else {
+
+            for (Track track : currentTracks) {
+
+                out.println("----------------------------------------");
+                out.println("Track ID: " + track.getTrackId());
+                out.println("Track Number: " + track.getTrackNumber());
+                out.println("Latitude: " + track.getLatitude());
+                out.println("Longitude: " + track.getLongitude());
+                out.println("Speed: " + track.getSpeed());
+                out.println("Identity: " + track.getIdentity());
+                out.println("Track Status: " + track.getTrackStatus());
+                out.println("Source ID: " + track.getSourceId());
+                out.println("Sequence Number: " + track.getSequenceNumber());
+                out.println("Observation Time: " + track.getObservationTime());
+                out.println("Received Time: " + track.getReceivedTime());
+                out.println("----------------------------------------");
+            }
+        }
+
+        out.close();
+    }
+}
+
+ValidationService:
+
+  public static List<String> validateTrack(Track track) {
+        List<String> errors = new ArrayList<>();
+
+        // Validation to Check Track number
+        if (track.getTrackNumber() == null ||
+                track.getTrackNumber().trim().isEmpty()) {
+            errors.add("Track Number is Empty");
+        } else if (track.getTrackNumber().trim().length() < 6)
+        {
+            errors.add("Track Number is Too Short");
+        }
+
+        // Validation to Check Source Id
+        if (track.getSourceId() == null ||
+                track.getSourceId().trim().isEmpty()) {
+            errors.add("Source Id is Empty");
+        } else if (track.getSourceId().trim().length() < 4)
+        {
+            errors.add("Source Id is Too Short");
+        }
+
+        // Validation to Check speed (>0 and <=2000)
+        if (track.getSequenceNumber() <= 0) {
+            errors.add("Sequence Number is Invalid ");
+        }
+
+        // Validation to Check Latitude (-90 to 90)
+        if (track.getLatitude() < -90 ||
+                track.getLatitude() > 90)
+        {
+            errors.add("Latitude is Invalid ");
+        }
+
+        // Validation to Check Longitude (-180 to 180)
+        if (track.getLongitude() < -180 ||
+                track.getLongitude() > 180)
+        {
+            errors.add("longitude is Invalid");
+        }
+
+        // Validation to Check speed (>0 and <=2000)
+        if (track.getSpeed() < 0) {
+            errors.add("Speed is Invalid ");
+        } else if (track.getSpeed() > 2000)
+        {
+            errors.add("Speed is too high ");
+        }
+
+        // Validation to Check identity (FRIEND, HOSTILE, UNKNOWN, NEUTRAL)
+        if (track.getIdentity() == null ||
+                !(track.getIdentity().equals("FRIEND") ||
+                        track.getIdentity().equals("HOSTILE") ||
+                        track.getIdentity().equals("UNKNOWN") ||
+                        track.getIdentity().equals("NEUTRAL")))
+        {
+            errors.add("Invalid identity");
+        }
+
+        // Validation to Check status
+        if (track.getTrackStatus() == null ||
+                !(track.getTrackStatus().equals("ACTIVE") ||
+                        track.getTrackStatus().equals("INACTIVE")))
+        {
+            errors.add("Status is Invalid ");
+        }
+
+advanced-filter.html:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage | Advanced Filters</title>
+</head>
+
+<body>
+
+<h3> Advanced Filter Tracks</h3>
+
+<form action="tracks/advancedfilter" method="get">
+
+
+    <label>Enter Source ID:
+        <input type="text"
+               name="sourceId"
+               placeholder="Enter Source ID: "
+        />
+
+    </label>
+    <br><br>
+
+    <label>Enter Track Number:
+        <input type="text"
+               name="trackNumber"
+               placeholder="Enter Track Number: "
+        />
+
+    </label>
+    <br><br>
+
+
+    <label for="identity">Choose Identity Type:</label>
+    <select name="identity" id="identity">
+        <option value="">Select Identity</option>
+        <option value="FRIEND">FRIEND</option>
+        <option value="NEUTRAL">NEUTRAL</option>
+        <option value="HOSTILE">HOSTILE</option>
+        <option value="UNKNOWN">UNKNOWN</option>
+    </select>
+
+    <br><br>
+
+    <label for="status">Choose Status Type:</label>
+    <select name="status" id="status">
+        <option value="">Select Status</option>
+        <option value="ACTIVE">ACTIVE</option>
+        <option value="INACTIVE">INACTIVE</option>
+    </select>
+
+
+    <br><br>
+
+    <label for="minSpeed">Minimum Speed:</label>
+    <input type="number" name="minSpeed"
+           id="minSpeed" min="0" step="any"
+
+    >
+
+
+    <br><br>
+
+    <label for="maxSpeed">Maximum Speed:</label>
+    <input type="number" name="maxSpeed"
+           id="maxSpeed"  step="any"
+
+    >
+
+    <br><br>
+
+    <label for="startTime"> Enter Start Date & Time: </label>
+    <input type="datetime-local"
+           name="startTime"
+           id="startTime"
+    >
+
+    <br><br>
+
+    <label for="endTime"> Enter End Date & Time: </label>
+    <input type="datetime-local"
+           name="endTime"
+           id="endTime"
+    >
+    <br><br>
+
+    <button type="submit">Search Track</button>
+</form>
+
+<br>
+<a href="index.html">Return Home</a>
+
+</body>
+</html>
+
+alert-list.html:
+
+<!-- Get alert track list -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HomePage | Alert List</title>
+</head>
+<body>
+
+<h3>Get All Alerts</h3>
+
+<form action="alerts/list" method="get">
+    <button type="submit">Get Alert List</button>
+
+</form>
+<br>
+<a href="index.html">Return Home</a>
+
+</body>
+</html>
+
+correlation-candidates.html:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HomePage | Correlation Candidates</title>
+</head>
+<body>
+<h3>Correlation Candidates</h3>
+
+<form  action="tracks/correlationcandidates" method="get">
+
+<button type="submit">Get All Correlation Candidates</button>
+</form>
+<br>
+<a href="index.html">Return Home</a>
+
+</body>
+
+
+</html>
+
+current-tracks.html:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HomePage | Current Track</title>
+</head>
+<body>
+<h3> Current Tracks </h3>
+<form action="tracks/current" method="get">
+
+
+    <button type="submit">Get Current Tracks List</button>
+
+</form>
+
+<br>
+<a href="index.html">Return Home</a>
+
+</body>
+</html>
+
+delete-form.html:
+
+<!-- Delete a track -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HomePage | Delete Track Form</title>
+</head>
+<body>
+
+<h3>Delete Track</h3>
+
+<form action="tracks/delete" method="post">
+
+  <label>Delete Track:
+    <input type="text"
+           name="trackNumber"
+           placeholder="Enter Track Number:"
+           required
+           minlength="5" />
+  </label>
+
+  <br><br>
+
+  <button type="submit">Delete Track</button>
+
+</form>
+<br><br>
+<a href="index.html">Return Home</a>
+
+</body>
+</html>
+
+filter-form.html:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> HomePage | Filter Track Form</title>
+</head>
+<body>
+
+<h3>Filter Tracks</h3>
+
+<form action="tracks/filter" method="get">
+
+  <label for="identity">Choose Identity Type:</label>
+  <select name="identity" id="identity">
+    <option value="default"></option>
+    <option value="FRIEND">FRIEND</option>
+    <option value="NEUTRAL">NEUTRAL</option>
+    <option value="HOSTILE">HOSTILE</option>
+    <option value="UNKNOWN">UNKNOWN</option>
+  </select>     <button type="submit">Submit</button>
+
+
+  <br><br>
+
+  <label for="status">Choose Status Type:</label>
+  <select name="status" id="status">
+    <option value="default"></option>
+    <option value="ACTIVE">ACTIVE</option>
+    <option value="INACTIVE">INACTIVE</option>
+  </select>
+  <button type="submit">Search Track</button>
+
+  <br><br>
+
+  <label for="minimumSpeed">Minimum Speed:</label>
+  <input type="number" name="minimumSpeed"
+         id="minimumSpeed" min="0" step="any" value="0"
+  >     <button type="submit">Search Track</button>
+
+
+  <br><br>
+
+
+</form>
+<br>
+<a href="index.html">Return Home</a>
+
+</body>
+</html>
+
+
+index.html:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HomePage | Navigation Bar</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #263445;
+            padding: 18px;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 35px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #64b5f6;
+        }
+
+        /* Main Content */
+        .container {
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        h1 {
+            color: #263445;
+        }
+
+        p {
+            color: #555;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navigation Links -->
+<nav>
+    <ul>
+        <li><a href="track-form.html">Create Track</a></li>
+        <li><a href="search-form.html">Search Tracks</a></li>
+        <li><a href="replay-form.html">Replay Tracks</a></li>
+        <li><a href="delete-form.html">Delete Tracks</a></li>
+        <li><a href="track-list.html">List Tracks</a></li>
+        <li><a href="alert-list.html">List Alerts</a></li>
+        <li><a href="current-track.html">List Current Tracks</a>
+        <li><a href="track-history.html">Track History</a>
+        <li><a href="statistics.html">Statistics</a></li>
+        <li><a href="source-monitor.html">Source Monitor</a></li>
+        <li><a href="correlation-candidates.html">Correlation Candidates</a>
+        <li><a href="filter-form.html">Filter Tracks</a></li>
+        <li><a href="advanced-filter.html">Advanced Filters</a></li>
+        </li>
+
+
+    </ul>
+</nav>
+
+<!-- Main Content -->
+<div class="container">
+    <h1>Track Management Home</h1>
+</div>
+
+</body>
+</html>
+
+replay-form.html:
+
+<!--Select for a replay time window-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HomePage | Replay Track Form</title>
+
+</head>
+<body>
+
+
+<h3>Replay Track</h3>
+<form  action="tracks/replay" method="get">
+
+
+    <label for="start">Enter Start Date & Time: </label>
+    <input type="datetime-local"
+           name="start"
+           id="start"
+           required>
+
+    <br><br>
+
+    <label for="end">Enter End Date & Time: </label>
+    <input type="datetime-local"
+           name="end"
+           id="end"
+           required>
+
+    <label for="speed">Select Replay Speed: </label>
+    <select name="speed" id="speed" required>
+        <option value="normal">NORMAL (500) </option>
+        <option value="half">HALF (2000) </option>
+        <option value="double">DOUBLE (1000) </option>
+    </select>
+
+
+    <button type="submit">Replay Track</button>
+
+</form>
+<br>
+<a href="index.html">Return Home</a>
+
+</body>
+
+</html>
+
+
+search-form.html:
+
+100%
+<!--search for a track-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HomePage | Search Track Form</title>
+
+</head>
+<body>
+
+
+<h3>Track Search</h3>
+<form  action="tracks/search" method="get">
+
+    <label>Search Track:
+        <input type="text"
+               name="trackNumber"
+               placeholder="Enter Track Number: "
+               required minlength="5"/>
+
+    </label>
+    <br>
+
+    <button type="submit">Search</button>
+</form>
+<br><br>
+<a href="index.html">Return Home</a>
+
+</body>
+
+</html>
+
+source-monitor.html:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+
+</head>
+
+
+
+<body>
+
+<h3>Sources Monitor</h3>
+
+<form  action="source/monitor" method="get">
+
+    <button type="submit">Get All Sources</button>
+
+</form>
+<br>
+
+<a href="index.html">Return Home</a>
+
+
+
+</form>
+
+
+</body>
+
+</html>
+
+
+statistics.html:
+
+<!-- Get track list -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HomePage | Statistics</title>
+</head>
+<body>
+
+<h3>Get Statistics on Tracks</h3>
+
+<form action="tracks/statistics" method="get">
+
+    <button type="submit">Get Statistics</button>
+
+</form>
+<br>
+<a href="index.html">Return Home</a>
+
+</body>
+</html>
+
+track-form.html:
+
+<!--//Form to create a track-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> HomePage | Create Track Forms </title>
+</head>
+<body>
+
+
+<h3>Create New Track</h3>
+<form  action="tracks/create" method="post">
+
+    <label> Enter Source ID:
+        <input type="text"
+               name="sourceId"
+               placeholder="Enter Source Id: "/>
+
+    </label><br><br>
+
+
+    <label> Enter Track Number:
+        <input type="text"
+               name="trackNumber"
+               placeholder="Enter Track Number: "
+               required minlength="5"/>
+
+    </label><br><br>
+
+    <label> Enter sequence Number:
+        <input type="text"
+               name="sequenceNumber"
+               placeholder="Enter sequence Number: "/>
+
+    </label><br><br>
+
+    <label for="end">Enter Observation Date & Time: </label>
+    <input type="datetime-local"
+           name="observationTime"
+           id="end"
+           required>
+    </label><br><br>
+
+
+    <label> Enter Latitude:
+        <input type="text"
+               name="latitude"
+               placeholder="Enter Latitude: "/>
+    </label><br><br>
+
+    <label> Enter Longitude:
+        <input type="text"
+               name="longitude"
+               placeholder="Enter Longitude: "/>
+    </label><br><br>
+
+    <label> Enter Speed:
+        <input type="text"
+               name="speedNumber"
+               placeholder="Enter Speed: "/>
+    </label><br><br>
+
+    <label for="identity">Choose Identity Type: </label>
+    <select name="identity" id="identity" required>
+        <option value="FRIEND">FRIEND</option>
+        <option value="NEUTRAL">NEUTRAL</option>
+        <option value="HOSTILE">HOSTILE</option>
+        <option value="UNKNOWN">UNKNOWN</option>
+    </select>
+    <br><br>
+
+    <label for="status">Choose Status Type: </label>
+    <select name="status" id="status" required>
+        <option value="ACTIVE">ACTIVE</option>
+        <option value="INACTIVE">INACTIVE</option>
+    </select>
+    <br><br>
+
+    <button type="submit"> Create Track </button>
+
+
+</form>
+<br>
+<a href="index.html">Return Home</a>
+
+</body>
+
+</html>
+
+track-history.html:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HomePage | Track History</title>
+</head>
+<body>
+
+
+
+<h3> Search History of a Track </h3>
+<br>
+<form action="tracks/history" method="get">
+
+  <label>Enter Track Number:
+    <input type="text"
+           name="trackNumber"
+           placeholder="Enter Track Number: "
+    />
+
+  </label><br><br>
+
+  <button type="submit">Get Track History</button>
+
+
+  <br><br>
+
+
+  <a href="index.html">Return Home</a>
+
+</form>
+</body>
+</html>
+
+
+track-list.html:
+
+<!-- Get track list -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HomePage | Track List</title>
+</head>
+<body>
+
+<h3>Get All Tracks</h3>
+
+<form action="tracks/list" method="get">
+    <button type="submit">Get Track List</button>
+
+</form>
+<br>
+<a href="index.html">Return Home</a>
+
+</body>
+</html>
+
+track-observations.html:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HomePage | Track Observations History</title>
+</head>
+<body>
+
+<h3>Get All Track Observations</h3>
+
+<form action="tracks/observations" method="get">
+    <button type="submit">Get Track Observations</button>
+
+</form>
+<br>
+<a href="index.html">Return Home</a>
+
+
+</body>
+</html>
+
+
+web.xml:
+
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
+         version="6.1">
+
+
+    <display-name>MTMS-Web-1.2</display-name>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+
+    <!--    CreateTrackServlet + track form -->
+    <servlet>
+        <servlet-name>CreateTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.CreateTracksServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CreateTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/create</url-pattern>
+    </servlet-mapping>
+
+
+    <!--    SearchTrack + search form -->
+    <servlet>
+        <servlet-name>SearchTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.SearchTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SearchTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/search</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- FilterTrack + filter form -->
+
+    <servlet>
+        <servlet-name>FilterTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.FilterTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>FilterTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/filter</url-pattern>
+    </servlet-mapping>
+
+    <!--Replay Track + replay form -->
+
+    <servlet>
+        <servlet-name>ReplayTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.ReplayTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ReplayTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/replay</url-pattern>
+    </servlet-mapping>
+
+
+    <!--    DeleteTrack + delete form-->
+
+    <servlet>
+        <servlet-name>DeleteTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.DeleteTrackServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DeleteTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/delete</url-pattern>
+    </servlet-mapping>
+
+    <!--List Track + Track List -->
+
+    <servlet>
+        <servlet-name>ListTrackRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.TrackListServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ListTrackRelatedServlet</servlet-name>
+        <url-pattern>/tracks/list</url-pattern>
+    </servlet-mapping>
+
+    <!--List Alert + Alert List -->
+
+    <servlet>
+        <servlet-name>ListAlertRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.AlertListServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ListAlertRelatedServlet</servlet-name>
+        <url-pattern>/alerts/list</url-pattern>
+    </servlet-mapping>
+
+    <!-- Statistics -->
+
+    <servlet>
+        <servlet-name>StatisticsRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.StatisticsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>StatisticsRelatedServlet</servlet-name>
+        <url-pattern>/tracks/statistics</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Source Monitor -->
+
+    <servlet>
+        <servlet-name>SourceMonitorRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.SourceMonitorServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SourceMonitorRelatedServlet</servlet-name>
+        <url-pattern>/source/monitor</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Advanced Filters   -->
+
+    <servlet>
+        <servlet-name>AdvancedFiltersRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.AdvancedFiltersServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AdvancedFiltersRelatedServlet</servlet-name>
+        <url-pattern>/tracks/advancedfilter</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Correlation Candidates   -->
+
+    <servlet>
+        <servlet-name>CorrelationCandidatesRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.CorrelationCandidatesServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CorrelationCandidatesRelatedServlet</servlet-name>
+        <url-pattern>/tracks/correlationcandidates</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Current Track   -->
+
+    <servlet>
+        <servlet-name>CurrentTracksRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.CurrentTracksServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CurrentTracksRelatedServlet</servlet-name>
+        <url-pattern>/tracks/current</url-pattern>
+    </servlet-mapping>
+
+    <!-- Full history of Track   -->
+
+    <servlet>
+        <servlet-name>TrackHistoryRelatedServlet</servlet-name>
+        <servlet-class>com.mtms.web.servlet.TrackHistoryServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>TrackHistoryRelatedServlet</servlet-name>
+        <url-pattern>/tracks/history</url-pattern>
+    </servlet-mapping>
+
+
+
+</web-app>
+
