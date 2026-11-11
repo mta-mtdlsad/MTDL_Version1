@@ -5,28 +5,49 @@ import com.mtms.networking.Server;
 import com.mtms.networking.SourceAClient;
 import com.mtms.networking.SourceBClient;
 import com.mtms.networking.SourceCClient;
-import com.mtms.service.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import static java.lang.Thread.sleep;
 
 @SpringBootApplication(scanBasePackages = "com.mtms")
+@EntityScan(basePackages = "com.mtms.domain")
+@EnableJpaRepositories(basePackages = "com.mtms.repository")
 public class MTMSApplication {
     public static void main(String[] args) throws InterruptedException {
-        SpringApplication.run(MTMSApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(MTMSApplication.class, args);
 
-        Thread serverThread = new Thread(Server::recevingDataFromClient);
-        serverThread.start();
+//
+//        Server server = new Server();
+//        SourceAClient clientA = new SourceAClient();
+//        SourceBClient clientB = new SourceBClient();
+//        SourceCClient clientC = new SourceCClient();
 
-        Thread clientAThread = new Thread(SourceAClient::sendingDataToServer);
-        clientAThread.start();
+        Server server = context.getBean(Server.class);
+        SourceAClient clientA = context.getBean(SourceAClient.class);
+        SourceBClient clientB = context.getBean(SourceBClient.class);
+        SourceCClient clientC = context.getBean(SourceCClient.class);
 
-        Thread clientBThread = new Thread(SourceBClient::sendingDataToServer);
-        clientBThread.start();
+        new Thread(server::recevingDataFromClient).start();
+        new Thread(clientA::sendingDataToServer).start();
+        new Thread(clientB::sendingDataToServer).start();
+        new Thread(clientC::sendingDataToServer).start();
 
-        Thread clientCThread = new Thread(SourceCClient::sendingDataToServer);
-        clientCThread.start();
+//        Thread serverThread = new Thread(server::recevingDataFromClient);
+//        serverThread.start();
+//
+//        Thread clientAThread = new Thread(clientA::sendingDataToServer);
+//        clientAThread.start();
+//
+//        Thread clientBThread = new Thread(clientB::sendingDataToServer);
+//        clientBThread.start();
+//
+//        Thread clientCThread = new Thread(clientC::sendingDataToServer);
+//        clientCThread.start();
 
 //        // waiting for tracks to be processed and saved
 //        sleep(1000);

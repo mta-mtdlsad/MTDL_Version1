@@ -1,10 +1,20 @@
 package com.mtms.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "track")
 public class Track {
     //Attributes
-    private int trackId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer trackId;
     private String trackNumber;
     private double latitude;
     private double longitude;
@@ -17,7 +27,7 @@ public class Track {
     private LocalDateTime receivedTime;
 
     // Constructor with trackId object
-    public Track(int trackId, String trackNumber, double latitude, double longitude,
+    public Track(Integer trackId, String trackNumber, double latitude, double longitude,
                  double speed, String identity, String trackStatus, String sourceId, int sequenceNumber,
                  LocalDateTime observationTime,  LocalDateTime receivedTime) {
         this.trackId = trackId;
@@ -49,8 +59,10 @@ public class Track {
         this.receivedTime = receivedTime;
     }
 
+    public Track() {}
+
     // Getters
-    public int getTrackId() {
+    public Integer getTrackId() {
         return trackId;
     }
     public String getTrackNumber() {

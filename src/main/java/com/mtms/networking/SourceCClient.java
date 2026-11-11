@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class SourceCClient {
     static List<String> listOfTracks = null;
-    public static void sendingDataToServer() {
+    public  void sendingDataToServer() {
 
         // generate tracks from source
         listOfTracks = TrackSimulator.generateTracksC();

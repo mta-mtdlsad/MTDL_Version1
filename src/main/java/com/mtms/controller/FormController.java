@@ -2,22 +2,24 @@ package com.mtms.controller;
 
 import com.mtms.domain.Track;
 import com.mtms.service.TrackService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class FormController {
 
+    @Autowired
     private TrackService trackService;
 
     @ResponseBody
     @GetMapping("/api/tracks/list")
     public String getTracks(Model model) {
         model.addAttribute("tracks", "Tracks List");
-        List<Track> listOfTracks = TrackService.findAllTracks();
+        List<Track> listOfTracks = trackService.findAllTracks();
 
         StringBuilder result = new StringBuilder();
 
@@ -43,9 +45,9 @@ public class FormController {
                                          Model model){
         List<Track> listOfTracks;
         if (!minimumSpeed.isEmpty())
-            listOfTracks =  TrackService.getFilteredTracks(identity, status, Double.parseDouble(minimumSpeed));
+            listOfTracks =  trackService.getFilteredTracks(identity, status, Double.parseDouble(minimumSpeed));
         else
-            listOfTracks =  TrackService.getFilteredTracks(identity, status, null);
+            listOfTracks =  trackService.getFilteredTracks(identity, status, null);
 
         StringBuilder result = new StringBuilder();
 
@@ -68,7 +70,7 @@ public class FormController {
     public String getFullHistory(@RequestParam("sourceId") String sourceId,
                                       @RequestParam("trackNumber") String trackNumber){
 
-        List<Track> listOfTracks = TrackService.getFullHistory(sourceId, trackNumber);
+        List<Track> listOfTracks = trackService.getFullHistory(trackNumber, sourceId);
 
         StringBuilder result = new StringBuilder();
 
@@ -91,7 +93,7 @@ public class FormController {
     public String searchTracks(@RequestParam("trackNumber") String trackNumber,
                                Model model) {
         model.addAttribute("tracks", "Tracks Search");
-        List<Track> listOfTracks = TrackService.findTrackByNum(trackNumber);
+        List<Track> listOfTracks = trackService.findTrackByNum(trackNumber);
 
         StringBuilder result = new StringBuilder();
 
@@ -118,7 +120,7 @@ public class FormController {
     public String deleteTrackByNum(@RequestParam("trackNumber") String trackNumber){
         StringBuilder result = new StringBuilder();
         result.append("========== DELETING TRACKS RESULTS ==========<pre>");
-        if(TrackService.deleteTrackByNum(trackNumber))
+        if(trackService.deleteTrackByNum(trackNumber))
             result.append("Track ").append(trackNumber).append(" has been deleted.");
         else
             result.append("Track ").append(trackNumber).append(" could not be deleted.");

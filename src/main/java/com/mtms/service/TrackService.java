@@ -1,11 +1,11 @@
 package com.mtms.service;
 
 import com.mtms.domain.Track;
-import com.mtms.domain.Alert;
 import com.mtms.repository.TrackRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -14,16 +14,26 @@ import java.util.Map;
 
 @Service
 public class TrackService {
-    static TrackRepository trackRepository = new TrackRepository();
-    static TrackAnalyticsService trackAnalyticsService = new TrackAnalyticsService();
+
+//    @Autowired
+//    private  TrackRepository trackRepository;
+
+    private final TrackRepository trackRepository;
+
+    public TrackService(TrackRepository trackRepository) {
+        this.trackRepository = trackRepository;
+    }
+
+    //static TrackAnalyticsService trackAnalyticsService = new TrackAnalyticsService();
     private static List<Track> listOfTracks = null;
     private static List<Track> outOfOrderTracks = new ArrayList<Track>();
     // calculating duplicates and out-of-order messages
     private static int duplicatesCount = 0;
     private static int orderCount = 0;
+    private Integer trackId = 0;
 
     // Validate and process each track
-    public static void processTrackString(String trackString) {
+    public  void processTrackString(String trackString) {
 
         // parsing track from string
         List<String> malformedErrors = ValidationService.parseTrackString(trackString);
@@ -54,17 +64,17 @@ public class TrackService {
 
     //overloading
     // Validate and process each track object
-    public static boolean processTrack(Track track) {
+    public  boolean processTrack(Track track) {
 
         List<String> validationErrors = ValidationService.validateTrack(track);
 
         if (validationErrors.isEmpty()) {
             if (!hasDuplicates(track)) {
-                if(!isOutOfOrder(track)) {
-                    trackRepository.addTrack(track);
-                    SourceService.processSources(track);
+                //if(!isOutOfOrder(track)) {
+                    trackRepository.save(track);
+                    //SourceService.processSources(track);
                     return true;
-                }
+                //}
             }
         } else {
             // creating alert
@@ -74,7 +84,7 @@ public class TrackService {
     }
 
     // Checking for duplicate tracks
-    public static boolean hasDuplicates(Track track){
+    public  boolean hasDuplicates(Track track){
         listOfTracks = findAllTracks();
         if (listOfTracks != null)
             for (Track oldTrack : listOfTracks){
@@ -89,29 +99,31 @@ public class TrackService {
         return false;
     }
 
-    // storing out of order tracks
-    public static boolean isOutOfOrder(Track track){
-        Track latestTrack = trackRepository.getLatestTrackFromSource(track.getSourceId());
-        if (latestTrack != null)
-            if (latestTrack.getSequenceNumber() > track.getSequenceNumber()){
-                String alertMessage = "Message with the same Source Id has a higher Sequence Number than an existing Track";
-                AlertService.processAlert(track.getSourceId(), track.getTrackNumber(), alertMessage, "Out-of-order message");
-                outOfOrderTracks.add(track);
-                orderCount++;
-                return true;
-            }
-        return false;
-    }
+//    // storing out of order tracks
+//    public static boolean isOutOfOrder(Track track){
+//        Track latestTrack = trackRepository.getLatestTrackFromSource(track.getSourceId());
+//        if (latestTrack != null)
+//            if (latestTrack.getSequenceNumber() > track.getSequenceNumber()){
+//                String alertMessage = "Message with the same Source Id has a higher Sequence Number than an existing Track";
+//                AlertService.processAlert(track.getSourceId(), track.getTrackNumber(), alertMessage, "Out-of-order message");
+//                outOfOrderTracks.add(track);
+//                orderCount++;
+//                return true;
+//            }
+//        return false;
+//    }
 
     // getting list of out of order tracks
-    public static List<Track> GetOutOfOrderTracks(){
+    public  List<Track> GetOutOfOrderTracks(){
         return outOfOrderTracks;
     }
 
-    public static Track parsingTrackString (String trackString){
+    public  Track parsingTrackString (String trackString){
         // splitting string into segments
         String[] stringSeg = trackString.split("\\|");
+        trackId++;
         return new Track(
+//                trackId,
             stringSeg[2].trim(), //trackNumber
             Double.parseDouble(stringSeg[3].trim()), //latitude
             Double.parseDouble(stringSeg[4].trim()), //longitude
@@ -125,8 +137,9 @@ public class TrackService {
     }
 
     // Retrieve all tracks
-    public static List<Track> findAllTracks() {
-        listOfTracks = trackRepository.getAllTracks();
+    public  List<Track> findAllTracks() {
+        List<Track> listOfTracks = new ArrayList<>();
+        trackRepository.findAll().forEach(listOfTracks::add);
 //        System.out.println("\nRetrieving all tracks:");
 //        if (listOfTracks != null)
 //            for (Track track : listOfTracks) {
@@ -138,8 +151,8 @@ public class TrackService {
     }
 
     // Find tracks by track number
-    public static List<Track> findTrackByNum(String trackNumber) {
-        listOfTracks = trackRepository.getTrackByNumber(trackNumber);
+    public List<Track> findTrackByNum(String trackNumber) {
+        listOfTracks = trackRepository.findByTrackNumber(trackNumber);
         System.out.println("\nRetrieving all tracks with track number " + trackNumber + " :");
         if (listOfTracks != null) {
             for (Track track : listOfTracks) {
@@ -149,13 +162,14 @@ public class TrackService {
         else
             System.out.println("No available tracks with track number " + trackNumber);
         return listOfTracks;
+
     }
 
     // Delete tracks by track number
-    public static boolean deleteTrackByNum(String trackNumber) {
+    @Transactional
+    public boolean deleteTrackByNum(String trackNumber) {
         System.out.println("\nDeleting tracks with track number " + trackNumber + " :");
-        Boolean trackDeleted =  trackRepository.deleteTrackByNumber(trackNumber);
-        if (trackDeleted == true) {
+        if (trackRepository.deleteByTrackNumber(trackNumber) >0) {
             System.out.println("Track number " + trackNumber + " deleted successfully");
             return true;
         } else {
@@ -164,24 +178,24 @@ public class TrackService {
         }
     }
 
-    // getting latest tracks from each source
-    public List<Track> getCurrentView() {
-        System.out.println("\nCurrent View of Tracks: ");
-        listOfTracks = trackRepository.getCurrentView();
-
-        if (listOfTracks != null) {
-            for (Track track : listOfTracks) {
-                System.out.println(track);
-            }
-        }
-        return listOfTracks;
-    }
+//    // getting latest tracks from each source
+//    public List<Track> getCurrentView() {
+//        System.out.println("\nCurrent View of Tracks: ");
+//        listOfTracks = trackRepository.getCurrentView();
+//
+//        if (listOfTracks != null) {
+//            for (Track track : listOfTracks) {
+//                System.out.println(track);
+//            }
+//        }
+//        return listOfTracks;
+//    }
 
     //calling get full history view method
-    public static List<Track> getFullHistory(String sourceId, String trackNumber) {
+    public  List<Track> getFullHistory(String trackNumber, String sourceId) {
         System.out.println("\nFull History of a Track: ");
 
-        listOfTracks = trackRepository.getFullHistory(sourceId, trackNumber);
+        listOfTracks = trackRepository.findByTrackNumberAndSourceId(trackNumber, sourceId);
 
         if (listOfTracks != null) {
             for (Track track : listOfTracks) {
@@ -192,7 +206,7 @@ public class TrackService {
     }
 
     // Generate processing counter
-    public static Map<String, Integer> processingCounter (){
+    public Map<String, Integer> processingCounter (){
         Map<String, Integer> processCounter = new LinkedHashMap<>();
 
         // calculating accepted unique messages
@@ -205,7 +219,7 @@ public class TrackService {
         // calculating rejected messages
         int rejectedCount = 0;
         try{
-            rejectedCount  = AlertService.getAllAlerts().size();
+            //rejectedCount  = AlertService.getAllAlerts().size();
         } catch (Exception ignored) {
 
         }
@@ -232,12 +246,12 @@ public class TrackService {
     }
 
     // Generating filtered tracks
-    public static List<Track> getFilteredTracks(String identity, String status, Double minSpeed){
+    public List<Track> getFilteredTracks(String identity, String status, Double minSpeed){
         if (identity.isEmpty())
             identity = null;
         if (status.isEmpty())
             status = null;
-        return TrackRepository.filterTracks(identity, status, minSpeed);
+        return trackRepository.findByIdentityOrTrackStatusOrSpeedGreaterThanEqual(identity, status, minSpeed);
     }
 
 //    // Generating cross-source correlation tracks

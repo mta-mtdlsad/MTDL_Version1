@@ -5,11 +5,23 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import com.mtms.service.TrackService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Server {
-    public static void recevingDataFromClient()  {
+
+
+    private final TrackService trackService;
+
+    public Server(TrackService trackService) {
+        this.trackService = trackService;
+    }
+
+//    @Autowired
+//    private TrackService trackService;
+
+    public void recevingDataFromClient()  {
 
         // creating socket to listen for data
         DatagramSocket datagramSocket = null;
@@ -39,7 +51,7 @@ public class Server {
                 break;
             }
 
-            TrackService.processTrackString(byteToString(receive));
+            trackService.processTrackString(byteToString(receive));
 
             // clear buffer
             receive = new byte[65535];

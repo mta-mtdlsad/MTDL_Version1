@@ -1,7 +1,7 @@
 package com.mtms.service;
 
 import com.mtms.domain.Alert;
-import com.mtms.repository.AlertRepository;
+//import com.mtms.repository.AlertRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import java.util.Locale;
 @Service
 public class AlertService {
 
-    static AlertRepository alertRepository = new AlertRepository();
+    //static AlertRepository alertRepository = new AlertRepository();
 
 
     // Process alert and save in repository
@@ -51,21 +51,21 @@ public class AlertService {
                 sourceId,
                 eventType
         );
-        AlertRepository.addAlert(alert);
+        //AlertRepository.addAlert(alert);
     }
 
-    // Retrieve all alerts
-    public static List<Alert> getAllAlerts() {
-        List <Alert> listOfAlerts = alertRepository.getAllAlerts();
-//        System.out.println("\nRetrieving all alerts: ");
-//        if (listOfAlerts != null)
-//            for (Alert alert : listOfAlerts) {
-//                System.out.println(alert);
-//            }
-//        else
-//            System.out.println("No available alerts");
-        return listOfAlerts;
-    }
+//    // Retrieve all alerts
+//    public static List<Alert> getAllAlerts() {
+//        List <Alert> listOfAlerts = alertRepository.getAllAlerts();
+////        System.out.println("\nRetrieving all alerts: ");
+////        if (listOfAlerts != null)
+////            for (Alert alert : listOfAlerts) {
+////                System.out.println(alert);
+////            }
+////        else
+////            System.out.println("No available alerts");
+//        return listOfAlerts;
+//    }
 }
 
 

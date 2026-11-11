@@ -2,6 +2,7 @@ package com.mtms.service;
 
 import com.mtms.domain.Track;
 import com.mtms.repository.TrackRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -13,25 +14,32 @@ import java.util.Map;
 @Service
 public class TrackAnalyticsService {
 
-    static TrackRepository trackRepository = new TrackRepository();
-    private static List<Track> listOfTracks = null;
+    private final TrackRepository trackRepository;
+
+    public TrackAnalyticsService(TrackRepository trackRepository) {
+        this.trackRepository = trackRepository;
+    }
 
     // Display report statistics
-    public static List<String> showReportStat() {
+    public List<String> showReportStat() {
 
         List<String> report = new ArrayList<>();
 
         report.add("Hostile Tracks:");
         report.addAll(showHostileTracks());
+        report.add("------------------------<pre>");
 
         report.add("High Speed Tracks:");
         report.addAll(showHighSpeedTracks());
+        report.add("------------------------<pre>");
 
         report.add("Active Tracks:");
         report.addAll(showActiveTracks());
+        report.add("------------------------<pre>");
 
         report.add("Inactive Tracks:");
         report.addAll(showInactiveTracks());
+        report.add("------------------------<pre>");
 
         report.add("Identity Count:");
         report.addAll(showIdentityCount());
@@ -39,9 +47,9 @@ public class TrackAnalyticsService {
         return report;
     }
     // function to show hostile tracks
-    public static List<String> showHostileTracks() {
+    public List<String> showHostileTracks() {
 
-        List<Track> tracks = trackRepository.getHostileTracks();
+        List<Track> tracks = trackRepository.findByIdentity("HOSTILE");
         List<String> result = new ArrayList<>();
 
         if (tracks != null && !tracks.isEmpty()) {
@@ -56,9 +64,9 @@ public class TrackAnalyticsService {
     }
 
     // function to show high-speed tracks
-    public static List<String> showHighSpeedTracks() {
+    public List<String> showHighSpeedTracks() {
 
-        List<Track> tracks = trackRepository.getHighSpeedTracks();
+        List<Track> tracks = trackRepository.findBySpeedGreaterThanEqual(700);
         List<String> result = new ArrayList<>();
 
         if (tracks != null && !tracks.isEmpty()) {
@@ -71,42 +79,50 @@ public class TrackAnalyticsService {
 
         return result;
     }
-
     // function to show identity counts
-    public static List<String> showIdentityCount() {
+    public List<String> showIdentityCount() {
 
-        Map<String, Integer> counts = trackRepository.getIdentityCount();
+        List<Map<String, Integer>> counts = trackRepository.findIdentityCount();
         List<String> result = new ArrayList<>();
-
-        if (counts != null && !counts.isEmpty()) {
-            for (Map.Entry<String, Integer> entry : counts.entrySet()) {
-                result.add(entry.getKey() + ": " + entry.getValue());
-            }
-        } else {
-            result.add("No identity counts available");
-        }
-
+        counts.forEach(row -> {result.add(row.get("identity") + ": " + row.get("count"));});
         return result;
     }
 
-    // function to show tracks by identity
-    public static List<Track> showTracksByIdentity(String identity) {
-        List<Track> listOfTracks = trackRepository.getTracksByIdentity(identity);
+//    // function to show identity counts
+//    public List<String> showIdentityCount() {
+//
+//        Map<String, Integer> counts = trackRepository.findIdentityCounts();
+//        List<String> result = new ArrayList<>();
+//
+//        if (counts != null && !counts.isEmpty()) {
+//            for (Map.Entry<String, Integer> entry : counts.entrySet()) {
+//                result.add(entry.getKey() + ": " + entry.getValue());
+//            }
+//        } else {
+//            result.add("No identity counts available");
+//        }
+//
+//        return result;
+//    }
 
-        if (listOfTracks != null) {
-            for (Track track : listOfTracks) {
-                System.out.println(track);
-            }
-        } else {
-            System.out.println("No tracks available");
-        }
-        return listOfTracks;
-    }
+//    // function to show tracks by identity
+//    public List<Track> showTracksByIdentity(String identity) {
+//        List<Track> listOfTracks = trackRepository.getTracksByIdentity(identity);
+//
+//        if (listOfTracks != null) {
+//            for (Track track : listOfTracks) {
+//                System.out.println(track);
+//            }
+//        } else {
+//            System.out.println("No tracks available");
+//        }
+//        return listOfTracks;
+//    }
 
     // Retrieve active tracks
-    public static List<String> showActiveTracks() {
+    public List<String> showActiveTracks() {
 
-        List<Track> tracks = trackRepository.getActiveTracks();
+        List<Track> tracks = trackRepository.findByTrackStatus("ACTIVE");
         List<String> result = new ArrayList<>();
 
         if (tracks != null && !tracks.isEmpty()) {
@@ -120,9 +136,9 @@ public class TrackAnalyticsService {
         return result;
     }
     // Retrieve inactive tracks
-    public static List<String> showInactiveTracks() {
+    public List<String> showInactiveTracks() {
 
-        List<Track> tracks = trackRepository.getInactiveTracks();
+        List<Track> tracks = trackRepository.findByTrackStatus("INACTIVE");
         List<String> result = new ArrayList<>();
 
         if (tracks != null && !tracks.isEmpty()) {
@@ -136,21 +152,22 @@ public class TrackAnalyticsService {
         return result;
     }
 
-    // Retrieve tracks with minimum speed
-    public static List<Track> showTracksByMinimumSpeed(int minimumSpeed) {
-        return trackRepository.getTracksByMinimumSpeed(minimumSpeed);
-    }
-
-    //retrieve the total number of tracks for each identity
-    public Map<String, Integer> getIdentitySummary() {
-        return trackRepository.getTrackIdentity();
-    }
+//    // Retrieve tracks with minimum speed
+//    public static List<Track> showTracksByMinimumSpeed(int minimumSpeed) {
+//        return trackRepository.getTracksByMinimumSpeed(minimumSpeed);
+//    }
+//
+//    //retrieve the total number of tracks for each identity
+//    public Map<String, Integer> getIdentitySummary() {
+//        return trackRepository.getTrackIdentity();
+//    }
 
 
     // Generating cross-source correlation tracks
-    public static List<String> getCorrelatedTracks(){
+    public List<String> getCorrelatedTracks(){
         List<String> correlatedTracksInfo = new ArrayList<String>();
-        listOfTracks = TrackService.findAllTracks();
+        List<Track> listOfTracks = new ArrayList<>();
+        trackRepository.findAll().forEach(listOfTracks::add);
         // each track compared to other tracks
         for (Track track : listOfTracks) {
             for (Track track1 : listOfTracks) {
