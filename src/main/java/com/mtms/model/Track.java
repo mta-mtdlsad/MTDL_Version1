@@ -68,6 +68,18 @@ public class Track{
         this.recievedTime = recievedTime;
     }
 
+    public Track(int trackId, String sourceId, int sequenceNumber, String trackNumber, double latitude, double longitude, double speed, String identityType, String trackStatus) {
+        this.trackId = trackId;
+        this.sourceId = sourceId;
+        this.sequenceNumber = sequenceNumber;
+        this.trackNumber = trackNumber;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.speed = speed;
+        this.identityType = identityType;
+        this.trackStatus = trackStatus;
+    }
+
     public int getTrackId() {
         return trackId;
     }

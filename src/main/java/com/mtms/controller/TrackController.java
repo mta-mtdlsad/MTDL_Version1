@@ -63,13 +63,13 @@ public class TrackController {
     public List<Track> searchTracks(@RequestParam("track_number") String track_number){
         return tracks.findTracksByNumber(track_number);
     }
-
+/*
     @GetMapping(value = "/history", params = "!search")
     public ModelAndView showHistoryForm(){
         return new ModelAndView("forward:/search-trackNo-form.html");
-    }
+    }*/
 
-    @GetMapping(value = "/history", params = "search")
+    @GetMapping(value = "/history") //, params = "search")
     public List<Track> searchHistoryTracks(@RequestParam("source_id") String source_id, @RequestParam("track_number") String track_number){
         return tracks.getAllTrackHistory(track_number, source_id);
     }
@@ -88,6 +88,12 @@ public class TrackController {
     @PostMapping(value = "/maintenance")
     public boolean deleteTrack(@RequestParam("track_number") String track_number){
         return tracks.deleteTracksByTrackNumber(track_number);
+    }
+
+
+    @GetMapping("/correlate")
+    public Map<Track, List<Track>> correlateTracks() {
+        return tracks.correlateTracks();
     }
 
 }

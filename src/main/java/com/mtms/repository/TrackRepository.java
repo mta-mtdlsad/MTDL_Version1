@@ -12,6 +12,6 @@ public interface TrackRepository extends CrudRepository<Track, Integer>,  JpaSpe
     List<Track> findTracksByTrackNumber(String track_number);
     List<Track> findTracksBySourceId(String sourceId);
     List<Track> findTracksByTrackNumberAndSourceId(String track_number, String source_id);
-    void deleteAllByTrackNumber(String trackNumber);
+    long deleteAllByTrackNumber(String trackNumber);
 
 }

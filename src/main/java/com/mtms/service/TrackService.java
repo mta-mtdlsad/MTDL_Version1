@@ -4,6 +4,7 @@ import com.mtms.model.FilterParameters;
 import com.mtms.model.Track;
 import com.mtms.repository.TrackRepository;
 import com.mtms.util.TrackSpecifications;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
@@ -42,13 +43,10 @@ public class TrackService {
         }
     }
 
+    @Transactional
     public Boolean deleteTracksByTrackNumber(String number) {
-        track_repo.deleteAllByTrackNumber(number);
-        if (findTracksByNumber(number) == null) {
-            return true;
-        } else {
-            return false;
-        }
+        long deleted = track_repo.deleteAllByTrackNumber(number);
+        return deleted > 0;
     }
 
     public boolean saveTrack(Track track) {
@@ -63,75 +61,39 @@ public class TrackService {
     public List<Track> filterTracks(FilterParameters filterParams) {
         Specification<Track> spec = TrackSpecifications.filterTracks(filterParams);
         List<Order> orders = new ArrayList<>();
-
         boolean sorted = false;
 
-
-
         String sortInput = filterParams.getTimeSort();
-
         String sortDirection = filterParams.getTimeSortDirection();
-
         if (sortInput != null && !sortInput.isEmpty()) {
-
             if(sortDirection.equalsIgnoreCase("desc"))
-
-                orders.add(Order.desc("created_time"));
-
+                orders.add(Order.desc("createdTime"));
             else
-
-                orders.add(Order.asc("created_time"));
-
+                orders.add(Order.asc("createdTime"));
             sorted = true;
-
         }
-
         sortInput = filterParams.getSpeedSort();
-
         sortDirection = filterParams.getSpeedSortDirection();
-
         if (sortInput != null && !sortInput.isEmpty()) {
-
             if(sortDirection.equalsIgnoreCase("desc"))
-
                 orders.add(Order.desc("speed"));
-
             else
-
                 orders.add(Order.asc("speed"));
-
             sorted = true;
-
         }
-
         sortInput = filterParams.getTrackNumberSort();
-
         sortDirection = filterParams.getTrackNumberSortDirection();
-
         if (sortInput != null && !sortInput.isEmpty()) {
-
             if(sortDirection.equalsIgnoreCase("desc"))
-
-                orders.add(Order.desc("track_number"));
-
+                orders.add(Order.desc("trackNumber"));
             else
-
-                orders.add(Order.asc("track_number"));
-
+                orders.add(Order.asc("trackNumber"));
             sorted = true;
-
         }
 
         // Default fallback sort rule if no sort query params are supplied
-
-        if(!sorted) orders.add(Order.asc("id"));
-
-
-
+        if(!sorted) orders.add(Order.asc("trackId"));
         Sort sort = Sort.by(orders);
-
-
-
         return track_repo.findAll(spec, sort);
     }
 
@@ -190,8 +152,6 @@ public class TrackService {
     }
 
     public Map<Track, List<Track>> correlateTracks() {
-        List<String> filter = Arrays.asList("track_status");
-        List<String> filter_values = Arrays.asList(" = 'ACTIVE'");
         FilterParameters filterParams = new FilterParameters();
         filterParams.setStatus("ACTIVE");
         List<Track> allActiveTracks = filterTracks(filterParams);

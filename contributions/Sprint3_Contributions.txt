@@ -1,0 +1,17 @@
+---------- Team A Sprint 3 Contributions ----------
+
+
+---------- Day 1 ----------
+
+### Shamma ###
+/api/tracks/filter  |   /api/analytics/correlations |   /api/statistics
+ReportController.java and TrackController.java (+ FilterParameters.java and TrackService.java)
+Extra: Initial migration to Spring Boot
+
+### Fatima & Shahad ###
+/api/tracks/filter  |   /api/tracks/list |  /api/tracks/search  |    /api/tracks/history
+ReportController.java (+ TrackService.java and TrackRepository.java)
+Extra: Troubleshooting and fixing typos/bugs due to Spring Boot migration
+
+
+---------- Day 2 & 3 ----------
