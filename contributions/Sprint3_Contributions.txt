@@ -15,3 +15,21 @@ Extra: Troubleshooting and fixing typos/bugs due to Spring Boot migration
 
 
 ---------- Day 2 & 3 ----------
+
+### Shamma ###
+TrackRepository.java
+TrackController.java    |   AlertController.java    |   ReportController.java
+TrackService.java       |   AlertService.java       |   MessageParserService.java
+Extra: Modified structure, Organized code, and Added comments
+
+### Fatima ###
+TrackRepository.java    |   SourceRepository.java
+TrackController.java    |   SourceController.java   |   TrackViewController.java
+TrackService.java       |   SourceHealthService.java
+Extra: Added templates/tracks.html and Integrated UDP functionality to new code
+
+### Shahad ###
+TrackRepository.java    |   AlertRepository.java
+TrackController.java    |   AlertController.java
+TrackService.java       |   AlertService.java
+Extra: Added templates/tracks.html
