@@ -23,8 +23,9 @@ public class TrackController {
 
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
-    public Boolean addTopic(@RequestBody Track track){
-        return tracks.saveTrack(track);
+    public Track addTrack(@RequestBody Track track){
+        return tracks.createTrackFromApi(track);
+        //return tracks.saveTrack(track);
     }
 
     // retuen all observations as JSON format
@@ -40,7 +41,7 @@ public class TrackController {
     }
 
     @GetMapping("/filter/{identity}/{status}/{minSpeed}")
-    public List<Track> filterTrackks(@PathVariable String identity, @PathVariable String status, @PathVariable String minSpeed){
+    public List<Track> filterTracks(@PathVariable String identity, @PathVariable String status, @PathVariable String minSpeed){
         FilterParameters filterParams = new FilterParameters();
         filterParams.setIdentity(identity);
         filterParams.setStatus(status);
@@ -88,12 +89,6 @@ public class TrackController {
     @PostMapping(value = "/maintenance")
     public boolean deleteTrack(@RequestParam("track_number") String track_number){
         return tracks.deleteTracksByTrackNumber(track_number);
-    }
-
-
-    @GetMapping("/correlate")
-    public Map<Track, List<Track>> correlateTracks() {
-        return tracks.correlateTracks();
     }
 
 }

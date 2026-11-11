@@ -2,6 +2,7 @@ package com.mtms.service;
 
 import com.mtms.model.FilterParameters;
 import com.mtms.model.Track;
+import com.mtms.repository.SourceRepository;
 import com.mtms.repository.TrackRepository;
 import com.mtms.util.TrackSpecifications;
 import jakarta.transaction.Transactional;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -20,6 +22,12 @@ public class TrackService {
 
     @Autowired
     private TrackRepository track_repo;
+
+    @Autowired
+    private SourceHealthService sourceHealth;
+
+    @Autowired
+    private SourceRepository source_repo;
 
     public Track findTrackById(int id) {
         return track_repo.findById(id).get();
@@ -31,6 +39,23 @@ public class TrackService {
 
     public List<Track> findTracksBySource(String source_id) {
         return track_repo.findTracksBySourceId(source_id);
+    }
+
+    @Transactional
+    public Track createTrackFromApi(Track track) {
+        // 1. Save the track
+        Track saved = track_repo.save(track);
+
+        // 2. Register or update its source statistics
+        sourceHealth.recordOutcome(
+                saved.getSourceId(),
+                LocalDateTime.now(),
+                "ACCEPTED",
+                saved.getSequenceNumber()
+        );
+        // 3. Update the source status
+        source_repo.updateStatus(saved.getSourceId(), "ACTIVE");
+        return saved;
     }
 
 
@@ -183,5 +208,4 @@ public class TrackService {
     public List<Track> getAllTrackHistory(String trackNo, String sourceId) {
         return track_repo.findTracksByTrackNumberAndSourceId(trackNo, sourceId);
     }
-
 }

@@ -1,8 +1,15 @@
 package com.mtms.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.time.LocalDateTime;
 
+@Entity
 public class Source {
+    @Id
     String sourceId;
     String sourceStatus;
     LocalDateTime firstSeen;
@@ -13,6 +20,10 @@ public class Source {
     int rejectedCount;
     int duplicateCount;
     int processingFailureCount;
+
+    public Source(){
+
+    }
 
     public Source(String sourceId, String sourceStatus, LocalDateTime firstSeen, LocalDateTime lastSeen, int highestSequence, int receivedCount, int acceptedCount, int rejectedCount, int duplicateCount, int processingFailureCount) {
         this.sourceId = sourceId;
@@ -67,6 +78,46 @@ public class Source {
         return processingFailureCount;
     }
 
+    public void setSourceStatus(String sourceStatus) {
+        this.sourceStatus = sourceStatus;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
+
+    public void setFirstSeen(LocalDateTime firstSeen) {
+        this.firstSeen = firstSeen;
+    }
+
+    public void setLastSeen(LocalDateTime lastSeen) {
+        this.lastSeen = lastSeen;
+    }
+
+    public void setHighestSequence(int highestSequence) {
+        this.highestSequence = highestSequence;
+    }
+
+    public void setReceivedCount(int receivedCount) {
+        this.receivedCount = receivedCount;
+    }
+
+    public void setAcceptedCount(int acceptedCount) {
+        this.acceptedCount = acceptedCount;
+    }
+
+    public void setRejectedCount(int rejectedCount) {
+        this.rejectedCount = rejectedCount;
+    }
+
+    public void setDuplicateCount(int duplicateCount) {
+        this.duplicateCount = duplicateCount;
+    }
+
+    public void setProcessingFailureCount(int processingFailureCount) {
+        this.processingFailureCount = processingFailureCount;
+    }
+
     @Override
     public String toString() {
         return "Source{" +
@@ -82,4 +133,6 @@ public class Source {
                 ", processingFailureCount=" + processingFailureCount +
                 '}';
     }
+
+
 }
