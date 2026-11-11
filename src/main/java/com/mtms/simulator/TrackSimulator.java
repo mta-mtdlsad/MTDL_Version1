@@ -223,6 +223,7 @@ public class TrackSimulator extends Simulator{
         sourcesAndSequences.replace(source, sequence);
 
         int selected_track = random.nextInt(total_source_tracks);
+
         String trackNumber = String.format("TRK%d%03d", (source.charAt(5) - '@'), selected_track);
 
         String identity = identity_selector.getValue();
