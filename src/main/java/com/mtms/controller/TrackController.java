@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -80,6 +82,49 @@ public class TrackController {
 
 
     // !!! Functions below deal with redirecting so HTML pages are functional !!!
+
+    @PostMapping(value = "/createTrack")
+    public ResponseEntity<?> createTrackFromForm(
+            @RequestParam("sourceId") String sourceId,
+            @RequestParam("sequenceNumber") int sequenceNumber,
+            @RequestParam("trackNumber") String trackNumber,
+            @RequestParam("trackLatitude") double trackLatitude,
+            @RequestParam("trackLongitude") double trackLongitude,
+            @RequestParam("trackSpeed") double trackSpeed,
+            @RequestParam("trackIdentity") String trackIdentity,
+            @RequestParam("trackStatus") String trackStatus,
+            @RequestParam("trackCreatedTime") String trackCreatedTime
+    ) {
+        // Convert HTML datetime-local value to LocalDateTime
+        LocalDateTime createdTime = LocalDateTime.parse(trackCreatedTime);
+        // Create a Track using your existing constructor
+
+        Track track = new Track(
+                sourceId,
+                sequenceNumber,
+                trackNumber,
+                trackLatitude,
+                trackLongitude,
+                trackSpeed,
+                trackIdentity,
+                trackStatus,
+                createdTime
+        );
+
+        // Use the same validation and processing as Postman
+        MessageProcessorService.ProcessingResult result = processor.processDetailed(track);
+        // Return the result to the browser
+        return switch (result.outcome()) {
+            case ACCEPTED -> ResponseEntity.status(201)
+                    .body("Track created successfully!");
+            case REJECTED -> ResponseEntity.status(422)
+                    .body("Track rejected: invalid data.");
+            case DUPLICATE -> ResponseEntity.status(409)
+                    .body("Duplicate source sequence number.");
+            case FAILURE -> ResponseEntity.status(500)
+                    .body("Track processing failed.");
+        };
+    }
 
     @GetMapping(value = "/search", params = "!track_number")
     public ModelAndView showSearchForm(){

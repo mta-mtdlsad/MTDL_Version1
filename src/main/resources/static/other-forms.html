@@ -8,15 +8,14 @@
 <div class="">
     <h3>Correlation Form</h3>
 
-    <form method="get" action="tracks/correlation">
+    <form method="get" action="api/analytics/correlations">
         <label>Enter Source ID</label>
-        <input type="text" name="correlationSource" required><br><br>
+        <input type="text" name="sourceId" required><br><br>
         <label>Enter Sequence Number</label>
-        <input type="text" name="correlationSequence" required><br><br>
-        <input type="hidden" name="purpose" value="correlation">
+        <input type="text" name="sequenceNumber" required><br><br>
         <input type="submit">
     </form>
-
+<!--
     <h3>Simulation Form</h3>
 
     <form method="get" action="tracks/simulation">
@@ -42,7 +41,7 @@
         <input type="hidden" name="purpose" value="simulation">
         <input type="submit" value="Start Simulation">
     </form>
-
+-->
 </div>
 
 </body>
