@@ -35,7 +35,7 @@ public class TrackController {
         //1. validate and process the track
         MessageProcessorService.ProcessingResult result = processor.processDetailed(track);
 
-        //2. Register or update the source
+        /*//2. Register or update the source
         if (track != null && track.getSourceId() != null && track.getSourceId().matches("[A-Za-z0-9_-]{2,30}")) {
             sourceHealth.recordOutcome(
                     track.getSourceId(),
@@ -43,7 +43,7 @@ public class TrackController {
                     result.outcome().name(),
                     track.getSequenceNumber()
             );
-        }
+        }*/
 
         //3. return the processing result
         return switch (result.outcome()) {

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -20,11 +21,11 @@ public class ReportController {
     private AlertService alertService;
 
     @RequestMapping("/api/statistics")
-    private List[] getStatistics() {
-        List[] results = {
+    private List<Map> getStatistics() {
+        List<Map> results = Arrays.asList(
                 trackService.getIdentityStatistics(),
                 alertService.getSeverityStatistics()
-        };
+        );
         return results;
     }
 

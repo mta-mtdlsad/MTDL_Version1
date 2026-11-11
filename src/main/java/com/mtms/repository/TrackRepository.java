@@ -15,12 +15,12 @@ public interface TrackRepository extends JpaRepository<Track, Integer>,  JpaSpec
     List<Track> findTracksByTrackNumberAndSourceId(String track_number, String source_id);
     long deleteAllByTrackNumber(String trackNumber);
     @Query("SELECT t.identityType AS identityType, COUNT(t) AS count FROM Track t GROUP BY t.identityType")
-    List countByIdentityType();
+    List<IdentityTypeCount> countByIdentityType();
 
     // Nested projection interface
     interface IdentityTypeCount {
         String getIdentityType();
-        Long getCount();
+        Integer getCount();
     }
 
     boolean existsBySourceIdAndSequenceNumber(String sourceId, int sequenceNumber);

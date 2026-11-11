@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AlertService {
@@ -93,8 +95,19 @@ public class AlertService {
         alert_repo.deleteById(id);
     }
 
-    public List getSeverityStatistics() {
-        return alert_repo.countBySeverity();
+    public Map<String, Integer> getSeverityStatistics() {
+        String[] severityTypes = {"HIGH", "MEDIUM", "LOW"};
+        Map<String, Integer> statistics = new LinkedHashMap<>();
+        List<AlertRepository.SeverityTypeCount> results = alert_repo.countBySeverity();
+        for (AlertRepository.SeverityTypeCount result : results) {
+            statistics.put(result.getSeverityType(), result.getCount());
+        }
+        for(String type : severityTypes) {
+            if(!statistics.containsKey(type)) {
+                statistics.put(type, 0);
+            }
+        }
+        return statistics;
     }
 }
 /*
