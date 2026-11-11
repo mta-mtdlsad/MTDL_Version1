@@ -1,86 +1,157 @@
 package com.mtms.service;
 
+import com.mtms.model.FilterParameters;
 import com.mtms.model.Track;
-import com.mtms.model.ValidationResult;
 import com.mtms.repository.TrackRepository;
+import com.mtms.util.TrackSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 public class TrackService {
+
     @Autowired
     private TrackRepository track_repo;
 
-    /*
-     * * * * *
-     *  v1.0 *
-     * * * * *
-     */
-
-    //printing out track given the track number using the track repo
-    public Track searchTracks(String number) {
-        Track track = track_repo.getTrackByNo(number);
-        if (track == null) {
-            System.out.println("Track not found in the database");
-        }
-        return track;
+    public Track findTrackById(int id) {
+        return track_repo.findById(id).get();
     }
 
-    //deleting a track using track repo
-    public Boolean deleteTrack(String number) {
-        if (searchTracks(number) == null) {
-            System.out.println("Track not found in the database");
-            return false;
-        } else {
-            track_repo.deleteTrackByNo(number);
-            System.out.println("Track " + number + " Deleted successfully"); //prints confirmation string
+    public List<Track> findTracksByNumber(String number) {
+        return track_repo.findTracksByTrackNumber(number);
+    }
+
+    public List<Track> findTracksBySource(String source_id) {
+        return track_repo.findTracksBySourceId(source_id);
+    }
+
+
+    public Boolean deleteTrack(int id) {
+        track_repo.deleteById(id);
+        if (findTrackById(id) == null) {
             return true;
+        } else {
+            return false;
         }
     }
 
-    /*
-     * * * * *
-     *  v1.3 *
-     * * * * *
-     */
+    public Boolean deleteTracksByTrackNumber(String number) {
+        track_repo.deleteAllByTrackNumber(number);
+        if (findTracksByNumber(number) == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public boolean saveTrack(Track track) {
-        try {
-            track_repo.saveTrack(track); //returns confirmation string
+        if (track_repo.save(track) != null) {
             return true;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            return false;
         }
-        return false;
+
     }
 
-    public List<Track> filterTracks(List<String> filters, List<String> filter_values, List<String> sort,
-                                    LocalDateTime start_time, LocalDateTime end_time) {
-        return track_repo.searchAllTracks(filters, filter_values, sort, start_time, end_time);
+    public List<Track> filterTracks(FilterParameters filterParams) {
+        Specification<Track> spec = TrackSpecifications.filterTracks(filterParams);
+        List<Order> orders = new ArrayList<>();
+
+        boolean sorted = false;
+
+
+
+        String sortInput = filterParams.getTimeSort();
+
+        String sortDirection = filterParams.getTimeSortDirection();
+
+        if (sortInput != null && !sortInput.isEmpty()) {
+
+            if(sortDirection.equalsIgnoreCase("desc"))
+
+                orders.add(Order.desc("created_time"));
+
+            else
+
+                orders.add(Order.asc("created_time"));
+
+            sorted = true;
+
+        }
+
+        sortInput = filterParams.getSpeedSort();
+
+        sortDirection = filterParams.getSpeedSortDirection();
+
+        if (sortInput != null && !sortInput.isEmpty()) {
+
+            if(sortDirection.equalsIgnoreCase("desc"))
+
+                orders.add(Order.desc("speed"));
+
+            else
+
+                orders.add(Order.asc("speed"));
+
+            sorted = true;
+
+        }
+
+        sortInput = filterParams.getTrackNumberSort();
+
+        sortDirection = filterParams.getTrackNumberSortDirection();
+
+        if (sortInput != null && !sortInput.isEmpty()) {
+
+            if(sortDirection.equalsIgnoreCase("desc"))
+
+                orders.add(Order.desc("track_number"));
+
+            else
+
+                orders.add(Order.asc("track_number"));
+
+            sorted = true;
+
+        }
+
+        // Default fallback sort rule if no sort query params are supplied
+
+        if(!sorted) orders.add(Order.asc("id"));
+
+
+
+        Sort sort = Sort.by(orders);
+
+
+
+        return track_repo.findAll(spec, sort);
     }
 
     public int getHighestSequence(String sourceId) throws SQLException {
-        return track_repo.getHighestSequence(sourceId);
+        List<Track> listOfTracks = track_repo.findTracksBySourceId(sourceId);
+        return listOfTracks.stream().mapToInt(Track::getSequenceNumber).max().orElse(0);
     }
 
     public List<Track> correlateTrack(Track selected_track, List<Track> search_pool) {
-        String s1 = " != '" + selected_track.getSourceId() + "'";
-        String s2 = " = '" + selected_track.getIdentityType() + "'";
-        List<String> filter = Arrays.asList("source_id", "identity_type");
-        List<String> filter_values = Arrays.asList(s1, s2);
-        List<Track> listOfTracks = track_repo.searchAllTracks(filter, filter_values, null, null, null);
+        FilterParameters filterParams = new FilterParameters();
+        filterParams.setSourceId(selected_track.getSourceId());
+        filterParams.setIdentity(selected_track.getIdentityType());
+        List<Track> listOfTracks = filterTracks(filterParams);
 
         List<Track> listOfCorrelatedTracks = new ArrayList<>();
         double distance;
         long time;
         for (Track track : listOfTracks) {
-            if(search_pool != null) {
-                if(search_pool.isEmpty() || !search_pool.contains(track)) continue;
+            if (search_pool != null) {
+                if (search_pool.isEmpty() || !search_pool.contains(track)) continue;
             }
             if (Math.abs(selected_track.getSpeed() - track.getSpeed()) <= 100) {
                 time = Math.abs(Duration.between(selected_track.getCreatedTime(), track.getCreatedTime()).getSeconds());
@@ -121,40 +192,36 @@ public class TrackService {
     public Map<Track, List<Track>> correlateTracks() {
         List<String> filter = Arrays.asList("track_status");
         List<String> filter_values = Arrays.asList(" = 'ACTIVE'");
-        List<Track> allActiveTracks = track_repo.searchAllTracks(filter, filter_values, null, null, null);
+        FilterParameters filterParams = new FilterParameters();
+        filterParams.setStatus("ACTIVE");
+        List<Track> allActiveTracks = filterTracks(filterParams);
         Map<Track, List<Track>> correlationMap = new HashMap<>();
         List<Track> updatedActiveTracks = new ArrayList<>(allActiveTracks);
         List<Track> listOfTracks;
-        for(Track track : allActiveTracks) {
-            if(!updatedActiveTracks.contains(track)) continue;
+        for (Track track : allActiveTracks) {
+            if (!updatedActiveTracks.contains(track)) continue;
             listOfTracks = correlateTrack(track, updatedActiveTracks);
             if (!listOfTracks.isEmpty()) {
                 correlationMap.put(track, listOfTracks);
-                for(Track correlatedTrack : listOfTracks)
+                for (Track correlatedTrack : listOfTracks)
                     updatedActiveTracks.remove(correlatedTrack);
             }
             updatedActiveTracks.remove(track);
-            if(updatedActiveTracks.isEmpty()) break;
+            if (updatedActiveTracks.isEmpty()) break;
         }
         return correlationMap;
     }
 
-    //printing out all tracks using track repo
-    public List<Track> displayTracks() {
-        List<Track> tracks = track_repo.getAllTracks();
-        if (tracks.isEmpty()) {
-            System.out.println("No Tracks found in the database");
-        }
-        System.out.println(tracks);
-        return tracks;
+    public List<Track> getAllTracks() {
+        List<Track> listOfTracks = new ArrayList<>();
+        track_repo.findAll().forEach(listOfTracks::add);
+        return listOfTracks;
+
     }
 
-    public List<Track> getTracksByNumber(String trackNo){
-        return track_repo.getTracksByNumber(trackNo);
-    }
 
-    public List<Track> getAllTrackHistory(String trackNo, String source_id){
-        return track_repo.getAllTrackHistory(trackNo, source_id);
+    public List<Track> getAllTrackHistory(String trackNo, String sourceId) {
+        return track_repo.findTracksByTrackNumberAndSourceId(trackNo, sourceId);
     }
 
 }

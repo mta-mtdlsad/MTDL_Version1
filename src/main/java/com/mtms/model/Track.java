@@ -1,9 +1,17 @@
 package com.mtms.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Entity
 public class Track{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int trackId;
     String sourceId;
     int sequenceNumber;
@@ -15,6 +23,10 @@ public class Track{
     String trackStatus;
     LocalDateTime createdTime;
     LocalDateTime recievedTime;
+
+    public Track(){
+
+    }
 
     public Track(int trackId, String sourceId, int sequenceNumber, String trackNumber, double latitude, double longitude, double speed, String identityType, String trackStatus, LocalDateTime createdTime) {
         this.trackId = trackId;

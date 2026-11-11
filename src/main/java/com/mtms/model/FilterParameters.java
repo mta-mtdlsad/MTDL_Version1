@@ -18,8 +18,9 @@ public class FilterParameters {
     private String speedSortDirection;
     private String trackNumberSort;
     private String trackNumberSortDirection;
+    private String sequenceNumber;
 
-    FilterParameters() {}
+    public FilterParameters() {}
 
     public String getSourceId() {
         return sourceId;
@@ -139,6 +140,14 @@ public class FilterParameters {
 
     public void setTrackNumberSortDirection(String trackNumberSortDirection) {
         this.trackNumberSortDirection = trackNumberSortDirection;
+    }
+
+    public String getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public void setSequenceNumber(String sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
     }
 
     @Override

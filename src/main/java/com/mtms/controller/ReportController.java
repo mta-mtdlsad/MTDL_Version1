@@ -1,5 +1,6 @@
 package com.mtms.controller;
 
+import com.mtms.model.FilterParameters;
 import com.mtms.model.Track;
 import com.mtms.service.AlertAnalyticsService;
 import com.mtms.service.TrackAnalyticsService;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Filter;
 
 @RestController
 public class ReportController {
@@ -22,21 +24,21 @@ public class ReportController {
     private AlertAnalyticsService alertAnalyticsService;
     @Autowired
     private TrackService trackService;
-
-    @RequestMapping("/api/statistics")
-    private List<String> getStatistics() {
-        List<String> statistics = new ArrayList<>();
-        statistics.add(trackAnalyticsService.identityStatistics().toString());
-        statistics.add(alertAnalyticsService.severityStatistics().toString());
-        return statistics;
-    }
+//
+//    @RequestMapping("/api/statistics")
+//    private List<String> getStatistics() {
+//        List<String> statistics = new ArrayList<>();
+//        statistics.add(trackAnalyticsService.identityStatistics().toString());
+//        statistics.add(alertAnalyticsService.severityStatistics().toString());
+//        return statistics;
+//    }
 
     @RequestMapping("/api/analytics/correlations/{sourceId}/{sequenceNumber}")
     private List<Track> getCorrelatedTracks(@PathVariable String sourceId, @PathVariable String sequenceNumber) {
-        List<String> filters = Arrays.asList("source_id = '", "sequence_number = ");
-        List<String> filter_values = Arrays.asList(sourceId+"'", sequenceNumber);
-        List<Track> tracks;
-        tracks = trackService.filterTracks(filters, filter_values, null, null, null);
+        FilterParameters filterParams = new FilterParameters();
+        filterParams.setSourceId(sourceId);
+        filterParams.setSequenceNumber(sequenceNumber);
+        List<Track> tracks = trackService.filterTracks(filterParams);
         if(tracks != null) return trackService.correlateTrack(tracks.get(0), null);
         else return tracks;
     }

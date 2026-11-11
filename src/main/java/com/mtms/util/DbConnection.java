@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 
 public class DbConnection {
 
-    private static final String URL = "jdbc:postgresql://localhost:5432/MTMS_DB";
+    private static final String URL = "jdbc:postgresql://localhost:5432/MTMS_DB?currentSchema=mtmsSchema";
     private static final String USER = "postgres";
     private static final String PASSWORD = "1234";
 
