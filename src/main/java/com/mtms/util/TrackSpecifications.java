@@ -72,4 +72,13 @@ public class TrackSpecifications {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
+
+    public static Specification<Track> filterTracksCorrelation(String sourceId, String trackIdentity) {
+        return (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.notEqual(root.get("sourceId"), sourceId));
+            predicates.add(criteriaBuilder.equal(root.get("identityType"), trackIdentity));
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
 }

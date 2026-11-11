@@ -128,10 +128,11 @@ public class TrackService {
     }
 
     public List<Track> correlateTrack(Track selected_track, List<Track> search_pool) {
-        FilterParameters filterParams = new FilterParameters();
-        filterParams.setSourceId(selected_track.getSourceId());
-        filterParams.setIdentity(selected_track.getIdentityType());
-        List<Track> listOfTracks = filterTracks(filterParams);
+        Specification<Track> spec = TrackSpecifications.filterTracksCorrelation(
+                selected_track.getSourceId(),
+                selected_track.getIdentityType()
+        );
+        List<Track> listOfTracks = track_repo.findAll(spec);
 
         List<Track> listOfCorrelatedTracks = new ArrayList<>();
         double distance;
@@ -208,4 +209,7 @@ public class TrackService {
     public List<Track> getAllTrackHistory(String trackNo, String sourceId) {
         return track_repo.findTracksByTrackNumberAndSourceId(trackNo, sourceId);
     }
+
+    public List getIdentityStatistics() {return track_repo.countByIdentityType();}
+
 }

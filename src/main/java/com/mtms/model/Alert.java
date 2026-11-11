@@ -1,13 +1,26 @@
 package com.mtms.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.time.LocalDateTime;
 
+@Entity
 public class Alert {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int alertId;
+
     String trackNumber;
     String alertMessage;
     String alertSeverity;
     LocalDateTime alertTime;
+
+    // for JPA
+    protected Alert() {
+    }
 
     public Alert(int alertId, String trackNumber, String alertMessage, String alertSeverity, LocalDateTime alertTime) {
         this.alertId = alertId;
