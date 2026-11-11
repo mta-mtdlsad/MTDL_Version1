@@ -5,6 +5,7 @@ import com.mtms.model.ValidationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -17,14 +18,19 @@ public class MessageProcessorService {
     private TrackService trackService;
     @Autowired
     private AlertService alertService;
+    @Autowired
+    private SourceHealthService sourceHealthService;
     // Counters.
     private int duplicateCount = 0;
     private int outOfOrderCount = 0;
 
     // Process a validated Track.
     public ProcessingResult processDetailed(Track track) {
+        ProcessingResult processingResult;
         if (track == null) {
-            return new ProcessingResult(Outcome.FAILURE, false);
+            processingResult = new ProcessingResult(Outcome.FAILURE, false);
+            //updateSource(track, processingResult);
+            return processingResult;
         }
         try {
             // STEP 1: Validate the track first
@@ -40,7 +46,9 @@ public class MessageProcessorService {
                     }
                 }
                 System.out.println("Track rejected: " + errors);
-                return new ProcessingResult(Outcome.REJECTED, false);
+                processingResult = new ProcessingResult(Outcome.REJECTED, false);
+                updateSource(track, processingResult);
+                return processingResult;
             }
             // STEP 2: Track passed validation
             String sourceId = track.getSourceId();
@@ -54,7 +62,9 @@ public class MessageProcessorService {
             if (!saved) {
                 duplicateCount++;
                 createAlert(track, "Duplicate message: " + sourceId + " sequence " + sequence);
-                return new ProcessingResult(Outcome.DUPLICATE, false);
+                processingResult = new ProcessingResult(Outcome.DUPLICATE, false);
+                updateSource(track, processingResult);
+                return processingResult;
             }
             // STEP 4: Check out-of-order
             if (outOfOrder) {
@@ -62,7 +72,9 @@ public class MessageProcessorService {
                 createAlert(track, "Out-of-order message: " + sourceId + " sequence " + sequence);
             }
             System.out.println("Saved Track: " + track);
-            return new ProcessingResult(Outcome.ACCEPTED, outOfOrder);
+            processingResult = new ProcessingResult(Outcome.ACCEPTED, outOfOrder);
+            updateSource(track, processingResult);
+            return processingResult;
         } catch (Exception e) {
             System.err.println("Track processing failed: " + e.getMessage());
             return new ProcessingResult(Outcome.FAILURE, false);
@@ -78,6 +90,16 @@ public class MessageProcessorService {
             System.err.println("Processing alert failed: " + e.getMessage());
         }
     }
+
+    public void updateSource(Track track, ProcessingResult result) {
+        sourceHealthService.recordOutcome(
+                track.getSourceId(),
+                LocalDateTime.now(),
+                result.outcome().name(),
+                track.getSequenceNumber()
+        );
+    }
+
     // Compatibility with existing code expecting boolean.
     public boolean process(Track track) {
         return processDetailed(track).outcome() == Outcome.ACCEPTED;

@@ -12,12 +12,12 @@ public interface AlertRepository extends JpaRepository<Alert, Integer> {
     // Retrieve alerts ordered by their creation time
     List<Alert> findAllByOrderByAlertTimeAsc();
 
-    @Query("SELECT a.alertSeverity AS alertSeverity, COUNT(a) AS count FROM Alert a GROUP BY a.alertSeverity")
-    List countBySeverity();
+    @Query("SELECT a.alertSeverity AS severityType, COUNT(a) AS count FROM Alert a GROUP BY a.alertSeverity")
+    List<SeverityTypeCount> countBySeverity();
 
     // Nested projection interface
     interface SeverityTypeCount {
         String getSeverityType();
-        Long getCount();
+        Integer getCount();
     }
 }

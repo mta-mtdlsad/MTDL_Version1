@@ -213,6 +213,19 @@ public class TrackService {
         return track_repo.findTracksByTrackNumberAndSourceId(trackNo, sourceId);
     }
 
-    public List getIdentityStatistics() {return track_repo.countByIdentityType();}
+    public Map<String, Integer> getIdentityStatistics() {
+        String[] identityTypes = {"FRIEND", "HOSTILE", "NEUTRAL", "UNKNOWN"};
+        Map<String, Integer> statistics = new LinkedHashMap<>();
+        List<TrackRepository.IdentityTypeCount> results = track_repo.countByIdentityType();
+        for (TrackRepository.IdentityTypeCount result : results) {
+            statistics.put(result.getIdentityType(), result.getCount());
+        }
+        for(String type : identityTypes) {
+            if(!statistics.containsKey(type)) {
+                statistics.put(type, 0);
+            }
+        }
+        return statistics;
+    }
 
 }
