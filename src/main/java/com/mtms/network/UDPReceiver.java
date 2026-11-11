@@ -183,6 +183,11 @@ public class UDPReceiver {
                         case FAILURE -> {
                             System.out.println("Track not saved (processing failure).");
                         }
+                        case REJECTED -> {
+                            rejectedCount.incrementAndGet();
+                            failureCount.incrementAndGet();
+                            System.out.println("Track not saved (Validation failed).");
+                        }
                     }
                 } catch (IllegalArgumentException e) {
                     // Invalid or malformed UDP message.

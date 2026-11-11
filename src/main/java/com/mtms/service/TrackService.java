@@ -41,22 +41,22 @@ public class TrackService {
         return track_repo.findTracksBySourceId(source_id);
     }
 
-    @Transactional
-    public Track createTrackFromApi(Track track) {
-        // 1. Save the track
-        Track saved = track_repo.save(track);
-
-        // 2. Register or update its source statistics
-        sourceHealth.recordOutcome(
-                saved.getSourceId(),
-                LocalDateTime.now(),
-                "ACCEPTED",
-                saved.getSequenceNumber()
-        );
-        // 3. Update the source status
-        source_repo.updateStatus(saved.getSourceId(), "ACTIVE");
-        return saved;
-    }
+//    @Transactional
+//    public Track createTrackFromApi(Track track) {
+//        // 1. Save the track
+//        Track saved = track_repo.save(track);
+//
+//        // 2. Register or update its source statistics
+//        sourceHealth.recordOutcome(
+//                saved.getSourceId(),
+//                LocalDateTime.now(),
+//                "ACCEPTED",
+//                saved.getSequenceNumber()
+//        );
+//        // 3. Update the source status
+//        source_repo.updateStatus(saved.getSourceId(), "ACTIVE");
+//        return saved;
+//    }
 
 
     public Boolean deleteTrack(int id) {
@@ -75,10 +75,13 @@ public class TrackService {
     }
 
     public boolean saveTrack(Track track) {
-        if (track_repo.save(track) != null) {
-            return true;
-        } else {
+        boolean exists = track_repo.existsBySourceIdAndSequenceNumber(track.getSourceId(), track.getSequenceNumber());
+
+        if (exists) {
             return false;
+        } else {
+            track_repo.save(track);
+            return true;
         }
 
     }

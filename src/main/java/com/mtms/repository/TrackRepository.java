@@ -22,4 +22,6 @@ public interface TrackRepository extends JpaRepository<Track, Integer>,  JpaSpec
         String getIdentityType();
         Long getCount();
     }
+
+    boolean existsBySourceIdAndSequenceNumber(String sourceId, int sequenceNumber);
 }

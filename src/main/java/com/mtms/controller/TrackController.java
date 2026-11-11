@@ -1,9 +1,12 @@
 package com.mtms.controller;
 import com.mtms.model.FilterParameters;
 import com.mtms.model.Track;
+import com.mtms.service.MessageProcessorService;
+import com.mtms.service.SourceHealthService;
 import com.mtms.service.TrackService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -21,11 +24,34 @@ public class TrackController {
     @Autowired
     private TrackService tracks;
 
+    @Autowired
+    private MessageProcessorService processor;
+
+    @Autowired
+    private SourceHealthService sourceHealth;
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
-    public Track addTrack(@RequestBody Track track){
-        return tracks.createTrackFromApi(track);
-        //return tracks.saveTrack(track);
+    public ResponseEntity<?>  addTrack(@RequestBody Track track){
+        //1. validate and process the track
+        MessageProcessorService.ProcessingResult result = processor.processDetailed(track);
+
+        //2. Register or update the source
+        if (track != null && track.getSourceId() != null && track.getSourceId().matches("[A-Za-z0-9_-]{2,30}")) {
+            sourceHealth.recordOutcome(
+                    track.getSourceId(),
+                    LocalDateTime.now(),
+                    result.outcome().name(),
+                    track.getSequenceNumber()
+            );
+        }
+
+        //3. return the processing result
+        return switch (result.outcome()) {
+            case ACCEPTED -> ResponseEntity.status(201).body(result);
+            case REJECTED -> ResponseEntity.status(422).body(result);
+            case DUPLICATE -> ResponseEntity.status(409).body(result);
+            case FAILURE -> ResponseEntity.status(500).body(result);
+        };
     }
 
     // retuen all observations as JSON format

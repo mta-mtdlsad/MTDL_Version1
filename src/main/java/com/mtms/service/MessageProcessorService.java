@@ -5,10 +5,12 @@ import com.mtms.model.ValidationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MessageProcessorService {
 
-    public enum Outcome {ACCEPTED, DUPLICATE, FAILURE}
+    public enum Outcome {ACCEPTED, REJECTED, DUPLICATE, FAILURE}
     public record ProcessingResult(Outcome outcome, boolean outOfOrder) {}
 
     @Autowired
@@ -24,24 +26,37 @@ public class MessageProcessorService {
         if (track == null) {
             return new ProcessingResult(Outcome.FAILURE, false);
         }
-
-        String sourceId = track.getSourceId();
-        int sequence = track.getSequenceNumber();
         try {
-            // Find the highest sequence saved for this source.
+            // STEP 1: Validate the track first
+            List<ValidationResult> errors = ValidationService.validateTrack(track);
+            if (!errors.isEmpty()) {
+                // Create an alert for each validation error
+                for (ValidationResult error : errors) {
+                    try {
+                        alertService.createAlert(track, error);
+                        System.out.println(error);
+                    } catch (Exception e) {
+                        System.err.println("Validation alert failed: " + e.getMessage());
+                    }
+                }
+                System.out.println("Track rejected: " + errors);
+                return new ProcessingResult(Outcome.REJECTED, false);
+            }
+            // STEP 2: Track passed validation
+            String sourceId = track.getSourceId();
+            int sequence = track.getSequenceNumber();
+            // Find highest sequence
             int highest = trackService.getHighestSequence(sourceId);
-            // Check if the message arrived out of order.
+            // Check out-of-order
             boolean outOfOrder = sequence < highest;
-
-            // Save the Track using the repository.
-            // Returns false when the source and sequence already exist.
+            // STEP 3: Save valid track
             boolean saved = trackService.saveTrack(track);
             if (!saved) {
                 duplicateCount++;
                 createAlert(track, "Duplicate message: " + sourceId + " sequence " + sequence);
                 return new ProcessingResult(Outcome.DUPLICATE, false);
             }
-            // Track was saved successfully.
+            // STEP 4: Check out-of-order
             if (outOfOrder) {
                 outOfOrderCount++;
                 createAlert(track, "Out-of-order message: " + sourceId + " sequence " + sequence);

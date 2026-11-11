@@ -123,7 +123,7 @@ public class SourceHealthService {
                     System.out.println(sourceId + ": " + previousStatus + " -> " + newStatus);
                     // Generate Alerts only for health deterioration.
                     if (newStatus.equals("STALE") || newStatus.equals("DISCONNECTED")) {
-//                        createHealthAlert(sourceId, newStatus);
+                        createHealthAlert(sourceId, newStatus);
                     }
                 }
             } catch (Exception e) {
@@ -132,21 +132,20 @@ public class SourceHealthService {
         }
     }
 
-//    // Save a health Alert in the existing alerts table.
-//    private void createHealthAlert(
-//            String sourceId, String status) {
-//        String severity = status.equals("STALE") ? "MEDIUM" : "HIGH";
-//        Alert alert = new Alert(
-//                sourceId,
-//                "Source " + sourceId + " became " + status,
-//                severity,
-//                LocalDateTime.now()
-//        );
-//        String result = alertRepo.saveAlert(alert);
-//        if (result == null) {
-//            System.err.println("Could not save health Alert for " + sourceId);
-//        }
-//    }
+    // Save a health Alert in the existing alerts table.
+    private void createHealthAlert(String sourceId, String status) {
+        String severity = status.equals("STALE") ? "MEDIUM" : "HIGH";
+        Alert alert = new Alert(
+                sourceId,
+                "Source " + sourceId + " became " + status,
+                severity,
+                LocalDateTime.now()
+        );
+        Alert result = alertRepo.save(alert);
+        if (result == null) {
+            System.err.println("Could not save health Alert for " + sourceId);
+        }
+    }
 
     // Start background monitoring.
     public synchronized void startMonitoring() {
@@ -203,4 +202,5 @@ public class SourceHealthService {
         int highest = accepted == 1 ? sequence : 0;
         source_repo.recordOutcome(sourceId, receivedAt, highest, accepted, rejected, duplicate, failure);
     }
+
 }
