@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>MTMS | Results</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    </style>
+</head>
+<body>
+<h2>MTMS Results</h2>
+<div id="results">Loading...</div>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const api = params.get("api");
+    const results = document.getElementById("results");
+    function displayResults(data) {
+        results.innerHTML = "";
+        if (Array.isArray(data)) {
+            if (data.length === 0) {
+                results.textContent = "No records found.";
+                return;
+            }
+            if (data.every(item => item !== null && typeof item === "object" && !Array.isArray(item))) {
+                const headers = [...new Set(data.flatMap(item => Object.keys(item)))];
+                const table = document.createElement("table");
+                const headerRow = table.insertRow();
+                headers.forEach(key => {
+                    const th = document.createElement("th");
+                    th.textContent = key;
+                    headerRow.appendChild(th);
+                });
+                data.forEach(item => {
+                    const row = table.insertRow();
+                    headers.forEach(key => {
+                        const cell = row.insertCell();
+                        const value = item[key];
+                        cell.textContent = value == null ? "" : typeof value === "object" ? JSON.stringify(value) : String(value);
+                    });
+                });
+                results.appendChild(table);
+            } else {
+                const pre = document.createElement("pre");
+                pre.textContent = JSON.stringify(data, null, 2);
+                results.appendChild(pre);
+            }
+
+        } else if (data !== null && typeof data === "object") {
+            const table = document.createElement("table");
+            Object.entries(data).forEach(([key, value]) => {
+                const row = table.insertRow();
+                row.insertCell().textContent = key;
+                row.insertCell().textContent = value == null ? "" : typeof value === "object" ? JSON.stringify(value) : String(value);
+            });
+            results.appendChild(table);
+        } else {
+            results.textContent = String(data);
+        }
+    }
+
+    async function loadResults() {
+        try {
+            if (!api || !api.startsWith("/api/") || api.startsWith("//")) {
+                throw new Error("Invalid API URL");
+            }
+            const response = await fetch(api);
+            if (!response.ok) throw new Error("HTTP " + response.status);
+            const data = await response.json();
+            displayResults(data);
+        } catch (error) {
+            results.textContent = "Error: " + error.message;
+        }
+    }
+    loadResults();
+</script>
+
+</body>
+
+</html>

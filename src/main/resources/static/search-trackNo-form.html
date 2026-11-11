@@ -8,14 +8,22 @@
 
 <h1>Search Track Number</h1>
 
-<form action="/api/tracks/history" method="GET">
+<form id="historyForm" action="/api/tracks/history" method="GET">
     <label>Track Number:</label>
-    <input type="text" name="track_number" required>
+    <input type="text" name="track_number" id="track_number"required>
     <label>Source ID:</label>
-    <input type="text" name="source_id" required>
-    <input type="hidden" name="search" value="true">
+    <input type="text" name="source_id" id="source_id" required>
     <button type="submit">Search</button>
 </form>
+<script>
+    document.getElementById("historyForm").addEventListener("submit", function (event){
+        event.preventDefault();
+        const trackNumber = document.getElementById("track_number").value;
+        const sourceId = document.getElementById("source_id").value;
+        const api = "/api/tracks/search?source_id=" +encodeURIComponent(sourceId) + "&track_number=" + encodeURIComponent(trackNumber);
+        window.location.href = "/results.html?api=" +encodeURIComponent(api);
+    });
+</script>
 <p><a href="index.html">Return Home</a></p>
 </body>
 </html>

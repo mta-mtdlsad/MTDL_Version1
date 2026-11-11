@@ -8,11 +8,11 @@
 <div class="">
     <h3>Correlation Form</h3>
 
-    <form method="get" action="api/analytics/correlations">
+    <form id="correlateForm" method="GET" action="api/analytics/correlations">
         <label>Enter Source ID</label>
-        <input type="text" name="sourceId" required><br><br>
+        <input type="text" name="sourceId" id="sourceId" required><br><br>
         <label>Enter Sequence Number</label>
-        <input type="text" name="sequenceNumber" required><br><br>
+        <input type="text" name="sequenceNumber" id="sequenceNumber" required><br><br>
         <input type="submit">
     </form>
 <!--
@@ -43,6 +43,14 @@
     </form>
 -->
 </div>
-
+<script>
+    document.getElementById("correlateForm").addEventListener("submit", function (event){
+        event.preventDefault();
+        const sourceId = document.getElementById("sourceId").value;
+        const sequenceNumber = document.getElementById("sequenceNumber").value;
+        const api = "/api/analytics/correlations/" +encodeURIComponent(sourceId) + "/" + encodeURIComponent(sequenceNumber);
+        window.location.href = "/results.html?api=" +encodeURIComponent(api);
+    });
+</script>
 </body>
 </html>

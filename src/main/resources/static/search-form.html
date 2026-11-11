@@ -8,11 +8,19 @@
 
 <h1>Search Track</h1>
 
-<form action="/api/tracks/search" method="GET">
+<form id="searchForm" method="GET">
     <label>Track Number:</label>
-    <input type="text" name="track_number" required>
+    <input type="text" name="track_number" id="track_number"required>
     <button type="submit">Search</button>
 </form>
+<script>
+    document.getElementById("searchForm").addEventListener("submit", function (event){
+        event.preventDefault();
+        const trackNumber = document.getElementById("track_number").value;
+        const api = "/api/tracks/search?track_number=" +encodeURIComponent(trackNumber);
+        window.location.href = "/results.html?api=" +encodeURIComponent(api);
+    });
+</script>
 <p><a href="index.html">Return Home</a></p>
 </body>
 </html>
