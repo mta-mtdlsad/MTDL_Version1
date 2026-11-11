@@ -1,4 +1,4 @@
-package com.mtms.model;
+package com.mtms.util;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.mtms.service;
 
 import com.mtms.model.Track;
-import com.mtms.model.ValidationResult;
+import com.mtms.util.ValidationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +14,7 @@ public class MessageParserService {
     @Autowired
     private AlertService alert_service;
 
+    // Returns Track if message isn't malformed
     public Track parse(String message) {
         // Check empty messages.
         if (message == null || message.isBlank()) {
@@ -34,6 +35,7 @@ public class MessageParserService {
                 rejectMalformed(trackNumber, "Malformed message: Field " + (i + 1) + " is missing");
             }
         }
+
         Track track;
         try {
             String sourceId = fields[0];
@@ -54,16 +56,9 @@ public class MessageParserService {
             rejectMalformed(trackNumber, "Malformed message: Invalid observation time");
             throw new IllegalArgumentException(e);
         }
-        // Validate all Track fields.
-        List<ValidationResult> errors = ValidationService.validateTrack(track);
-        if (!errors.isEmpty()) {
-            for (ValidationResult result : errors) {
-                saveAlert(track, result);
-            }
-            throw new IllegalArgumentException("Invalid Track: " + errors);
-        }
         return track;
     }
+
     // Create an alert for malformed messages.
     private void rejectMalformed(String trackNumber, String message) {
         ValidationResult result = new ValidationResult(message, "HIGH");
@@ -80,6 +75,7 @@ public class MessageParserService {
             System.err.println("Alert creation failed: " + e.getMessage());
         }
     }
+
     // Save malformed alerts without a complete Track.
     private void saveAlert(String trackNumber, ValidationResult result) {
         try {

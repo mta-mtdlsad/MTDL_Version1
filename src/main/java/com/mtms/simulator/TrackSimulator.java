@@ -1,6 +1,6 @@
 package com.mtms.simulator;
 
-import com.mtms.model.WeightedSelector;
+import com.mtms.util.WeightedSelector;
 import com.mtms.service.SourceHealthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

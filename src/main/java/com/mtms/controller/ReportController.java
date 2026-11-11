@@ -1,6 +1,6 @@
 package com.mtms.controller;
 
-import com.mtms.model.FilterParameters;
+import com.mtms.util.FilterParameters;
 import com.mtms.model.Track;
 import com.mtms.service.AlertService;
 import com.mtms.service.TrackService;
@@ -14,13 +14,15 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api")
 public class ReportController {
     @Autowired
     private TrackService trackService;
     @Autowired
     private AlertService alertService;
 
-    @RequestMapping("/api/statistics")
+    // Returns identity and severity statistics
+    @RequestMapping("/statistics")
     private List<Map> getStatistics() {
         List<Map> results = Arrays.asList(
                 trackService.getIdentityStatistics(),
@@ -29,7 +31,8 @@ public class ReportController {
         return results;
     }
 
-    @RequestMapping("/api/analytics/correlations/{sourceId}/{sequenceNumber}")
+    // Returns any correlated tracks for a specific observation (given sourceId and sequenceNumber)
+    @RequestMapping("/analytics/correlations/{sourceId}/{sequenceNumber}")
     private List<Track> getCorrelatedTracks(@PathVariable String sourceId, @PathVariable String sequenceNumber) {
         FilterParameters filterParams = new FilterParameters();
         filterParams.setSourceId(sourceId);
@@ -39,7 +42,8 @@ public class ReportController {
         else return tracks;
     }
 
-    @RequestMapping("/api/analytics/correlations")
+    // Returns any correlated tracks
+    @RequestMapping("/analytics/correlations")
     private Map<Track, List<Track>> getCorrelatedTracks() {
         return trackService.correlateTracks();
     }

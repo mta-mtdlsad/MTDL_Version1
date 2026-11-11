@@ -15,14 +15,15 @@ import java.util.Optional;
 
 @Repository
 public interface SourceRepository extends CrudRepository<Source, Integer>, JpaSpecificationExecutor {
-
     Optional<Source> findBySourceId(String id);
 
+    // Update status (ACTIVE, STALE, DISCONNECTED)
     @Modifying
     @Transactional
     @Query("UPDATE Source s SET s.sourceStatus = :newStatus where s.sourceId = :sourceId")
     int updateStatus(@Param("sourceId") String sourceId, @Param("newStatus") String newStatus);
 
+    // Update source based on outcome, Uses native SQL
     @Modifying
     @Transactional
     @Query(value = """

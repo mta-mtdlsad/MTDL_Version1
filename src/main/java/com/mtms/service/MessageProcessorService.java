@@ -1,7 +1,7 @@
 package com.mtms.service;
 
 import com.mtms.model.Track;
-import com.mtms.model.ValidationResult;
+import com.mtms.util.ValidationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +27,7 @@ public class MessageProcessorService {
     // Process a validated Track.
     public ProcessingResult processDetailed(Track track) {
         ProcessingResult processingResult;
+        // FAILURE if track is null
         if (track == null) {
             processingResult = new ProcessingResult(Outcome.FAILURE, false);
             //updateSource(track, processingResult);
@@ -50,14 +51,16 @@ public class MessageProcessorService {
                 updateSource(track, processingResult);
                 return processingResult;
             }
-            // STEP 2: Track passed validation
+
+            // STEP 2: Check if track is out-of-order
             String sourceId = track.getSourceId();
             int sequence = track.getSequenceNumber();
             // Find highest sequence
             int highest = trackService.getHighestSequence(sourceId);
             // Check out-of-order
             boolean outOfOrder = sequence < highest;
-            // STEP 3: Save valid track
+
+            // STEP 3: Save valid track using TrackService
             boolean saved = trackService.saveTrack(track);
             if (!saved) {
                 duplicateCount++;
@@ -66,20 +69,25 @@ public class MessageProcessorService {
                 updateSource(track, processingResult);
                 return processingResult;
             }
-            // STEP 4: Check out-of-order
+
+            // STEP 4: Create an alert if track is out-of-order
             if (outOfOrder) {
                 outOfOrderCount++;
                 createAlert(track, "Out-of-order message: " + sourceId + " sequence " + sequence);
             }
+
+            // STEP 5: Update source and return processingResult
             System.out.println("Saved Track: " + track);
             processingResult = new ProcessingResult(Outcome.ACCEPTED, outOfOrder);
             updateSource(track, processingResult);
             return processingResult;
+
         } catch (Exception e) {
             System.err.println("Track processing failed: " + e.getMessage());
             return new ProcessingResult(Outcome.FAILURE, false);
         }
     }
+
     // Create duplicate and out-of-order alerts.
     private void createAlert(Track track, String message) {
         ValidationResult result = new ValidationResult(message, "LOW");
@@ -91,6 +99,7 @@ public class MessageProcessorService {
         }
     }
 
+    // Updates source counters using SourceHealthService
     public void updateSource(Track track, ProcessingResult result) {
         sourceHealthService.recordOutcome(
                 track.getSourceId(),

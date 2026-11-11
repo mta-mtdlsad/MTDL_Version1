@@ -1,6 +1,6 @@
 package com.mtms.network;
 
-import com.mtms.model.ValidationResult;
+import com.mtms.util.ValidationResult;
 import com.mtms.service.AlertService;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;

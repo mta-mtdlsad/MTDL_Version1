@@ -1,6 +1,6 @@
 package com.mtms.util;
 
-import com.mtms.model.FilterParameters;
+import com.mtms.util.FilterParameters;
 import com.mtms.model.Track;
 import org.springframework.data.jpa.domain.Specification;
 

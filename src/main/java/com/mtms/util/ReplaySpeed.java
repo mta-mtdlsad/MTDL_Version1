@@ -1,4 +1,4 @@
-package com.mtms.model;
+package com.mtms.util;
 
 public enum ReplaySpeed {
     HALF(2000),

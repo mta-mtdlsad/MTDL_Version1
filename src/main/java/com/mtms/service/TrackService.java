@@ -1,6 +1,6 @@
 package com.mtms.service;
 
-import com.mtms.model.FilterParameters;
+import com.mtms.util.FilterParameters;
 import com.mtms.model.Track;
 import com.mtms.repository.SourceRepository;
 import com.mtms.repository.TrackRepository;
@@ -23,69 +23,70 @@ public class TrackService {
     @Autowired
     private TrackRepository track_repo;
 
-    @Autowired
-    private SourceHealthService sourceHealth;
-
-    @Autowired
-    private SourceRepository source_repo;
-
-    public Track findTrackById(int id) {
-        return track_repo.findById(id).get();
-    }
-
-    public List<Track> findTracksByNumber(String number) {
-        return track_repo.findTracksByTrackNumber(number);
-    }
-
-    public List<Track> findTracksBySource(String source_id) {
-        return track_repo.findTracksBySourceId(source_id);
-    }
-
-//    @Transactional
-//    public Track createTrackFromApi(Track track) {
-//        // 1. Save the track
-//        Track saved = track_repo.save(track);
-//
-//        // 2. Register or update its source statistics
-//        sourceHealth.recordOutcome(
-//                saved.getSourceId(),
-//                LocalDateTime.now(),
-//                "ACCEPTED",
-//                saved.getSequenceNumber()
-//        );
-//        // 3. Update the source status
-//        source_repo.updateStatus(saved.getSourceId(), "ACTIVE");
-//        return saved;
-//    }
-
-
-    public Boolean deleteTrack(int id) {
-        track_repo.deleteById(id);
-        if (findTrackById(id) == null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Transactional
-    public Boolean deleteTracksByTrackNumber(String number) {
-        long deleted = track_repo.deleteAllByTrackNumber(number);
-        return deleted > 0;
-    }
-
+    // Saves track using TrackRepository and returns boolean for result
     public boolean saveTrack(Track track) {
         boolean exists = track_repo.existsBySourceIdAndSequenceNumber(track.getSourceId(), track.getSequenceNumber());
-
         if (exists) {
             return false;
         } else {
             track_repo.save(track);
             return true;
         }
+    }
+
+    // Returns List of all tracks using TrackRepository
+    public List<Track> getAllTracks() {
+        List<Track> listOfTracks = new ArrayList<>();
+        track_repo.findAll().forEach(listOfTracks::add);
+        return listOfTracks;
 
     }
 
+    // Returns Track based on given ID using TrackRepository
+    public Track findTrackById(int id) {
+        return track_repo.findById(id).get();
+    }
+
+    // Returns Tracks based on given trackNumber using TrackRepository
+    public List<Track> findTracksByNumber(String number) {
+        return track_repo.findTracksByTrackNumber(number);
+    }
+
+    @Transactional
+    // Deletes Tracks based on given trackNumber using TrackRepository
+    public Boolean deleteTracksByTrackNumber(String number) {
+        long deleted = track_repo.deleteAllByTrackNumber(number);
+        return deleted > 0;
+    }
+
+    // Returns List of track observations for a specific trackNumber and sourceId using TrackRepository
+    public List<Track> getAllTrackHistory(String trackNo, String sourceId) {
+        return track_repo.findTracksByTrackNumberAndSourceId(trackNo, sourceId);
+    }
+
+    // Returns the highest sequenceNumber given a specific sourceId using TrackRepository
+    public int getHighestSequence(String sourceId) throws SQLException {
+        List<Track> listOfTracks = track_repo.findTracksBySourceId(sourceId);
+        return listOfTracks.stream().mapToInt(Track::getSequenceNumber).max().orElse(0);
+    }
+
+    // Returns identityType counts using TrackRepository
+    public Map<String, Integer> getIdentityStatistics() {
+        String[] identityTypes = {"FRIEND", "HOSTILE", "NEUTRAL", "UNKNOWN"};
+        Map<String, Integer> statistics = new LinkedHashMap<>();
+        List<TrackRepository.IdentityTypeCount> results = track_repo.countByIdentityType();
+        for (TrackRepository.IdentityTypeCount result : results) {
+            statistics.put(result.getIdentityType(), result.getCount());
+        }
+        for(String type : identityTypes) {
+            if(!statistics.containsKey(type)) {
+                statistics.put(type, 0);
+            }
+        }
+        return statistics;
+    }
+
+    // Returns List of tracks based on specified filter parameters using TrackRepository
     public List<Track> filterTracks(FilterParameters filterParams) {
         Specification<Track> spec = TrackSpecifications.filterTracks(filterParams);
         List<Order> orders = new ArrayList<>();
@@ -125,11 +126,30 @@ public class TrackService {
         return track_repo.findAll(spec, sort);
     }
 
-    public int getHighestSequence(String sourceId) throws SQLException {
-        List<Track> listOfTracks = track_repo.findTracksBySourceId(sourceId);
-        return listOfTracks.stream().mapToInt(Track::getSequenceNumber).max().orElse(0);
+    // Returns any correlated tracks without repeating
+    // (if A is correlated with B, no need to return that B is correlated with A)
+    public Map<Track, List<Track>> correlateTracks() {
+        FilterParameters filterParams = new FilterParameters();
+        filterParams.setStatus("ACTIVE");
+        List<Track> allActiveTracks = filterTracks(filterParams);
+        Map<Track, List<Track>> correlationMap = new HashMap<>();
+        List<Track> updatedActiveTracks = new ArrayList<>(allActiveTracks);
+        List<Track> listOfTracks;
+        for (Track track : allActiveTracks) {
+            if (!updatedActiveTracks.contains(track)) continue;
+            listOfTracks = correlateTrack(track, updatedActiveTracks);
+            if (!listOfTracks.isEmpty()) {
+                correlationMap.put(track, listOfTracks);
+                for (Track correlatedTrack : listOfTracks)
+                    updatedActiveTracks.remove(correlatedTrack);
+            }
+            updatedActiveTracks.remove(track);
+            if (updatedActiveTracks.isEmpty()) break;
+        }
+        return correlationMap;
     }
 
+    // Returns any correlated tracks in search_pool for a specific track
     public List<Track> correlateTrack(Track selected_track, List<Track> search_pool) {
         Specification<Track> spec = TrackSpecifications.filterTracksCorrelation(
                 selected_track.getSourceId(),
@@ -157,6 +177,7 @@ public class TrackService {
         return listOfCorrelatedTracks;
     }
 
+    // Distance calculation (from lat,lon to km) for correlation
     public double calculate_distance(double lat1, double lon1, double lat2, double lon2) {
         final double EARTH_RADIUS_KM = 6371.0;
 
@@ -180,52 +201,20 @@ public class TrackService {
         return EARTH_RADIUS_KM * c;
     }
 
-    public Map<Track, List<Track>> correlateTracks() {
-        FilterParameters filterParams = new FilterParameters();
-        filterParams.setStatus("ACTIVE");
-        List<Track> allActiveTracks = filterTracks(filterParams);
-        Map<Track, List<Track>> correlationMap = new HashMap<>();
-        List<Track> updatedActiveTracks = new ArrayList<>(allActiveTracks);
-        List<Track> listOfTracks;
-        for (Track track : allActiveTracks) {
-            if (!updatedActiveTracks.contains(track)) continue;
-            listOfTracks = correlateTrack(track, updatedActiveTracks);
-            if (!listOfTracks.isEmpty()) {
-                correlationMap.put(track, listOfTracks);
-                for (Track correlatedTrack : listOfTracks)
-                    updatedActiveTracks.remove(correlatedTrack);
-            }
-            updatedActiveTracks.remove(track);
-            if (updatedActiveTracks.isEmpty()) break;
-        }
-        return correlationMap;
+
+    // !!! Not used currently !!!
+
+    public List<Track> findTracksBySource(String source_id) {
+        return track_repo.findTracksBySourceId(source_id);
     }
 
-    public List<Track> getAllTracks() {
-        List<Track> listOfTracks = new ArrayList<>();
-        track_repo.findAll().forEach(listOfTracks::add);
-        return listOfTracks;
-
-    }
-
-
-    public List<Track> getAllTrackHistory(String trackNo, String sourceId) {
-        return track_repo.findTracksByTrackNumberAndSourceId(trackNo, sourceId);
-    }
-
-    public Map<String, Integer> getIdentityStatistics() {
-        String[] identityTypes = {"FRIEND", "HOSTILE", "NEUTRAL", "UNKNOWN"};
-        Map<String, Integer> statistics = new LinkedHashMap<>();
-        List<TrackRepository.IdentityTypeCount> results = track_repo.countByIdentityType();
-        for (TrackRepository.IdentityTypeCount result : results) {
-            statistics.put(result.getIdentityType(), result.getCount());
+    public Boolean deleteTrack(int id) {
+        track_repo.deleteById(id);
+        if (findTrackById(id) == null) {
+            return true;
+        } else {
+            return false;
         }
-        for(String type : identityTypes) {
-            if(!statistics.containsKey(type)) {
-                statistics.put(type, 0);
-            }
-        }
-        return statistics;
     }
 
 }

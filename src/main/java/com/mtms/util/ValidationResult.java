@@ -1,4 +1,4 @@
-package com.mtms.model;
+package com.mtms.util;
 
 public class ValidationResult {
     String message;

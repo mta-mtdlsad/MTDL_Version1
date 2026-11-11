@@ -1,6 +1,4 @@
-package com.mtms.model;
-
-import java.util.Map;
+package com.mtms.util;
 
 public class FilterParameters {
     private String sourceId;

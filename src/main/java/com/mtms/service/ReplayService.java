@@ -1,6 +1,6 @@
 package com.mtms.service;
 
-import com.mtms.model.ReplaySpeed;
+import com.mtms.util.ReplaySpeed;
 import com.mtms.model.Track;
 import com.mtms.repository.TrackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
