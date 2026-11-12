@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class ValidationService {
     // 1. Source ID: 2 to 30 permitted characters.
-    public static ValidationResult validateSource_id(Track track){
+    public static ValidationResult validateSourceId(Track track){
         String sourceId = track.getSourceId();
         if(sourceId == null || !sourceId.matches("[A-Za-z0-9_-]{2,30}")){
             return new ValidationResult("Invalid source_id: not matching [A-Za-z0-9_-]{2,30}", "LOW");
@@ -19,7 +19,7 @@ public class ValidationService {
     }
 
     // 2. Sequence Number: greater than 0
-    public static ValidationResult validateSequence_number(Track track){
+    public static ValidationResult validateSequenceNumber(Track track){
         if (track.getSequenceNumber()<= 0) {
             return new ValidationResult("Invalid sequence number: is negative", "MEDIUM");
         }
@@ -27,7 +27,7 @@ public class ValidationService {
     }
 
     // 3. Track number: keep the existing minimum length.
-    public static ValidationResult validateTrack_number(Track track) {
+    public static ValidationResult validateTrackNumber(Track track) {
         String number = track.getTrackNumber();
         if (number == null || number.length() < 5) {
             return new ValidationResult(
@@ -75,7 +75,7 @@ public class ValidationService {
     }
 
     // 7. Identity must match an allowed value.
-    public static ValidationResult validateIdentity_type(Track track) {
+    public static ValidationResult validateIdentityType(Track track) {
         String identity = track.getIdentityType();
         if (!List.of("FRIEND", "HOSTILE", "NEUTRAL", "UNKNOWN").contains(identity)) {
             return new ValidationResult(
@@ -87,7 +87,7 @@ public class ValidationService {
     }
 
     // 8. Status must be ACTIVE or INACTIVE.
-    public static ValidationResult validateTrack_status(Track track) {
+    public static ValidationResult validateTrackStatus(Track track) {
         String status = track.getTrackStatus();
         if (!List.of("ACTIVE", "INACTIVE").contains(status)) {
             return new ValidationResult(
@@ -99,7 +99,7 @@ public class ValidationService {
     }
 
     // 9. Observation time must exist.
-    public static ValidationResult validateCreated_time(Track track) {
+    public static ValidationResult validateCreatedTime(Track track) {
         if (track.getCreatedTime() == null) {
             return new ValidationResult( "Observation time is missing",  "MEDIUM"
             );
@@ -113,15 +113,15 @@ public class ValidationService {
 
         // Include all nine checks.
         ValidationResult[] checks = {
-                validateSource_id(track),
-                validateSequence_number(track),
-                validateTrack_number(track),
+                validateSourceId(track),
+                validateSequenceNumber(track),
+                validateTrackNumber(track),
                 validateLatitude(track),
                 validateLongitude(track),
                 validateSpeed(track),
-                validateIdentity_type(track),
-                validateTrack_status(track),
-                validateCreated_time(track)
+                validateIdentityType(track),
+                validateTrackStatus(track),
+                validateCreatedTime(track)
         };
 
         // Add only failed validation results.
