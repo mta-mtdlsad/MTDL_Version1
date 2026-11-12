@@ -1,11 +1,16 @@
 package com.mtms.domain;
 
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+@Entity
+//@Table(name = "alert")
 public class Alert {
     //Attributes
-    private int alertId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer alertId;
     private String trackNumber;
     private String alertMessage;
     private String alertSeverity;
@@ -13,8 +18,11 @@ public class Alert {
     private String sourceId;
     private String eventType;
 
+    // default constructor
+    public Alert() {}
+
     // Constructor with alertId object
-    public Alert(int alertId, String trackNumber, String alertMessage, String alertSeverity, LocalDateTime alertTime, String sourceId, String eventType) {
+    public Alert(Integer alertId, String trackNumber, String alertMessage, String alertSeverity, LocalDateTime alertTime, String sourceId, String eventType) {
         this.alertId = alertId;
         this.trackNumber = trackNumber;
         this.alertMessage = alertMessage;
@@ -35,7 +43,7 @@ public class Alert {
     }
 
     // Getters
-    public int getAlertId() {
+    public Integer getAlertId() {
         return alertId;
     }
     public String getTrackNumber() {

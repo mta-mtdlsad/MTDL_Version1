@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -27,4 +28,19 @@ public interface TrackRepository extends CrudRepository<Track, Integer> {
 
     @Query(value = "SELECT identity, COUNT(*) AS count FROM Track GROUP BY identity", nativeQuery = true)
     List<Map<String, Integer>> findIdentityCount();
+
+    Track findTopBySourceIdOrderBySequenceNumberDesc(String sourceId);
+
+    List<Track> findByObservationTimeBetweenOrderByObservationTimeAsc(LocalDateTime startTime, LocalDateTime endTime);
+
+    @Query(value = "SELECT DISTINCT ON (source_id, track_number) * FROM Track ORDER BY source_id, track_number, observation_time DESC", nativeQuery = true)
+    List<Track> findDistinctLatestTracks();
+
+    List<Track> findBySourceId(String sourceId);
+
+    List<Track> findBySpeedLessThanEqual(double maxSpeedDouble);
+
+    List<Track> findByObservationTimeGreaterThanEqual(LocalDateTime time);
+
+    List<Track> findByObservationTimeLessThanEqual(LocalDateTime time);
 }

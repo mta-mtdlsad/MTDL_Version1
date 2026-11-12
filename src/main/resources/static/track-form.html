@@ -10,7 +10,7 @@
 
 
 <h3>Create New Track</h3>
-<form  action="tracks/create" method="post">
+<form  action="api/tracks" method="post">
 
     <label> Enter Source ID:
         <input type="text"
@@ -57,7 +57,7 @@
 
     <label> Enter Speed:
         <input type="text"
-               name="speedNumber"
+               name="speed"
                placeholder="Enter Speed: "/>
     </label><br><br>
 
@@ -70,8 +70,8 @@
     </select>
     <br><br>
 
-    <label for="status">Choose Status Type: </label>
-    <select name="status" id="status" required>
+    <label for="trackStatus">Choose Status Type: </label>
+    <select name="trackStatus" id="trackStatus" required>
         <option value="ACTIVE">ACTIVE</option>
         <option value="INACTIVE">INACTIVE</option>
     </select>

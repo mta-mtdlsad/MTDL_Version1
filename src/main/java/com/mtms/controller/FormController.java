@@ -1,12 +1,15 @@
 package com.mtms.controller;
 
+import com.mtms.domain.ReplaySpeed;
 import com.mtms.domain.Track;
+import com.mtms.service.ReplayService;
 import com.mtms.service.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -14,6 +17,93 @@ public class FormController {
 
     @Autowired
     private TrackService trackService;
+
+    @Autowired
+    private ReplayService replayService;
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/api/tracks", params = {"trackNumber", "latitude", "longitude",
+            "speed", "identity", "trackStatus", "sourceId", "sequenceNumber", "observationTime"})
+    public String addTrack(@RequestParam("trackNumber") String trackNumber,
+                           @RequestParam("latitude") double latitude,
+                           @RequestParam("longitude") double longitude,
+                           @RequestParam("speed") double speed,
+                           @RequestParam("identity") String identity,
+                           @RequestParam("trackStatus") String status,
+                           @RequestParam("sourceId") String sourceId,
+                           @RequestParam("sequenceNumber") int sequenceNumber,
+                           @RequestParam("observationTime") LocalDateTime observationTime){
+
+
+        Track track = new Track(trackNumber, latitude, longitude, speed, identity,
+                status, sourceId, sequenceNumber, observationTime, LocalDateTime.now());
+
+        StringBuilder result = new StringBuilder();
+        result.append("========== CREATING TRACK ==========<pre>");
+        if(trackService.processTrack(track))
+            result.append("Track ").append(track.getTrackNumber()).append(" has been added.");
+        else
+            result.append("Track ").append(track.getTrackNumber()).append(" could not be added.");
+        return result.toString();
+    }
+
+
+    @ResponseBody
+    @GetMapping(value="/api/tracks/replay", params = {"startTime", "endTime", "speed"})
+    public String getFilteredTracks(@RequestParam("startTime") LocalDateTime startTime,
+                                    @RequestParam("endTime") LocalDateTime endTime,
+                                    @RequestParam("speed") String speed){
+
+        //converting user input to enum
+        ReplaySpeed speedEnum;
+        switch (speed) {
+            case "half":
+                speedEnum = ReplaySpeed.HALF;
+            case "double":
+                speedEnum = ReplaySpeed.DOUBLE;
+            default:
+                speedEnum = ReplaySpeed.NORMAL;
+        };
+
+        List<Track> listOfTracks = replayService.replayTracks(speedEnum, startTime, endTime);
+
+        StringBuilder result = new StringBuilder();
+
+        if (listOfTracks != null && !listOfTracks.isEmpty()) {
+
+            result.append("========== REPLAY TRACK RESULTS ==========<pre>");
+            result.append("Displaying tracks with ").append(speedEnum).append(" speed\n");
+            result.append("------------------------------<pre>");
+
+            buildingString(listOfTracks, result);
+
+        } else {
+
+            result.append("Tracks could not be found.");
+        }
+
+        return result.toString();
+    }
+
+    @ResponseBody
+    @GetMapping("/api/tracks/current")
+    public String getCurrentTracks() {
+        List<Track> listOfTracks = trackService.getCurrentView();
+
+        StringBuilder result = new StringBuilder();
+
+        result.append("========== LIST OF CURRENT TRACKS ==========<pre>");
+
+        if (listOfTracks == null || listOfTracks.isEmpty()) {
+
+            result.append("No tracks available.");
+
+        } else {
+
+            buildingString(listOfTracks, result);
+        }
+        return result.toString();
+    }
 
     @ResponseBody
     @GetMapping("/api/tracks/list")
@@ -40,9 +130,8 @@ public class FormController {
     @ResponseBody
     @GetMapping(value="/api/tracks/filter", params = {"identity", "status", "minimumSpeed"})
     public String getFilteredTracks(@RequestParam("identity") String identity,
-                                         @RequestParam("status") String status,
-                                         @RequestParam("minimumSpeed") String minimumSpeed,
-                                         Model model){
+                                    @RequestParam("status") String status,
+                                    @RequestParam("minimumSpeed") String minimumSpeed){
         List<Track> listOfTracks;
         if (!minimumSpeed.isEmpty())
             listOfTracks =  trackService.getFilteredTracks(identity, status, Double.parseDouble(minimumSpeed));
@@ -64,6 +153,38 @@ public class FormController {
 
         return result.toString();
     }
+
+    @ResponseBody
+    @GetMapping(value="/api/tracks/advancedFilter", params = {"sourceId", "trackNumber", "identity",  "status",
+                                                                "minSpeed", "maxSpeed", "startTime", "endTime"})
+    public String getAdvanceFilteredTracks(@RequestParam("sourceId") String sourceId,
+                                           @RequestParam("trackNumber") String trackNumber,
+                                           @RequestParam("identity") String identity,
+                                           @RequestParam("status") String status,
+                                           @RequestParam("minSpeed") String minSpeed,
+                                           @RequestParam("maxSpeed") String maxSpeed,
+                                           @RequestParam("startTime") String startTime,
+                                           @RequestParam("endTime") String endTime){
+
+        List<Track> listOfTracks = trackService.getAdvancedFilteredTracks(sourceId, trackNumber,
+                identity, status, minSpeed, maxSpeed, startTime, endTime);
+
+        StringBuilder result = new StringBuilder();
+
+        if (listOfTracks != null && !listOfTracks.isEmpty()) {
+
+            result.append("========== ADVANCED FILTERED TRACK RESULTS ==========<pre>");
+
+            buildingString(listOfTracks, result);
+
+        } else {
+
+            result.append("Tracks could not be found.");
+        }
+
+        return result.toString();
+    }
+
 
     @ResponseBody
     @GetMapping(value = "/api/tracks/history", params = {"sourceId", "trackNumber"})
@@ -119,7 +240,7 @@ public class FormController {
     @RequestMapping(method = RequestMethod.POST, value = "/api/tracks/maintenance", params = "trackNumber")
     public String deleteTrackByNum(@RequestParam("trackNumber") String trackNumber){
         StringBuilder result = new StringBuilder();
-        result.append("========== DELETING TRACKS RESULTS ==========<pre>");
+        result.append("========== DELETING TRACKS ==========<pre>");
         if(trackService.deleteTrackByNum(trackNumber))
             result.append("Track ").append(trackNumber).append(" has been deleted.");
         else

@@ -1,34 +1,33 @@
 package com.mtms.service;
 
 import com.mtms.domain.Alert;
-//import com.mtms.repository.AlertRepository;
+import com.mtms.repository.AlertRepository;
+import com.mtms.repository.TrackRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 
 @Service
 public class AlertService {
 
-    //static AlertRepository alertRepository = new AlertRepository();
+    @Autowired
+    private AlertRepository alertRepository;
 
 
     // Process alert and save in repository
-    public static void processAlert(String sourceId, String trackNumber, String alertMessage, String eventType) {
+    public String processAlert(String sourceId, String trackNumber, String alertMessage, String eventType) {
 
         // processes short track number
-        if (alertMessage.contains("short"))
+        if (alertMessage.contains("short")) {
             trackNumber = "INVALID(" + trackNumber + ")";
+        }
 
-        // create alert object and save to repository
-        createAlertObject(
-                trackNumber,
-                alertMessage,
-                chooseSeverity(eventType), // assigning severity base on event type
-                sourceId,
-                eventType);
-
+        // create alert object and save to repository, assigning severity base on event type
+        return createAlertObject(trackNumber, alertMessage, chooseSeverity(eventType), sourceId, eventType);
     }
 
     // Choose severity based on track event
@@ -42,30 +41,19 @@ public class AlertService {
     }
 
     // Create the Alert object and send the alert to AlertRepository
-    public static void createAlertObject(String trackNumber, String alertMessage, String severity, String sourceId, String eventType){
-        Alert alert = new Alert(
-                trackNumber,
-                alertMessage,
-                severity,
-                LocalDateTime.now(),
-                sourceId,
-                eventType
-        );
-        //AlertRepository.addAlert(alert);
+    public String createAlertObject(String trackNumber, String alertMessage, String severity, String sourceId, String eventType){
+        Alert alert = new Alert(trackNumber, alertMessage, severity, LocalDateTime.now(), sourceId, eventType);
+        if (alertRepository.save(alert) != null) {
+            return "Success";
+        }
+        return "Failure";
     }
 
-//    // Retrieve all alerts
-//    public static List<Alert> getAllAlerts() {
-//        List <Alert> listOfAlerts = alertRepository.getAllAlerts();
-////        System.out.println("\nRetrieving all alerts: ");
-////        if (listOfAlerts != null)
-////            for (Alert alert : listOfAlerts) {
-////                System.out.println(alert);
-////            }
-////        else
-////            System.out.println("No available alerts");
-//        return listOfAlerts;
-//    }
+    // Retrieve all alerts
+    public List<Alert> getAllAlerts() {
+        List <Alert> listOfAlerts = new ArrayList<>();
+        alertRepository.findAll().forEach(listOfAlerts::add);
+        return listOfAlerts;
+    }
 }
-
 

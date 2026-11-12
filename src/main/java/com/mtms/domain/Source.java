@@ -1,17 +1,26 @@
 package com.mtms.domain;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+//@Table(name = "source")
 public class Source {
+
     //Attributes
+    @Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private String sourceId;
     private LocalDateTime firstSeenAt;
     private LocalDateTime lastReceivedAt;
-    private long latestSequence;
+    private Integer latestSequence;
     private String sourceStatus;
 
+
     //Constructor
-    public Source(String sourceId, LocalDateTime firstSeenAt, LocalDateTime lastReceivedAt, long latestSequence, String sourceStatus) {
+    public Source(String sourceId, LocalDateTime firstSeenAt, LocalDateTime lastReceivedAt, Integer latestSequence, String sourceStatus) {
         this.sourceId = sourceId;
         this.firstSeenAt = firstSeenAt;
         this.lastReceivedAt = lastReceivedAt;
@@ -19,18 +28,23 @@ public class Source {
         this.sourceStatus = sourceStatus;
     }
 
+    //empty constructor
+
+    public Source() {}
+
     //getter
     public String getSourceId() {return sourceId;}
     public LocalDateTime getFirstSeenAt() {return firstSeenAt;}
     public LocalDateTime getLastReceivedAt() {return lastReceivedAt;}
-    public long getLatestSequence() {return latestSequence;}
+    public Integer getLatestSequence() {return latestSequence;}
     public String getSourceStatus() {return sourceStatus;}
 
     //setter
     public void setSourceStatus(String sourceStatus) {
         this.sourceStatus = sourceStatus;
     }
-
+    public void setLastReceivedAt(LocalDateTime lastReceivedAt) {this.lastReceivedAt = lastReceivedAt;}
+    public void setLatestSequence(Integer latestSequence) {this.latestSequence = latestSequence;}
     //toString
     @Override
     public String toString() {

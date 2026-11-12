@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class TrackService {
@@ -19,9 +20,14 @@ public class TrackService {
 //    private  TrackRepository trackRepository;
 
     private final TrackRepository trackRepository;
+    private final AlertService alertService;
+    private final SourceService sourceService;
+    List<Track> filteredList;
 
-    public TrackService(TrackRepository trackRepository) {
+    public TrackService(TrackRepository trackRepository, AlertService alertService, SourceService sourceService) {
         this.trackRepository = trackRepository;
+        this.alertService = alertService;
+        this.sourceService = sourceService;
     }
 
     //static TrackAnalyticsService trackAnalyticsService = new TrackAnalyticsService();
@@ -30,7 +36,6 @@ public class TrackService {
     // calculating duplicates and out-of-order messages
     private static int duplicatesCount = 0;
     private static int orderCount = 0;
-    private Integer trackId = 0;
 
     // Validate and process each track
     public  void processTrackString(String trackString) {
@@ -53,7 +58,7 @@ public class TrackService {
                 malformedErrors.add("Track Number not found");
             }
             // creating alert
-            AlertService.processAlert(sourceId, trackNumber, String.join(", ", malformedErrors), "Malformed message");
+            alertService.processAlert(sourceId, trackNumber, String.join(", ", malformedErrors), "Malformed message");
         } else {
 
             // parsing and sending track object to processing
@@ -64,21 +69,21 @@ public class TrackService {
 
     //overloading
     // Validate and process each track object
-    public  boolean processTrack(Track track) {
+    public boolean processTrack(Track track) {
 
         List<String> validationErrors = ValidationService.validateTrack(track);
 
         if (validationErrors.isEmpty()) {
             if (!hasDuplicates(track)) {
-                //if(!isOutOfOrder(track)) {
+                if(!isOutOfOrder(track)) {
                     trackRepository.save(track);
-                    //SourceService.processSources(track);
+                    sourceService.processSources(track);
                     return true;
-                //}
+                }
             }
         } else {
             // creating alert
-            AlertService.processAlert(track.getSourceId(), track.getTrackNumber(), String.join(", ", validationErrors), "Track validation failure");
+            alertService.processAlert(track.getSourceId(), track.getTrackNumber(), String.join(", ", validationErrors), "Track validation failure");
         }
         return false;
     }
@@ -91,7 +96,7 @@ public class TrackService {
                 if ((oldTrack.getSourceId().equals(track.getSourceId())) &&
                         (oldTrack.getSequenceNumber() == track.getSequenceNumber())){
                     String alertMessage = "Message with the same Source Id and Sequence Number as an existing Track";
-                    AlertService.processAlert(track.getSourceId(), track.getTrackNumber(), alertMessage, "Duplicate message");
+                    alertService.processAlert(track.getSourceId(), track.getTrackNumber(), alertMessage, "Duplicate message");
                     duplicatesCount++;
                     return true;
                 }
@@ -99,19 +104,19 @@ public class TrackService {
         return false;
     }
 
-//    // storing out of order tracks
-//    public static boolean isOutOfOrder(Track track){
-//        Track latestTrack = trackRepository.getLatestTrackFromSource(track.getSourceId());
-//        if (latestTrack != null)
-//            if (latestTrack.getSequenceNumber() > track.getSequenceNumber()){
-//                String alertMessage = "Message with the same Source Id has a higher Sequence Number than an existing Track";
-//                AlertService.processAlert(track.getSourceId(), track.getTrackNumber(), alertMessage, "Out-of-order message");
-//                outOfOrderTracks.add(track);
-//                orderCount++;
-//                return true;
-//            }
-//        return false;
-//    }
+    // storing out of order tracks
+    public boolean isOutOfOrder(Track track){
+        Track latestTrack = trackRepository.findTopBySourceIdOrderBySequenceNumberDesc(track.getSourceId());
+        if (latestTrack != null)
+            if (latestTrack.getSequenceNumber() > track.getSequenceNumber()){
+                String alertMessage = "Message with the same Source Id has a higher Sequence Number than an existing Track";
+                alertService.processAlert(track.getSourceId(), track.getTrackNumber(), alertMessage, "Out-of-order message");
+                outOfOrderTracks.add(track);
+                orderCount++;
+                return true;
+            }
+        return false;
+    }
 
     // getting list of out of order tracks
     public  List<Track> GetOutOfOrderTracks(){
@@ -121,9 +126,7 @@ public class TrackService {
     public  Track parsingTrackString (String trackString){
         // splitting string into segments
         String[] stringSeg = trackString.split("\\|");
-        trackId++;
         return new Track(
-//                trackId,
             stringSeg[2].trim(), //trackNumber
             Double.parseDouble(stringSeg[3].trim()), //latitude
             Double.parseDouble(stringSeg[4].trim()), //longitude
@@ -178,18 +181,18 @@ public class TrackService {
         }
     }
 
-//    // getting latest tracks from each source
-//    public List<Track> getCurrentView() {
-//        System.out.println("\nCurrent View of Tracks: ");
-//        listOfTracks = trackRepository.getCurrentView();
-//
-//        if (listOfTracks != null) {
-//            for (Track track : listOfTracks) {
-//                System.out.println(track);
-//            }
-//        }
-//        return listOfTracks;
-//    }
+    // getting latest tracks from each source
+    public List<Track> getCurrentView() {
+        System.out.println("\nCurrent View of Tracks: ");
+        listOfTracks = trackRepository.findDistinctLatestTracks();
+
+        if (listOfTracks != null) {
+            for (Track track : listOfTracks) {
+                System.out.println(track);
+            }
+        }
+        return listOfTracks;
+    }
 
     //calling get full history view method
     public  List<Track> getFullHistory(String trackNumber, String sourceId) {
@@ -206,7 +209,9 @@ public class TrackService {
     }
 
     // Generate processing counter
-    public Map<String, Integer> processingCounter (){
+    public List<String> processingCounter (){
+
+        List<String> result = new ArrayList<>();
         Map<String, Integer> processCounter = new LinkedHashMap<>();
 
         // calculating accepted unique messages
@@ -238,11 +243,11 @@ public class TrackService {
         if (processCounter != null) {
             System.out.println("\nDisplaying Processing Count: ");
             for (Map.Entry<String, Integer> entry : processCounter.entrySet()) {
-                System.out.println(entry.getKey() + ": " + entry.getValue());
+                result.add(entry.getKey() + ": " + entry.getValue());
             }
         }
 
-        return processCounter;
+        return result;
     }
 
     // Generating filtered tracks
@@ -252,6 +257,59 @@ public class TrackService {
         if (status.isEmpty())
             status = null;
         return trackRepository.findByIdentityOrTrackStatusOrSpeedGreaterThanEqual(identity, status, minSpeed);
+    }
+
+    // Generate advanced filtering
+    public List<Track> getAdvancedFilteredTracks(String sourceId, String trackNumber, String identity, String status,
+                                         String minSpeed, String maxSpeed, String startTime, String endTime){
+
+        listOfTracks = findAllTracks();
+
+        if (!sourceId.isEmpty()){
+            filteredList = trackRepository.findBySourceId(sourceId);
+            listOfTracks = listOfTracks.stream().filter(track -> filteredList.contains(track)).collect(Collectors.toList());
+        }
+
+        if (!trackNumber.isEmpty()){
+            filteredList = trackRepository.findByTrackNumber(trackNumber);
+            listOfTracks = listOfTracks.stream().filter(track -> filteredList.contains(track)).collect(Collectors.toList());
+        }
+
+        if (!identity.isEmpty()){
+            filteredList = trackRepository.findByIdentity(identity);
+            listOfTracks = listOfTracks.stream().filter(track -> filteredList.contains(track)).collect(Collectors.toList());
+        }
+
+        if (!status.isEmpty()){
+            filteredList = trackRepository.findByTrackStatus(status);
+            listOfTracks = listOfTracks.stream().filter(track -> filteredList.contains(track)).collect(Collectors.toList());
+        }
+
+        if (!minSpeed.isEmpty()){
+            double minSpeedDouble = Double.parseDouble(minSpeed);
+            filteredList = trackRepository.findBySpeedGreaterThanEqual(minSpeedDouble);
+            listOfTracks = listOfTracks.stream().filter(track -> filteredList.contains(track)).collect(Collectors.toList());
+        }
+
+        if (!maxSpeed.isEmpty()){
+            double maxSpeedDouble = Double.parseDouble(maxSpeed);
+            filteredList = trackRepository.findBySpeedLessThanEqual(maxSpeedDouble);
+            listOfTracks = listOfTracks.stream().filter(track -> filteredList.contains(track)).collect(Collectors.toList());
+        }
+
+        if (!startTime.isEmpty()){
+            LocalDateTime time = LocalDateTime.parse(startTime);
+            filteredList = trackRepository.findByObservationTimeGreaterThanEqual(time);
+            listOfTracks = listOfTracks.stream().filter(track -> filteredList.contains(track)).collect(Collectors.toList());
+        }
+
+        if (!endTime.isEmpty()){
+            LocalDateTime time = LocalDateTime.parse(endTime);
+            filteredList = trackRepository.findByObservationTimeLessThanEqual(time);
+            listOfTracks = listOfTracks.stream().filter(track -> filteredList.contains(track)).collect(Collectors.toList());
+        }
+
+        return listOfTracks;
     }
 
 //    // Generating cross-source correlation tracks

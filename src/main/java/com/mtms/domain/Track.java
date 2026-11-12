@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "track")
+//@Table(name = "track")
 public class Track {
     //Attributes
     @Id
