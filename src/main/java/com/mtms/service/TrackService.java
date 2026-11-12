@@ -65,7 +65,7 @@ public class TrackService {
     }
 
     // Returns the highest sequenceNumber given a specific sourceId using TrackRepository
-    public int getHighestSequence(String sourceId) throws SQLException {
+    public int getHighestSequence(String sourceId) {
         List<Track> listOfTracks = track_repo.findTracksBySourceId(sourceId);
         return listOfTracks.stream().mapToInt(Track::getSequenceNumber).max().orElse(0);
     }

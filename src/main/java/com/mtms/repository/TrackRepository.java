@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Repository
-public interface TrackRepository extends JpaRepository<Track, Integer>, JpaSpecificationExecutor {
+public interface TrackRepository extends JpaRepository<Track, Integer>, JpaSpecificationExecutor<Track> {
     List<Track> findTracksByTrackNumber(String track_number);
 
     List<Track> findTracksBySourceId(String sourceId);
