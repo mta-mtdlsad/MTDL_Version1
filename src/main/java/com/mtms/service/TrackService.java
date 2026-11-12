@@ -43,9 +43,9 @@ public class TrackService {
     }
 
     // Returns Track based on given ID using TrackRepository
-    public Track findTrackById(int id) {
+    /*public Track findTrackById(int id) {
         return track_repo.findById(id).get();
-    }
+    }*/
 
     // Returns Tracks based on given trackNumber using TrackRepository
     public List<Track> findTracksByNumber(String number) {
