@@ -27,10 +27,10 @@ public class ValidationServiceTest {
         this.validationResult = new ValidationResult();
     }
 
-    // Runs after every test
+    // Runs after each test
     @AfterEach
-    public void postEachTest(){
-        System.out.println("Completed test");
+    void tearDown(TestInfo testInfo) {
+        System.out.println("Finished Test: " + testInfo.getDisplayName());
     }
 
     // Test Source ID
@@ -48,7 +48,7 @@ public class ValidationServiceTest {
     public void validateSourceIdInvalidTest(){
         track.setSourceId("LINK@A");
         validationResult = ValidationService.validateSourceId(track);
-        assertNull(validationResult, "Source ID Validation Failed");
+        assertNotNull(validationResult, "Source ID Validation Failed");
     }
 
     // Test Sequence Number
@@ -66,7 +66,7 @@ public class ValidationServiceTest {
     public void validateSequenceNumberInvalidTest(){
         track.setSequenceNumber(-10);
         validationResult = ValidationService.validateSequenceNumber(track);
-        assertNull(validationResult, "Sequence Number Validation Failed");
+        assertNotNull(validationResult, "Sequence Number Validation Failed");
     }
 
     // Test Track Number
@@ -84,7 +84,7 @@ public class ValidationServiceTest {
     public void validateTrackNumberInvalidTest(){
         track.setTrackNumber("TRK");
         validationResult = ValidationService.validateTrackNumber(track);
-        assertNull(validationResult, "Track Number Validation Failed");
+        assertNotNull(validationResult, "Track Number Validation Failed");
     }
 
     //Test Invalid Null Track Number
@@ -93,7 +93,7 @@ public class ValidationServiceTest {
     public void validateTrackNumberInvalidNullTest(){
         track.setTrackNumber(null);
         validationResult = ValidationService.validateTrackNumber(track);
-        assertNull(validationResult, "Track Number Validation Failed");
+        assertNotNull(validationResult, "Track Number Validation Failed");
     }
 
     // Test Latitiude
@@ -111,7 +111,7 @@ public class ValidationServiceTest {
     public void validateLatitudeInvalidTest(){
         track.setLatitude(1000);
         validationResult = ValidationService.validateLatitude(track);
-        assertNull(validationResult, "Track Latitude Validation Failed");
+        assertNotNull(validationResult, "Track Latitude Validation Failed");
     }
 
     // Test Longitude
@@ -129,7 +129,7 @@ public class ValidationServiceTest {
     public void validateLongitudeInvalidTest(){
         track.setLongitude(1000);
         validationResult = ValidationService.validateLongitude(track);
-        assertNull(validationResult, "Track Longitude Validation Failed");
+        assertNotNull(validationResult, "Track Longitude Validation Failed");
     }
 
     // Test Speed
@@ -147,7 +147,7 @@ public class ValidationServiceTest {
     public void validateSpeedInvalidTest(){
         track.setSpeed(3000);
         validationResult = ValidationService.validateSpeed(track);
-        assertNull(validationResult, "Track Speed Validation Failed");
+        assertNotNull(validationResult, "Track Speed Validation Failed");
     }
 
     // Test Identity Type
@@ -165,7 +165,7 @@ public class ValidationServiceTest {
     public void validateIdentityTypeInvalidTest(){
         track.setIdentityType("TEST");
         validationResult = ValidationService.validateIdentityType(track);
-        assertNull(validationResult, "Track Identity Type Validation Failed");
+        assertNotNull(validationResult, "Track Identity Type Validation Failed");
     }
 
     // Test Track Status
@@ -183,7 +183,7 @@ public class ValidationServiceTest {
     public void validateTrackStatusInvalidTest(){
         track.setTrackStatus("TEST");
         validationResult = ValidationService.validateTrackStatus(track);
-        assertNull(validationResult, "Track Status Validation Failed");
+        assertNotNull(validationResult, "Track Status Validation Failed");
     }
 
     // Test Created Time
@@ -201,7 +201,7 @@ public class ValidationServiceTest {
     public void validateCreatedTimeInvalidTest(){
         track.setCreatedTime(null);
         validationResult = ValidationService.validateCreatedTime(track);
-        assertNull(validationResult, "Track Created Time Validation Failed");
+        assertNotNull(validationResult, "Track Created Time Validation Failed");
     }
 
     // Test Track Validation
@@ -235,6 +235,6 @@ public class ValidationServiceTest {
         track.setIdentityType("TEST");
         track.setCreatedTime(null);
         List<ValidationResult> errors = ValidationService.validateTrack(track);
-        assertTrue(errors.isEmpty(), "Track Validation Failed");
+        assertFalse(errors.isEmpty(), "Track Validation Failed");
     }
 }

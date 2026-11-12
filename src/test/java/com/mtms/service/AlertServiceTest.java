@@ -37,10 +37,10 @@ public class AlertServiceTest {
         testReporter.publishEntry("\nRunning " + testInfo.getDisplayName());
     }
 
-    // Runs after every test
+    // Runs after each test
     @AfterEach
-    public void postEachTest(){
-        System.out.println("Completed test");
+    void tearDown(TestInfo testInfo) {
+        System.out.println("Finished Test: " + testInfo.getDisplayName());
     }
 
 
