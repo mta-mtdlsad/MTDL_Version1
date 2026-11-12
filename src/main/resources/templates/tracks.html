@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE>
+<html xmlns:th="http://thymeleaf.org">
 <head>
     <title>MTMS - All Tracks</title>
 </head>
@@ -23,8 +23,9 @@
     </thead>
     <tbody id="tracksBody"></tbody>
 </table>
-<script>
-    fetch('/api/tracks/list')
+<script th:inline="javascript">
+    const url = [[${url}]];
+    fetch(url)
         .then(response => {
             if (!response.ok) {
                 throw new Error("Failed to retrieve tracks");

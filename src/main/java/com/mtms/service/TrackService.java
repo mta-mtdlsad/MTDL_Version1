@@ -140,6 +140,8 @@ public class TrackService {
             listOfTracks = correlateTrack(track, updatedActiveTracks);
             if (!listOfTracks.isEmpty()) {
                 correlationMap.put(track, listOfTracks);
+                // Maybe should rethink, if both A and B are removed
+                // and C is correlated with B only, it will not show
                 for (Track correlatedTrack : listOfTracks)
                     updatedActiveTracks.remove(correlatedTrack);
             }

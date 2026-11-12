@@ -6,7 +6,7 @@
 </head>
 <body>
 <h2>Search and Filter Tracks</h2>
-<form method="GET" action="/api/tracks/filter" name="filterForm">
+<form method="GET" action="/api/tracks/filter" name="filterForm" id="filterForm">
     <!-- Source ID -->
     <label>Source ID:</label>
     <input type="text" name="sourceId" pattern="[A-Za-z0-9_-]{2,30}"><br><br>
@@ -103,11 +103,9 @@
     })
     document.getElementById("filterForm").addEventListener("submit", function (event){
         event.preventDefault();
-        const FilterParameters = Java.type("com.mtms.util");
-        const filterParameters = new FilterParameters();
-        const sourceId = document.getElementById("sourceId").value;
-        const sequenceNumber = document.getElementById("sequenceNumber").value;
-        const api = "/api/analytics/correlations/" +encodeURIComponent(sourceId) + "/" + encodeURIComponent(sequenceNumber);
+        const formData = new FormData(event.target);
+        const queryString = new URLSearchParams(formData).toString();
+        const api = "/api/tracks/filter?" + encodeURIComponent(queryString);
         window.location.href = "/results.html?api=" +encodeURIComponent(api);
     });
 </script>
