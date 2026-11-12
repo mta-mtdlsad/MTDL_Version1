@@ -19,7 +19,7 @@ public class Alert {
     LocalDateTime alertTime;
 
     // for JPA
-    protected Alert() {
+    public Alert() {
     }
 
     public Alert(int alertId, String trackNumber, String alertMessage, String alertSeverity, LocalDateTime alertTime) {
@@ -55,6 +55,26 @@ public class Alert {
 
     public LocalDateTime getAlertTime() {
         return alertTime;
+    }
+
+    public void setAlertId(int alertId) {
+        this.alertId = alertId;
+    }
+
+    public void setTrackNumber(String trackNumber) {
+        this.trackNumber = trackNumber;
+    }
+
+    public void setAlertMessage(String alertMessage) {
+        this.alertMessage = alertMessage;
+    }
+
+    public void setAlertSeverity(String alertSeverity) {
+        this.alertSeverity = alertSeverity;
+    }
+
+    public void setAlertTime(LocalDateTime alertTime) {
+        this.alertTime = alertTime;
     }
 
     @Override

@@ -19,12 +19,21 @@ public class ValidationServiceTest {
 
     @BeforeEach
     public void init(TestInfo testInfo, TestReporter testReporter){
+        // Publish the test info
         testReporter.publishEntry("\nRunning " + testInfo.getDisplayName());
+        // New Track, ValidationService and ValidationResult for each test
         this.track = new Track();
         this.validationService = new ValidationService();
         this.validationResult = new ValidationResult();
     }
 
+    // Runs after every test
+    @AfterEach
+    public void postEachTest(){
+        System.out.println("Completed test");
+    }
+
+    // Test Source ID
     @Test
     @DisplayName("Testing Source ID Validation")
     public void validateSourceIdTest(){
@@ -33,6 +42,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Source ID Validation Failed");
     }
 
+    //Test Invalid Source ID
     @Test
     @DisplayName("Testing Invalid Source ID Validation")
     public void validateSourceIdInvalidTest(){
@@ -41,6 +51,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Source ID Validation Failed");
     }
 
+    // Test Sequence Number
     @Test
     @DisplayName("Testing Sequence Number Validation")
     public void validateSequenceNumberTest(){
@@ -49,6 +60,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Sequence Number Validation Failed");
     }
 
+    //Test Invalid Sequence Number
     @Test
     @DisplayName("Testing Invalid Sequence Number Validation")
     public void validateSequenceNumberInvalidTest(){
@@ -57,6 +69,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Sequence Number Validation Failed");
     }
 
+    // Test Track Number
     @Test
     @DisplayName("Testing Track Number Validation")
     public void validateTrackNumberTest(){
@@ -65,6 +78,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Track Number Validation Failed");
     }
 
+    //Test Invalid Track Number
     @Test
     @DisplayName("Testing Invalid Track Number Validation")
     public void validateTrackNumberInvalidTest(){
@@ -73,6 +87,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Track Number Validation Failed");
     }
 
+    //Test Invalid Null Track Number
     @Test
     @DisplayName("Testing Invalid Null Track Number Validation")
     public void validateTrackNumberInvalidNullTest(){
@@ -81,6 +96,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Track Number Validation Failed");
     }
 
+    // Test Latitiude
     @Test
     @DisplayName("Testing Latitude Validation")
     public void validateLatitudeTest(){
@@ -89,6 +105,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Track Latitude Validation Failed");
     }
 
+    // Test Invalid Latitiude
     @Test
     @DisplayName("Testing Invalid Latitude Validation")
     public void validateLatitudeInvalidTest(){
@@ -97,6 +114,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Track Latitude Validation Failed");
     }
 
+    // Test Longitude
     @Test
     @DisplayName("Testing Longitude Validation")
     public void validateLongitudeTest(){
@@ -105,6 +123,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Track Longitude Validation Failed");
     }
 
+    // Test Invalid Longitude
     @Test
     @DisplayName("Testing Invalid Longitude Validation")
     public void validateLongitudeInvalidTest(){
@@ -113,6 +132,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Track Longitude Validation Failed");
     }
 
+    // Test Speed
     @Test
     @DisplayName("Testing Speed Validation")
     public void validateSpeedTest(){
@@ -121,6 +141,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Track Speed Validation Failed");
     }
 
+    // Test Invalid Speed
     @Test
     @DisplayName("Testing Invalid Speed Validation")
     public void validateSpeedInvalidTest(){
@@ -129,6 +150,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Track Speed Validation Failed");
     }
 
+    // Test Identity Type
     @Test
     @DisplayName("Testing Identity Type Validation")
     public void validateIdentityTypeTest(){
@@ -137,6 +159,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Track Identity Type Validation Failed");
     }
 
+    // Test Invalid Identity Type
     @Test
     @DisplayName("Testing Invalid Identity Type Validation")
     public void validateIdentityTypeInvalidTest(){
@@ -145,6 +168,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Track Identity Type Validation Failed");
     }
 
+    // Test Track Status
     @Test
     @DisplayName("Testing Track Status Validation")
     public void validateTrackStatusTest(){
@@ -153,6 +177,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Track Status Validation Failed");
     }
 
+    // Test Invalid Track Status
     @Test
     @DisplayName("Testing Invalid Track Status Validation")
     public void validateTrackStatusInvalidTest(){
@@ -161,6 +186,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Track Status Validation Failed");
     }
 
+    // Test Created Time
     @Test
     @DisplayName("Testing Created Time Validation")
     public void validateCreatedTimeTest(){
@@ -169,6 +195,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Track Created Time Validation Failed");
     }
 
+    // Test Invalid Created Time
     @Test
     @DisplayName("Testing Invalid Created Time Validation")
     public void validateCreatedTimeInvalidTest(){
@@ -177,6 +204,7 @@ public class ValidationServiceTest {
         assertNull(validationResult, "Track Created Time Validation Failed");
     }
 
+    // Test Track Validation
     @Test
     @DisplayName("Testing Track Validation")
     public void validateTrackTest(){
@@ -193,6 +221,7 @@ public class ValidationServiceTest {
         assertTrue(errors.isEmpty(),"Track Validation Failed");
     }
 
+    // Test Invalid Track Validation
     @Test
     @DisplayName("Testing Invalid Track Validation")
     public void validateTrackInvalidTest(){
