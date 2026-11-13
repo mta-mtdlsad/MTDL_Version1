@@ -1,15 +1,11 @@
 package com.mtms;
 
-import com.mtms.network.UDPReceiver;
-import com.mtms.service.SourceHealthService;
 import com.mtms.simulator.TrackSimulator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-@SpringBootApplication(scanBasePackages = "com.mtms")
+@SpringBootApplication()
 public class MTMSApplication {
 
     public static void main( String[] args ) throws Exception {

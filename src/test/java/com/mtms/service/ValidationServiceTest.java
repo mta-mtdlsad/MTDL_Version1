@@ -11,8 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ValidationServiceTest {
 
-    private ValidationService validationService;
-
     private Track track;
 
     private ValidationResult validationResult;
@@ -23,7 +21,6 @@ public class ValidationServiceTest {
         testReporter.publishEntry("\nRunning " + testInfo.getDisplayName());
         // New Track, ValidationService and ValidationResult for each test
         this.track = new Track();
-        this.validationService = new ValidationService();
         this.validationResult = new ValidationResult();
     }
 
@@ -92,6 +89,15 @@ public class ValidationServiceTest {
     @DisplayName("Testing Invalid Null Track Number Validation")
     public void validateTrackNumberInvalidNullTest(){
         track.setTrackNumber(null);
+        validationResult = ValidationService.validateTrackNumber(track);
+        assertNotNull(validationResult, "Track Number Validation Failed");
+    }
+
+    //Test Invalid Null Track Number
+    @Test
+    @DisplayName("Testing Invalid Empty Track Number Validation")
+    public void validateTrackNumberInvalidEmptyTest(){
+        track.setTrackNumber("");
         validationResult = ValidationService.validateTrackNumber(track);
         assertNotNull(validationResult, "Track Number Validation Failed");
     }

@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class TrackControllerTest {
     @InjectMocks
     TrackController trackController;
 
-    private Track track1, track2 ,track3, track4;
+    private Track track1, track2, track3, track4;
     private List<Track> listOfTracks;
 
     @BeforeEach
@@ -43,6 +44,55 @@ public class TrackControllerTest {
         track3 = new Track("LINK-B", 1, "TRK2001", 10.0, 70.0, 500.0, "FRIEND", "ACTIVE", LocalDateTime.now());
         track4 = new Track("LINK-C", 1, "TRK3001", 15.0, 75.0, 900.0, "FRIEND", "ACTIVE", LocalDateTime.now());
         listOfTracks = Arrays.asList(track1, track2, track3, track4);
+    }
+
+    @Nested
+    @Tag("TracksControllerBasicCRUD")
+    @DisplayName("Test addTrack Functionality")
+    class addTrackTest {
+        @Test
+        @DisplayName("When Track is ACCEPTED")
+        public void addTrackACCEPTEDTest() {
+            MessageProcessorService.ProcessingResult result = new MessageProcessorService.ProcessingResult(
+                    MessageProcessorService.Outcome.ACCEPTED,
+                    false);
+            when(processor.processDetailed(track1)).thenReturn(result);
+            assertEquals(ResponseEntity.status(201).body(result), trackController.addTrack(track1));
+            verify(processor, times(1)).processDetailed(track1);
+        }
+
+        @Test
+        @DisplayName("When Track is REJECTED")
+        public void addTrackREJECTEDTest() {
+            MessageProcessorService.ProcessingResult result = new MessageProcessorService.ProcessingResult(
+                    MessageProcessorService.Outcome.REJECTED,
+                    false);
+            when(processor.processDetailed(track1)).thenReturn(result);
+            assertEquals(ResponseEntity.status(422).body(result), trackController.addTrack(track1));
+            verify(processor, times(1)).processDetailed(track1);
+        }
+
+        @Test
+        @DisplayName("When Track is DUPLICATE")
+        public void addTrackDUPLICATETest() {
+            MessageProcessorService.ProcessingResult result = new MessageProcessorService.ProcessingResult(
+                    MessageProcessorService.Outcome.DUPLICATE,
+                    false);
+            when(processor.processDetailed(track1)).thenReturn(result);
+            assertEquals(ResponseEntity.status(409).body(result), trackController.addTrack(track1));
+            verify(processor, times(1)).processDetailed(track1);
+        }
+
+        @Test
+        @DisplayName("When Track is FAILURE")
+        public void addTrackFAILURETest() {
+            MessageProcessorService.ProcessingResult result = new MessageProcessorService.ProcessingResult(
+                    MessageProcessorService.Outcome.FAILURE,
+                    false);
+            when(processor.processDetailed(track1)).thenReturn(result);
+            assertEquals(ResponseEntity.status(500).body(result), trackController.addTrack(track1));
+            verify(processor, times(1)).processDetailed(track1);
+        }
     }
 
     @Test
