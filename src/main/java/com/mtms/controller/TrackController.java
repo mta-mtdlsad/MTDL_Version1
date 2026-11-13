@@ -17,13 +17,10 @@ import java.util.List;
 public class TrackController {
 
     @Autowired
-    private TrackService tracks;
+    private TrackService trackService;
 
     @Autowired
     private MessageProcessorService processor;
-
-    @Autowired
-    private SourceHealthService sourceHealth;
 
     // Adds track using MessageProcessorService then returns ResponseEntity based on ProcessingResult
     @RequestMapping(method = RequestMethod.POST, value = "/create")
@@ -43,13 +40,12 @@ public class TrackController {
     // Returns all observations as JSON format
     @GetMapping("/list")
     public List<Track> getAllTracks(){
-        return tracks.getAllTracks();
+        return trackService.getAllTracks();
     }
 
-    // Get /api/tracks/search?trackNumber=###
-    @GetMapping("/search/{trackNumber}")
-    public List<Track> searchTrackNumber(@PathVariable String trackNumber){
-        return tracks.findTracksByNumber(trackNumber);
+    @GetMapping(value = "/search", params = "track_number")
+    public List<Track> searchTracks(@RequestParam("track_number") String track_number){
+        return trackService.findTracksByNumber(track_number);
     }
 
     // Filters tracks based on identity, status, and minSpeed
@@ -59,25 +55,24 @@ public class TrackController {
         filterParams.setIdentity(identity);
         filterParams.setStatus(status);
         filterParams.setMinSpeed(minSpeed);
-        return tracks.filterTracks(filterParams);
+        return trackService.filterTracks(filterParams);
     }
 
     // Filters tracks dynamically based form
     @GetMapping("/filter")
     public List<Track> filterTracks(@ModelAttribute FilterParameters filterParams) {
-        return tracks.filterTracks(filterParams);
+        return trackService.filterTracks(filterParams);
     }
 
-    // Get a track's history based on a sourceId and trackNumber
-    @GetMapping("/history/{source_id}/{track_number}")
-    public List<Track> getHistory(@PathVariable String source_id, @PathVariable String track_number){
-        return tracks.getAllTrackHistory(track_number, source_id);
+    @GetMapping(value = "/history") //, params = "search")
+    public List<Track> searchHistoryTracks(@RequestParam("source_id") String source_id, @RequestParam("track_number") String track_number){
+        return trackService.getAllTrackHistory(track_number, source_id);
     }
 
     // Deletes based on trackNumber
     @PostMapping(value = "/maintenance")
     public boolean deleteTrack(@RequestParam("track_number") String track_number){
-        return tracks.deleteTracksByTrackNumber(track_number);
+        return trackService.deleteTracksByTrackNumber(track_number);
     }
 
 
@@ -130,21 +125,11 @@ public class TrackController {
     public ModelAndView showSearchForm(){
         return new ModelAndView("forward:/search-form.html");
     }
-
-    @GetMapping(value = "/search", params = "track_number")
-    public List<Track> searchTracks(@RequestParam("track_number") String track_number){
-        return tracks.findTracksByNumber(track_number);
-    }
 /*
     @GetMapping(value = "/history", params = "!search")
     public ModelAndView showHistoryForm(){
         return new ModelAndView("forward:/search-trackNo-form.html");
     }*/
-
-    @GetMapping(value = "/history") //, params = "search")
-    public List<Track> searchHistoryTracks(@RequestParam("source_id") String source_id, @RequestParam("track_number") String track_number){
-        return tracks.getAllTrackHistory(track_number, source_id);
-    }
 
     @GetMapping(value = "/maintenance")
     public ModelAndView showDeleteForm(){

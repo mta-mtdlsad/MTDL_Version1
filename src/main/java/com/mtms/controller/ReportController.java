@@ -23,7 +23,7 @@ public class ReportController {
 
     // Returns identity and severity statistics
     @RequestMapping("/statistics")
-    private List<Map> getStatistics() {
+    public List<Map> getStatistics() {
         List<Map> results = Arrays.asList(
                 trackService.getIdentityStatistics(),
                 alertService.getSeverityStatistics()
@@ -33,7 +33,7 @@ public class ReportController {
 
     // Returns any correlated tracks for a specific observation (given sourceId and sequenceNumber)
     @RequestMapping("/analytics/correlations/{sourceId}/{sequenceNumber}")
-    private List<Track> getCorrelatedTracks(@PathVariable String sourceId, @PathVariable String sequenceNumber) {
+    public List<Track> getCorrelatedTracks(@PathVariable String sourceId, @PathVariable String sequenceNumber) {
         FilterParameters filterParams = new FilterParameters();
         filterParams.setSourceId(sourceId);
         filterParams.setSequenceNumber(sequenceNumber);
@@ -44,7 +44,7 @@ public class ReportController {
 
     // Returns any correlated tracks
     @RequestMapping("/analytics/correlations")
-    private Map<Track, List<Track>> getCorrelatedTracks() {
+    public Map<Track, List<Track>> getCorrelatedTracks() {
         return trackService.correlateTracks();
     }
 }
