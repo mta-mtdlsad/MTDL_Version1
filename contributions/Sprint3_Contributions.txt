@@ -42,10 +42,13 @@ Extra: Added templates/tracks.html
 
 ### Shamma ###
 TrackServiceTest.java | ReportController.java   | TrackController.java
+Extra: Maven configurations, Integrated automated tests to Maven, Troubleshooting and debugging
 
 ### Fatima ###
 ValidationTest.java |   AlertServiceTest.java   |   MessageProcessorServiceTest.java    |   ReplayServiceTest.java
 AlertController.java    |   ReplayControllerTest.java
+Extra: Troubleshooting and debugging
 
 ### Shahad ###
 SourceHealthServiceTest.java    |   MessageParserServiceTest.java   | SourceControllerTest.java
+Extra: Troubleshooting and debugging

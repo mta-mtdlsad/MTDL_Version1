@@ -6,6 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -32,10 +34,8 @@ public class MessageProcessorServiceTest {
     @BeforeEach
     void setUp(TestInfo testInfo, TestReporter testReporter) {
         // New alert for each test
-        track = new Track();
-        track.setSourceId("LINK-A");
-        track.setSequenceNumber(100);
-        track.setTrackNumber("TRK-10001");
+        track = new Track("LINK-A", 1, "TRK1001", 10.0, 70.0, 550.0, "FRIEND", "ACTIVE", LocalDateTime.now());
+
         // Publish the test info
         testReporter.publishEntry("\nRunning " + testInfo.getDisplayName());
     }
