@@ -3,7 +3,6 @@ package com.mtms.domain;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 //@Table(name = "source")
@@ -11,7 +10,7 @@ public class Source {
 
     //Attributes
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String sourceId;
     private LocalDateTime firstSeenAt;
     private LocalDateTime lastReceivedAt;
@@ -43,8 +42,11 @@ public class Source {
     public void setSourceStatus(String sourceStatus) {
         this.sourceStatus = sourceStatus;
     }
+    public void setSourceId(String sourceId) {this.sourceId = sourceId;}
     public void setLastReceivedAt(LocalDateTime lastReceivedAt) {this.lastReceivedAt = lastReceivedAt;}
     public void setLatestSequence(Integer latestSequence) {this.latestSequence = latestSequence;}
+    public void setFirstSeenAt(LocalDateTime firstSeenAt ) {this.firstSeenAt = firstSeenAt;}
+
     //toString
     @Override
     public String toString() {
@@ -56,4 +58,6 @@ public class Source {
                 ", sourceStatus='" + sourceStatus + '\'' +
                 '}';
     }
+
+
 }

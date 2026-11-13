@@ -221,7 +221,7 @@ public class Track {
 =======================AlertRepository.java=======================
 package com.mtms.repository;
 
-import com.mtms.domain.Alert;
+import com.domain.com.mtms.Alert;
 import com.mtms.util.DbConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -331,8 +331,8 @@ public class AlertRepository {
 =======================SourceRepository.java=======================
 package com.mtms.repository;
 
-import com.mtms.domain.Source;
-import com.mtms.domain.Alert;
+import com.domain.com.mtms.Source;
+import com.domain.com.mtms.Alert;
 import com.mtms.util.DbConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -548,7 +548,7 @@ public class SourceRepository {
 =======================AlertAnalyticsService.java=======================
 package com.mtms.service;
 
-import com.mtms.repository.AlertRepository;
+import com.repository.com.mtms.AlertRepository;
 import java.util.Map;
 
 public class AlertAnalyticsService {
@@ -563,8 +563,8 @@ public class AlertAnalyticsService {
 =======================AlertService.java=======================
 package com.mtms.service;
 
-import com.mtms.domain.Alert;
-import com.mtms.repository.AlertRepository;
+import com.domain.com.mtms.Alert;
+import com.repository.com.mtms.AlertRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -633,11 +633,11 @@ public class AlertService {
 =======================SourceService.java=======================
 package com.mtms.service;
 
-import com.mtms.domain.Source;
-import com.mtms.domain.Alert;
-import com.mtms.domain.Track;
-import com.mtms.repository.SourceRepository;
-import com.mtms.repository.AlertRepository;
+import com.domain.com.mtms.Source;
+import com.domain.com.mtms.Alert;
+import com.domain.com.mtms.Track;
+import com.repository.com.mtms.SourceRepository;
+import com.repository.com.mtms.AlertRepository;
 import java.time.LocalDateTime;
 import java.time.Duration;
 import java.util.List;
@@ -798,8 +798,8 @@ public class DbConnection {
 =======================AlertListServlet.java=======================
 package com.mtms.web.servlet;
 
-import com.mtms.domain.Alert;
-import com.mtms.service.AlertService;
+import com.domain.com.mtms.Alert;
+import com.service.com.mtms.AlertService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -898,7 +898,7 @@ public abstract class BaseServlet extends HttpServlet {
 package com.mtms.web.servlet;
 
 import com.mtms.service.AlertAnalyticsService;
-import com.mtms.service.TrackAnalyticsService;
+import com.service.com.mtms.TrackAnalyticsService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -946,9 +946,9 @@ public class StatisticsServlet extends HttpServlet {
 =======================SourceMonitorServlet.java=======================
 package com.mtms.web.servlet;
 
-import com.mtms.domain.Source;
-import com.mtms.service.SourceService;
-import com.mtms.service.TrackService;
+import com.domain.com.mtms.Source;
+import com.service.com.mtms.SourceService;
+import com.service.com.mtms.TrackService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -2801,8 +2801,8 @@ AdvancedFilters Servlet:
 
 package com.mtms.web.servlet;
 
-import com.mtms.domain.Track;
-import com.mtms.repository.TrackRepository;
+import com.domain.com.mtms.Track;
+import com.repository.com.mtms.TrackRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -2947,8 +2947,8 @@ Current Tracks Servlet:
 package com.mtms.web.servlet;
 
 
-import com.mtms.domain.Track;
-import com.mtms.service.TrackService;
+import com.domain.com.mtms.Track;
+import com.service.com.mtms.TrackService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

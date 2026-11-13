@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
 import static java.lang.Thread.sleep;
 
 @SpringBootApplication(scanBasePackages = "com.mtms")

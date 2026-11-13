@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
 @Service
 public class TrackService {
 
@@ -22,12 +23,15 @@ public class TrackService {
     private final TrackRepository trackRepository;
     private final AlertService alertService;
     private final SourceService sourceService;
+    private final ValidationService validationService;
     List<Track> filteredList;
 
-    public TrackService(TrackRepository trackRepository, AlertService alertService, SourceService sourceService) {
+    @Autowired
+    public TrackService(TrackRepository trackRepository, AlertService alertService, SourceService sourceService, ValidationService validationService) {
         this.trackRepository = trackRepository;
         this.alertService = alertService;
         this.sourceService = sourceService;
+        this.validationService =validationService;
     }
 
     //static TrackAnalyticsService trackAnalyticsService = new TrackAnalyticsService();
@@ -38,10 +42,10 @@ public class TrackService {
     private static int orderCount = 0;
 
     // Validate and process each track
-    public  void processTrackString(String trackString) {
+    public boolean processTrackString(String trackString) {
 
         // parsing track from string
-        List<String> malformedErrors = ValidationService.parseTrackString(trackString);
+        List<String> malformedErrors = validationService.parseTrackString(trackString);
 
         // getting source id and track number from malformed track
         if (!malformedErrors.isEmpty()) {
@@ -59,11 +63,13 @@ public class TrackService {
             }
             // creating alert
             alertService.processAlert(sourceId, trackNumber, String.join(", ", malformedErrors), "Malformed message");
+            return false;
         } else {
 
             // parsing and sending track object to processing
             Track track = parsingTrackString(trackString);
             processTrack(track);
+            return true;
         }
     }
 
@@ -71,7 +77,7 @@ public class TrackService {
     // Validate and process each track object
     public boolean processTrack(Track track) {
 
-        List<String> validationErrors = ValidationService.validateTrack(track);
+        List<String> validationErrors = validationService.validateTrack(track);
 
         if (validationErrors.isEmpty()) {
             if (!hasDuplicates(track)) {
@@ -89,7 +95,7 @@ public class TrackService {
     }
 
     // Checking for duplicate tracks
-    public  boolean hasDuplicates(Track track){
+    public boolean hasDuplicates(Track track){
         listOfTracks = findAllTracks();
         if (listOfTracks != null)
             for (Track oldTrack : listOfTracks){
@@ -118,12 +124,12 @@ public class TrackService {
         return false;
     }
 
-    // getting list of out of order tracks
-    public  List<Track> GetOutOfOrderTracks(){
-        return outOfOrderTracks;
-    }
+//    // getting list of out of order tracks
+//    public  List<Track> GetOutOfOrderTracks(){
+//        return outOfOrderTracks;
+//    }
 
-    public  Track parsingTrackString (String trackString){
+    public Track parsingTrackString (String trackString){
         // splitting string into segments
         String[] stringSeg = trackString.split("\\|");
         return new Track(
@@ -224,14 +230,14 @@ public class TrackService {
         // calculating rejected messages
         int rejectedCount = 0;
         try{
-            //rejectedCount  = AlertService.getAllAlerts().size();
+            rejectedCount  = alertService.getAllAlerts().size();
         } catch (Exception ignored) {
 
         }
         processCounter.put("Rejected Messages", rejectedCount);
 
         // calculating received messages
-        processCounter.put("Received Messages", acceptedCount + rejectedCount + duplicatesCount);
+        processCounter.put("Received Messages", acceptedCount + rejectedCount);
 
         // add duplicate count
         processCounter.put("Duplicate Messages", duplicatesCount);
@@ -311,6 +317,8 @@ public class TrackService {
 
         return listOfTracks;
     }
+
+
 
 //    // Generating cross-source correlation tracks
 //    public static List<String> getCorrelatedTracks(){

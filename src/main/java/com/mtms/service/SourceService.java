@@ -7,6 +7,7 @@ import com.mtms.domain.Track;
 import com.mtms.repository.AlertRepository;
 import com.mtms.repository.SourceRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -19,16 +20,21 @@ import java.util.Optional;
 @Service
 public class SourceService {
 
-    private final SourceRepository sourceRepository;
-    private final AlertRepository alertRepository;
+    private SourceRepository sourceRepository;
+    private AlertRepository alertRepository;
 
+    @Autowired
     public SourceService(SourceRepository sourceRepository, AlertRepository alertRepository) {
         this.sourceRepository = sourceRepository;
         this.alertRepository = alertRepository;
     }
 
+    public SourceService() {
+    }
+
     //    private Source listOfSources;
-    private static List<Source> listOfSources;
+    public static List<Source> listOfSources;
+
 
     // Main method to process incoming tracking data
     public void processSources(Track track) {
@@ -112,7 +118,7 @@ public class SourceService {
 
 
     // Calculate source health status
-    private String calculateSourceStatus(Source source, LocalDateTime checkTime) {
+    public String calculateSourceStatus(Source source, LocalDateTime checkTime) {
         if (source.getLastReceivedAt() == null) {
             return "NOT SEEN";
         }
@@ -130,8 +136,12 @@ public class SourceService {
     // Check health of all registered sources
     @Transactional
     public void checkSourceHealth(String trackNumber) {
+        checkSourceHealth(trackNumber, LocalDateTime.now());
+    }
 
-        // Retrieve all registered sources
+    //overloaded version for testing purposes
+    @Transactional
+    public void checkSourceHealth(String trackNumber, LocalDateTime checkTime) {
         List<Source> sources = new ArrayList<>();
         sourceRepository.findAll().forEach(sources::add);
 
@@ -139,24 +149,24 @@ public class SourceService {
             return;
         }
 
-        LocalDateTime checkTime = LocalDateTime.now();
         for (Source source : sources) {
             String oldStatus = source.getSourceStatus();
             String newStatus = calculateSourceStatus(source, checkTime);
 
-            // Check whether source status has changed
             if (!newStatus.equals(oldStatus)) {
                 Alert alert = null;
 
                 // Create alert if source becomes STALE
                 if (newStatus.equals("STALE")) {
                     alert = new Alert(trackNumber, "Source " + source.getSourceId() + " has become stale.",
-                            "MEDIUM", checkTime, source.getSourceId(), "Source becomes stale");}
+                            "MEDIUM", checkTime, source.getSourceId(), "Source becomes stale");
+                }
 
                 // Create alert if source becomes DISCONNECTED
                 else if (newStatus.equals("DISCONNECTED")) {
                     alert = new Alert(trackNumber, "Source " + source.getSourceId() + " has become disconnected.",
-                            "HIGH", checkTime, source.getSourceId(), "Source becomes disconnected");}
+                            "HIGH", checkTime, source.getSourceId(), "Source becomes disconnected");
+                }
 
                 // Update source status
                 source.setSourceStatus(newStatus);
@@ -174,28 +184,26 @@ public class SourceService {
     }
 
 
+
+    //findallsources
     public List<Source> findAllSources() {
         List<Source> listOfSources = new ArrayList<>();
         sourceRepository.findAll().forEach(listOfSources::add);
-//        System.out.println("\nRetrieving all sources: ");
-//        if (listOfSources != null)
-//            for (Source source : listOfSources) {
-//                System.out.println(source);
-//            }
         return listOfSources;
     }
 
     //findsourcebyid
     public List<Source> findSourceById(String sourceId) {
-        listOfSources = Collections.singletonList(sourceRepository.findBySourceId(sourceId));
-        System.out.println("\nRetrieving all sources with source Id " + sourceId + " :");
-        if (listOfSources != null) {
-            for (Source source : listOfSources) {
-                System.out.println(source);
-            }
-        } else
-            System.out.println("No available sources with source id " + sourceId);
+        List<Source> listOfSources = new ArrayList<>();
+        Source source = sourceRepository.findBySourceId(sourceId);
+
+        System.out.println("\nRetrieving all Sources with Source Id " + sourceId + ":");
+        if (source != null) {
+            listOfSources.add(source);
+            System.out.println(source);
+        } else {
+            System.out.println("No available Sources with source Id " + sourceId );
+        }
         return listOfSources;
     }
-
 }

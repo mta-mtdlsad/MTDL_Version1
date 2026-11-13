@@ -209,7 +209,7 @@ public class TrackAnalyticsService {
     }
 
     // calculation to find the distance between two points
-    public static double calculateDistance(double latitude1, double longtitude1, double latitude2, double longtitude2){
+    public double calculateDistance(double latitude1, double longtitude1, double latitude2, double longtitude2){
         double radLatitude1 = Math.toRadians(latitude1);
         double radLongtitude1 = Math.toRadians(longtitude1);
         double radLatitude2 = Math.toRadians(latitude2);

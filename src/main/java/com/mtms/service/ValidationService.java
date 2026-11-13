@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class ValidationService {
 
-    public static List<String> parseTrackString(String trackString) {
+    public List<String> parseTrackString(String trackString) {
         List<String> errors = new ArrayList<>();
 
         // splitting string into segments
@@ -54,7 +54,7 @@ public class ValidationService {
         return errors;
     }
 
-    public static List<String> validateTrack(Track track) {
+    public List<String> validateTrack(Track track) {
         List<String> errors = new ArrayList<>();
 
         // Validation to Check Track number
