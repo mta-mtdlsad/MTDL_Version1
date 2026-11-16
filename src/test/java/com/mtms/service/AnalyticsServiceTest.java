@@ -1,6 +1,6 @@
 package com.mtms.service;
 
-import com.mtms.constants.MTMSConstants;
+import com.mtms.constant.MTMSConstants;
 import com.mtms.domain.Alert;
 import com.mtms.domain.Source;
 import com.mtms.domain.Track;

@@ -1,6 +1,6 @@
 package com.mtms.web.rest;
 
-import com.mtms.constants.MTMSConstants;
+import com.mtms.constant.MTMSConstants;
 import com.mtms.domain.Track;
 import com.mtms.service.AnalyticsService;
 import com.mtms.service.TrackService;
