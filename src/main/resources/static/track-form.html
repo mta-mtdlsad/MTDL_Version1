@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Create Track Record</title>
+</head>
+<body>
+<h1>Create New Track Record</h1>
+<hr>
+<form action="api/tracks/create" method="POST">
+    <p>
+        <label for="sourceId">Source Identifier:</label><br>
+        <input type="text" id="sourceId" name="sourceId" required minlength="2" maxlength="30" placeholder="e.g. SRC_01">
+    </p>
+    <p>
+        <label for="sequenceNumber">Sequence Number:</label><br>
+        <input type="number" id="sequenceNumber" name="sequenceNumber" required min="0" placeholder="e.g. 101">
+    </p>
+    <p>
+        <label for="trackNumber">Track Number:</label><br>
+        <input type="text" id="trackNumber" name="trackNumber" required minlength="5" placeholder="e.g. TRK10001">
+    </p>
+    <p>
+        <label for="latitude">Latitude (-90.0 to 90.0):</label><br>
+        <input type="number" id="latitude" name="latitude" step="any" required placeholder="e.g. 34.052234">
+    </p>
+    <p>
+        <label for="longitude">Longitude (-180.0 to 180.0):</label><br>
+        <input type="number" id="longitude" name="longitude" step="any" required placeholder="e.g. -118.243684">
+    </p>
+    <p>
+        <label for="speed">Speed (0.0 to 2000.0):</label><br>
+        <input type="number" id="speed" name="speed" step="any" required placeholder="e.g. 450.00">
+    </p>
+    <p>
+        <label for="category">Identity Classification Type:</label><br>
+        <select id="category" name="category" required>
+            <option value="">-- Select Identity --</option>
+            <option value="FRIEND">FRIEND</option>
+            <option value="HOSTILE">HOSTILE</option>
+            <option value="NEUTRAL">NEUTRAL</option>
+            <option value="UNKNOWN">UNKNOWN</option>
+        </select>
+    </p>
+    <p>
+        <label for="trackStatus">Track Operational Status:</label><br>
+        <select id="trackStatus" name="trackStatus" required>
+            <option value="">-- Select Status --</option>
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="INACTIVE">INACTIVE</option>
+        </select>
+    </p>
+    <p>
+        <button type="submit">Submit Track Entry</button>
+    </p>
+</form>
+<hr>
+<p><a href="index.html">Return Home</a></p>
+</body>
+</html>

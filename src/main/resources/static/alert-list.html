@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>System Alert Logs</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+<h1>System Validation Alert Logs</h1>
+<hr>
+
+<h2>Recorded Alerts Table</h2>
+<div id="tableContainer">Loading alerts...</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', function() {
+        fetch('api/alerts/list')
+            .then(response => response.json())
+            .then(data => renderTable(data))
+            .catch(error => {
+                document.getElementById('tableContainer').innerHTML = `<p style="color:red;">Error loading alerts: ${error}</p>`;
+            });
+    });
+
+    function renderTable(alerts) {
+        const container = document.getElementById('tableContainer');
+        if (!alerts || alerts.length === 0) {
+            container.innerHTML = '<p>No system alerts recorded.</p>';
+            return;
+        }
+
+        let html = `<table>
+            <thead>
+                <tr>
+                    <th>Alert ID</th>
+                    <th>Track Number</th>
+                    <th>Source ID</th>
+                    <th>Alert Message</th>
+                    <th>Severity</th>
+                    <th>Event Type</th>
+                    <th>Alert Time</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        alerts.forEach(a => {
+            html += `<tr>
+                <td>${a.alertId ?? ''}</td>
+                <td>${a.trackNumber || ''}</td>
+                <td>${a.sourceId || ''}</td>
+                <td>${a.alertMessage || ''}</td>
+                <td>${a.alertSeverity || ''}</td>
+                <td>${a.eventType || ''}</td>
+                <td>${a.alertTime || ''}</td>
+            </tr>`;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+</script>
+
+<hr>
+<p><a href="index.html">Return Home</a></p>
+</body>
+</html>

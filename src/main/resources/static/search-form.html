@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Track Search & Table View</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+<h1>Search Track by Number</h1>
+<hr>
+
+<form id="searchForm">
+    <p>
+        <label for="trackNumber">Track Number:</label><br>
+        <input type="text" id="trackNumber" name="trackNumber" required placeholder="e.g. TRK10001">
+    </p>
+    <p>
+        <button type="submit">Search Track</button>
+    </p>
+</form>
+
+<hr>
+<h2>Results Table</h2>
+<div id="tableContainer">Submit a search query above to populate track results.</div>
+
+<script>
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const trackNum = document.getElementById('trackNumber').value;
+
+        fetch(`/api/tracks/search?trackNumber=${encodeURIComponent(trackNum)}`)
+            .then(response => response.json())
+            .then(data => renderTable(data))
+            .catch(error => {
+                document.getElementById('tableContainer').innerHTML = `<p style="color:red;">Error loading tracks: ${error}</p>`;
+            });
+    });
+
+    function renderTable(tracks) {
+        const container = document.getElementById('tableContainer');
+        if (!tracks || tracks.length === 0) {
+            container.innerHTML = '<p>No matching tracks found.</p>';
+            return;
+        }
+
+        let html = `<table>
+            <thead>
+                <tr>
+                    <th>Track ID</th>
+                    <th>Source ID</th>
+                    <th>Sequence #</th>
+                    <th>Path ID</th>
+                    <th>Track Number</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Speed</th>
+                    <th>Identity</th>
+                    <th>Status</th>
+                    <th>Created Time</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        tracks.forEach(t => {
+            html += `<tr>
+                <td>${t.trackId}</td>
+                <td>${t.sourceId || 'N/A'}</td>
+                <td>${t.sequenceNumber ?? 'N/A'}</td>
+                <td>${t.pathId ?? '-'}</td>
+                <td>${t.trackNumber || ''}</td>
+                <td>${t.latitude}</td>
+                <td>${t.longitude}</td>
+                <td>${t.speed}</td>
+                <td>${t.identityType || ''}</td>
+                <td>${t.trackStatus || ''}</td>
+                <td>${t.createdTime || ''}</td>
+            </tr>`;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+</script>
+
+<br>
+<p><a href="index.html">Return Home</a></p>
+</body>
+</html>
