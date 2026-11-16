@@ -50,7 +50,7 @@ public class FormController {
 
     @ResponseBody
     @GetMapping(value="/api/tracks/replay", params = {"startTime", "endTime", "speed"})
-    public String getFilteredTracks(@RequestParam("startTime") LocalDateTime startTime,
+    public String getReplayTracks(@RequestParam("startTime") LocalDateTime startTime,
                                     @RequestParam("endTime") LocalDateTime endTime,
                                     @RequestParam("speed") String speed){
 
@@ -107,8 +107,7 @@ public class FormController {
 
     @ResponseBody
     @GetMapping("/api/tracks/list")
-    public String getTracks(Model model) {
-        model.addAttribute("tracks", "Tracks List");
+    public String getTracks() {
         List<Track> listOfTracks = trackService.findAllTracks();
 
         StringBuilder result = new StringBuilder();

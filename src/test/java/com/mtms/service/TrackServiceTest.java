@@ -112,15 +112,16 @@ public class TrackServiceTest {
                 "INACTIVE", "LINK-D", 1, time, time);
         Track track2 = new Track("TRK1004", 10, 50, 200, "HOSTILE",
                 "INACTIVE", "LINK-D", 2, time, time);
+
+        assertThat(trackService.findAllTracks()).isEmpty();
+
         trackService.processTrack(track1);
         trackService.processTrack(track2);
         List<Track> listOfTracks = Arrays.asList(track1, track2);
-        assertAll(
-                () -> assertThat(trackService.findAllTracks())
+
+        assertThat(trackService.findAllTracks())
                         .usingRecursiveFieldByFieldElementComparatorIgnoringFields("receivedTime")
-                        .containsExactlyElementsOf(listOfTracks),
-                () -> assertThat(trackService.findAllTracks()).isNotNull()
-        );
+                        .containsExactlyElementsOf(listOfTracks);
     }
 
     @Test
@@ -162,15 +163,16 @@ public class TrackServiceTest {
                 "INACTIVE", "LINK-D", 1, time1, time1);
         Track track2 = new Track("TRK1004", 70, 100, 500, "UNKNOWN",
                 "ACTIVE", "LINK-D", 2, time2, time2);
+
+        assertThat(trackService.getCurrentView()).isEmpty();
+
         trackService.processTrack(track1);
         trackService.processTrack(track2);
         List<Track> listOfTracks = Arrays.asList(track2);
-        assertAll(
-                () -> assertThat(trackService.getCurrentView())
+
+        assertThat(trackService.getCurrentView())
                         .usingRecursiveFieldByFieldElementComparatorIgnoringFields("receivedTime")
-                        .containsExactlyElementsOf(listOfTracks),
-                () -> assertThat(trackService.getCurrentView()).isNotNull()
-        );
+                        .containsExactlyElementsOf(listOfTracks);
     }
 
     @Test
@@ -203,18 +205,26 @@ public class TrackServiceTest {
                 "INACTIVE", "LINK-A", 1, time, time);
         Track track2 = new Track("TRK1001", 70, 100, -2, "UNKNOWN",
                 "ACTIVE", "LINK-A", 1, time, time);
+
+        List<String> listOfCountsNoTracks = new ArrayList<>(Arrays.asList("Accepted Messages: 0",
+                "Rejected Messages: 0",
+                "Received Messages: 0",
+                "Duplicate Messages: 0",
+                "Processing Failure: 0"));
+
+        assertThat(trackService.processingCounter()).isEqualTo(listOfCountsNoTracks);
+
         trackService.processTrack(track1);
         trackService.processTrack(track2);
         trackService.processTrack(track1);
+
         List<String> listOfCounts = new ArrayList<>(Arrays.asList("Accepted Messages: 1",
                 "Rejected Messages: 2",
                 "Received Messages: 3",
                 "Duplicate Messages: 1",
                 "Processing Failure: 3"));
-        assertAll(
-                () -> assertThat(trackService.processingCounter()).isEqualTo(listOfCounts),
-                () -> assertThat(trackService.processingCounter()).isNotNull()
-        );
+
+        assertThat(trackService.processingCounter()).isEqualTo(listOfCounts);
     }
 
     @Test
@@ -236,29 +246,25 @@ public class TrackServiceTest {
         );
     }
 
+
     @Test
     @Tag("Track")
-    @Disabled
     public void getAdvancedFilteredTracksTest(){
         LocalDateTime time = LocalDateTime.parse("2026-11-03T12:45:30");
         Track track1= new Track("TRK1004", 10, 50, 200, "HOSTILE",
                 "INACTIVE", "LINK-D", 1, time, time);
-        Track track2 = new Track("TRK1001", 70, 100, 20, "UNKNOWN",
+        Track track2 = new Track("TRK1004", 70, 100, 20, "UNKNOWN",
                 "ACTIVE", "LINK-A", 1, time, time);
         trackRepository.save(track1);
         trackRepository.save(track2);
         List<Track> listOfTracks = Arrays.asList(track2);
-        System.out.println("All list: " + trackService.findAllTracks());
-        List<Track> listOfTracks1 = trackService.getAdvancedFilteredTracks("", "", "",
-                "", "0", "", "", "");
-        System.out.println("-------------------tracks: " + listOfTracks1.toString());
         assertAll(
-                () -> assertThat(trackService.getAdvancedFilteredTracks("", "", "",
-                        "", "0", "", "", ""))
+                () -> assertThat(trackService.getAdvancedFilteredTracks("", "TRK1004", "",
+                        "ACTIVE", "0", "20", "", ""))
                         .usingRecursiveFieldByFieldElementComparatorIgnoringFields("receivedTime")
                         .containsExactlyElementsOf(listOfTracks),
                 () -> assertThat(trackService.getAdvancedFilteredTracks("LINK-D", "TRK1001", "",
-                            "", "", "100", "", "")).isEmpty()
+                        "", "", "100", "", "")).isEmpty()
         );
     }
 

@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 //@Table(name = "track")
@@ -88,6 +89,40 @@ public class Track {
     public LocalDateTime getObservationTime() {return observationTime;}
     public LocalDateTime getReceivedTime() {return receivedTime;}
 
+    public void setTrackId(Integer trackId) {
+        this.trackId = trackId;
+    }
+    public void setReceivedTime(LocalDateTime receivedTime) {
+        this.receivedTime = receivedTime;
+    }
+    public void setObservationTime(LocalDateTime observationTime) {
+        this.observationTime = observationTime;
+    }
+    public void setSequenceNumber(int sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
+    }
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
+    public void setTrackStatus(String trackStatus) {
+        this.trackStatus = trackStatus;
+    }
+    public void setIdentity(String identity) {
+        this.identity = identity;
+    }
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+    public void setTrackNumber(String trackNumber) {
+        this.trackNumber = trackNumber;
+    }
+
     @Override
     public String toString() {
         return "Track{" +
@@ -103,5 +138,17 @@ public class Track {
                 ", observationTime=" + observationTime +
                 ", receivedTime=" + receivedTime +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Track track = (Track) o;
+        return Double.compare(latitude, track.latitude) == 0 && Double.compare(longitude, track.longitude) == 0 && Double.compare(speed, track.speed) == 0 && sequenceNumber == track.sequenceNumber && Objects.equals(trackId, track.trackId) && Objects.equals(trackNumber, track.trackNumber) && Objects.equals(identity, track.identity) && Objects.equals(trackStatus, track.trackStatus) && Objects.equals(sourceId, track.sourceId) && Objects.equals(observationTime, track.observationTime) && Objects.equals(receivedTime, track.receivedTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(trackId, trackNumber, latitude, longitude, speed, identity, trackStatus, sourceId, sequenceNumber, observationTime, receivedTime);
     }
 }
