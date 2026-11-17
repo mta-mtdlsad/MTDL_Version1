@@ -1,4 +1,4 @@
-import Card from '../components/Card.jsx'
+import Card from './Card.jsx'
 import {useState} from "react";
 
 export default function TrackFilter() {
@@ -88,41 +88,49 @@ export default function TrackFilter() {
                 <div>
                     <br/>
                     <h3>Tracks Results</h3>
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Source ID</th>
-                            <th>Sequence Number</th>
-                            <th>Track Number</th>
-                            <th>Latitude</th>
-                            <th>Longitude</th>
-                            <th>Speed</th>
-                            <th>Identity</th>
-                            <th>Status</th>
-                            <th>Created Time</th>
-                            <th>Received Time</th>
-                            <th>Path ID</th>
-                        </tr>
-                        </thead>
+                    <div className="table-scroll">
 
-                        <tbody>
-                        {tracks.map(track => (
-                            <tr key={track.trackId}>
-                                <td> {track.sourceId}</td>
-                                <td> {track.sequenceNumber}</td>
-                                <td> {track.trackNumber}</td>
-                                <td> {track.latitude}</td>
-                                <td> {track.longitude}</td>
-                                <td> {track.speed}</td>
-                                <td>{track.identityType}</td>
-                                <td>{track.trackStatus}</td>
-                                <td>{track.createdTime}</td>
-                                <td>{track.receiveTime}</td>
-                                <td>{track.pathId}</td>
+                        <table className="track-table">
+
+                            <thead>
+                            <tr>
+                                <th>Source ID</th>
+                                <th>Sequence Number</th>
+                                <th>Track Number</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                                <th>Speed</th>
+                                <th>Identity</th>
+                                <th>Status</th>
+                                <th>Created Time</th>
+                                <th>Received Time</th>
+                                <th>Path ID</th>
                             </tr>
-                        ))}
-                        </tbody>
-                    </table>
+                            </thead>
+
+                            <tbody>
+                            {tracks.map(track => (
+                                <tr key={track.trackId}>
+                                    <td> {track.sourceId}</td>
+                                    <td> {track.sequenceNumber}</td>
+                                    <td> {track.trackNumber}</td>
+                                    <td> {track.latitude}</td>
+                                    <td> {track.longitude}</td>
+                                    <td> {track.speed}</td>
+                                    <td>{track.identityType}</td>
+                                    <td>{track.trackStatus}</td>
+                                    <td>{track.createdTime}</td>
+                                    <td>{track.receiveTime}</td>
+                                    <td>{track.pathId}</td>
+                                </tr>
+
+                            ))}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
                 </div>
             )}
         </Card>

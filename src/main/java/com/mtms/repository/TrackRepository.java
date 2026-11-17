@@ -50,6 +50,12 @@ public interface TrackRepository extends CrudRepository<Track, Long> {
     // Fetches all tracks stored in the database ordered for replay data
     List<Track> findAllByOrderByCreatedTimeAscTrackIdAsc();
 
+    // Selects tracks within a specific time window and track number
+    @Query("SELECT t FROM Track t WHERE (:trackNumber IS NULL OR t.trackNumber = :trackNumber) AND t.createdTime BETWEEN :start AND :end ORDER BY t.createdTime ASC, t.trackId ASC")
+    List<Track> selectByTrackNumberAndTimeWindow(@Param("start") LocalDateTime start,
+                                                 @Param("end") LocalDateTime end,
+                                                 @Param("trackNumber") String trackNumber);
+
     // Selects tracks within a specific time window
     @Query("SELECT t FROM Track t WHERE t.createdTime BETWEEN :start AND :end ORDER BY t.createdTime ASC, t.trackId ASC")
     List<Track> selectByTimeWindow(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);

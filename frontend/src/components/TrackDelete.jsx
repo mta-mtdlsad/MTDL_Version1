@@ -1,4 +1,4 @@
-import Card from '../components/Card.jsx'
+import Card from './Card.jsx'
 import { useState } from "react";
 
 export default function TrackDelete() {
@@ -108,13 +108,12 @@ export default function TrackDelete() {
 
                 <button type="submit">Delete</button>
             </form>
-
+            <br/><br/>
             {/* Confirmation section */}
             {showConfirmation && (
                 <Card title="Confirm Deletion">
-                    <p>Are you sure you want to delete all records matching track number:</p>
-                    <strong>{confirmedTrackNumber}</strong>
-                    <p className="warning">Warning: This action will permanently delete ALL database rows matching this track number.</p>
+                    <p>Are you sure you want to delete all records matching track number: <strong>{confirmedTrackNumber}</strong></p>
+                    <p className="warning"><strong>Warning: </strong> This action will permanently delete ALL database rows matching this track number.</p>
                     <button type="button" onClick={handleConfirmDelete} disabled={isDeleting}>{isDeleting ? "Deleting..." : "Yes, Delete"}</button>
                     &ensp;&ensp;
                     <button type="button" onClick={handleCancel} disabled={isDeleting}>Cancel</button>

@@ -48,10 +48,11 @@ public class TrackService {
         return trackRepository.findTracksByCombinedCriteria(identity, status, minSpeed);
     }
 
-    public List<Track> getTrackHistory(String start, String end) {
+    public List<Track> getTrackHistory(String start, String end, String trackNumber) {
         LocalDateTime startTime = parseFlexibleDateTime(start);
         LocalDateTime endTime = parseFlexibleDateTime(end);
-        return trackRepository.selectByTimeWindow(startTime, endTime);
+        if (trackNumber.isEmpty()) trackNumber = null;
+        return trackRepository.selectByTrackNumberAndTimeWindow(startTime, endTime, trackNumber);
     }
 
     private LocalDateTime parseFlexibleDateTime(String input) {

@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import "../App.css";
-import Card from '../components/Card.jsx'
+import Card from './Card.jsx'
 
 
 export default function TrackCreate() {

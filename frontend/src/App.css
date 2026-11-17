@@ -1,113 +1,2131 @@
 
+/*:root {*/
+/*  font-family: system-ui, sans-serif;*/
+/*  color: #1f2937;*/
+/*  background: #f3f4f6;*/
+/*}*/
+
+/** {*/
+/*  box-sizing: border-box;*/
+/*}*/
+
+/*body {*/
+/*  max-width: 900px;*/
+/*  margin: 0 auto;*/
+/*  padding: 2rem 1rem;*/
+/*}*/
+
+/*header {*/
+/*  padding: 1.5rem;*/
+/*  border-radius: 12px;*/
+/*  background: #1d4ed8;*/
+/*  color: white;*/
+/*}*/
+
+/*h1 {*/
+/*  margin-top: 0;*/
+/*}*/
+
+/*main {*/
+/*  margin: 1.5rem 0;*/
+/*  min-height: 12rem;*/
+/*}*/
+
+/*section {*/
+/*  margin-bottom: 1rem;*/
+/*  padding: 1.5rem;*/
+/*  border-radius: 12px;*/
+/*  background: white;*/
+/*}*/
+
+/*h2 {*/
+/*  margin-top: 0;*/
+/*}*/
+
+/*p, li {*/
+/*  overflow-wrap: anywhere;*/
+/*}*/
+
+/*nav {*/
+/*  display: flex;*/
+/*  flex-wrap: wrap;*/
+/*  gap: .5rem;*/
+/*  margin: 1rem 0;*/
+/*}*/
+
+/*nav span, nav a {*/
+/*  padding: .5rem .75rem;*/
+/*  border-radius: 6px;*/
+/*  background: white;*/
+/*}*/
+
+/*nav span {*/
+/*  color: #6b7280;*/
+/*}*/
+
+/*nav a {*/
+/*  color: #1d4ed8;*/
+/*  text-decoration: none;*/
+/*}*/
+
+/*nav a.active {*/
+/*  background: #1d4ed8;*/
+/*  color: white;*/
+/*}*/
+
+/*ul {*/
+/*  padding: 0;*/
+/*  list-style: none;*/
+/*}*/
+
+/*li {*/
+/*  margin-top: .6rem;*/
+/*  padding: .8rem;*/
+/*  border-radius: 6px;*/
+/*  background: #eff6ff;*/
+/*}*/
+
+/*li p {*/
+/*  margin-bottom: 0;*/
+/*}*/
+
+/*button {*/
+/*  padding: .7rem 1rem;*/
+/*  border: 0;*/
+/*  border-radius: 6px;*/
+/*  background: rgb(90, 149, 189);*/
+/*  color: white;*/
+/*  font: inherit;*/
+/*  cursor: pointer;*/
+/*}*/
+
+/*a:focus-visible,*/
+/*button:focus-visible {*/
+/*  outline: 3px solid #2563eb;*/
+/*  outline-offset: 3px;*/
+/*}*/
+
+/*footer {*/
+/*  text-align: center;*/
+/*  color: #6b7280;*/
+/*}*/
+
+/*!* Application Theme *!*/
+
+/*.app-shell {*/
+/*  --page-bg: #f3f4f6;*/
+/*  --surface: #ffffff;*/
+/*  --item-bg: #eff6ff;*/
+/*  --text: #1f2937;*/
+/*  --muted: #4b5563;*/
+/*  --link: #1d4ed8;*/
+
+/*  min-height: 100vh;*/
+/*  padding: 2rem 1rem;*/
+/*  background: var(--page-bg);*/
+/*  color: var(--text);*/
+/*}*/
+
+/*.app-shell[data-theme='dark'] {*/
+/*  --page-bg: #111827;*/
+/*  --surface: #1f2937;*/
+/*  --item-bg: #374151;*/
+/*  --text: #f9fafb;*/
+/*  --muted: #d1d5db;*/
+/*  --link: #93c5fd;*/
+/*}*/
+
+/*!* Creation Track Formatting *!*/
+
+/*.error {*/
+/*  color: red;*/
+/*  font-size: 14px;*/
+/*  font-weight: bold;*/
+/*  margin-top: 5px;*/
+/*  margin-bottom: 5px;*/
+/*}*/
+
+/*.success {*/
+/*  color: green;*/
+/*  font-size: 14px;*/
+/*  font-weight: bold;*/
+/*}*/
+
+/*!* Deletion Track Formatting *!*/
+
+/*.track-delete {*/
+/*  padding: 1.5rem;*/
+/*  background: white;*/
+/*  border-radius: 12px;*/
+/*}*/
+
+/*.track-delete label {*/
+/*  display: block;*/
+/*  margin-bottom: 5px;*/
+/*  font-weight: bold;*/
+/*}*/
+
+/*.track-delete input {*/
+/*  display: block;*/
+/*  width: 100%;*/
+/*  padding: 10px;*/
+/*  margin-bottom: 10px;*/
+/*}*/
+
+/*.confirmation {*/
+/*  margin-top: 20px;*/
+/*  padding: 15px;*/
+/*  border: 1px solid #dc2626;*/
+/*  border-radius: 8px;*/
+/*}*/
+
+/*.warning {*/
+/*  color: red;*/
+/*  font-weight: bold;*/
+/*}*/
+
+/*.confirmation button {*/
+/*  margin-right: 10px;*/
+/*}*/
+
+/*.track-delete .error {*/
+/*  color: red;*/
+/*}*/
+
+/*.track-delete .success {*/
+/*  color: green;*/
+/*}*/
+
+/*!* Label Formatting *!*/
+
+/*label {*/
+/*  display: block;*/
+/*  margin-bottom: 15px;*/
+/*}*/
+
+/*!* Track Table Container *!*/
+
+/*.track-table-container {*/
+/*  width: 100%;*/
+/*  max-width: 100%;*/
+/*  overflow-x: auto;*/
+/*}*/
+
+/*!* Track Table Design *!*/
+
+/*.track-table-container table {*/
+/*  width: 100%;*/
+/*  max-width: 100%;*/
+/*  table-layout: fixed;*/
+/*  border-collapse: collapse;*/
+/*  margin-top: 1rem;*/
+/*  background: white;*/
+/*  font-size: 12px;*/
+/*}*/
+
+/*!* Table Headings and Cells *!*/
+
+/*.track-table-container th,*/
+/*.track-table-container td {*/
+/*  border: 1px solid #d1d5db;*/
+/*  padding: 4px 5px;*/
+/*  text-align: left;*/
+/*  overflow-wrap: anywhere;*/
+/*}*/
+
+/*!* Table Heading *!*/
+
+/*.track-table-container th {*/
+/*  background-color: #1d4ed8;*/
+/*  color: white;*/
+/*  font-size: 12px;*/
+/*}*/
+
+/*!* Alternate Row Colors *!*/
+
+/*.track-table-container tbody tr:nth-child(even) {*/
+/*  background-color: #eff6ff;*/
+/*}*/
+
+/*!* Hover Effect *!*/
+
+/*.track-table-container tbody tr:hover {*/
+/*  background-color: #dbeafe;*/
+/*}*/
+
+
+
+/* =========================================
+   MTMS - COMPLETE APP.CSS
+   Material UI Grid Dashboard Layout
+========================================= */
+
+/* =========================================
+   1. THEME
+========================================= */
+
 :root {
-  font-family: system-ui, sans-serif;
-  color: #1f2937;
-  background: #f3f4f6;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #f1f5f9;
+    background: #101827;
+
+    --page-bg: #101827;
+    --panel-bg: #1b2940;
+    --panel-hover: #263852;
+    --border: #35465f;
+    --text: #f1f5f9;
+    --muted: #a9b8cd;
+    --accent: #3b82f6;
+
+    --friend: #22c55e;
+    --hostile: #ef4444;
+    --neutral: #3b82f6;
+    --unknown: #f59e0b;
 }
 
-* { box-sizing: border-box; }
-body { max-width: 900px; margin: 0 auto; padding: 2rem 1rem; }
-header { padding: 1.5rem; border-radius: 12px; background: #1d4ed8; color: white; }
-h1 { margin-top: 0; }
-main { margin: 1.5rem 0; min-height: 12rem; }
-section { margin-bottom: 1rem; padding: 1.5rem; border-radius: 12px; background: white; }
-h2 { margin-top: 0; }
-p, li { overflow-wrap: anywhere; }
-nav { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
-nav span, nav a { padding: .5rem .75rem; border-radius: 6px; background: white; }
-nav span { color: #6b7280; }
-nav a { color: #1d4ed8; text-decoration: none; }
-nav a.active { background: #1d4ed8; color: white; }
-ul { padding: 0; list-style: none; }
-li { margin-top: .6rem; padding: .8rem; border-radius: 6px; background: #eff6ff; }
-li p { margin-bottom: 0; }
-button { padding: .7rem 1rem; border: 0; border-radius: 6px; background: rgb(90, 149, 189); color: white; font: inherit; cursor: pointer; }
-a:focus-visible, button:focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
-footer { text-align: center; color: #6b7280; }
-/* TODO: Add theme styles and a fixed height for the Leaflet map container. */
-.app-shell {
-  --page-bg: #f3f4f6;
-  --surface: #ffffff;
-  --item-bg: #eff6ff;
-  --text: #1f2937;
-  --muted: #4b5563;
-  --link: #1d4ed8;
-  min-height: 100vh;
-  padding: 2rem 1rem;
-  background: var(--page-bg);
-  color: var(--text);
+/* =========================================
+   2. GLOBAL RESET
+========================================= */
+
+* {
+    box-sizing: border-box;
 }
 
-.app-shell[data-theme='dark'] {
-  --page-bg: #111827;
-  --surface: #1f2937;
-  --item-bg: #374151;
-  --text: #f9fafb;
-  --muted: #d1d5db;
-  --link: #93c5fd;
+html,
+body,
+#root {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    width: 100%;
 }
 
-/* Creation Track Processer Formatting */
-.error {
-  color: red;
-  font-size: 14px;
-  font-weight: bold;
-  margin-top: 5px;
-  margin-bottom: 5px;
+body {
+    background: var(--page-bg);
+    color: var(--text);
 }
 
-.success {
-  color: green;
-  font-size: 14px;
-  font-weight: bold;
+button,
+input,
+select,
+textarea {
+    font: inherit;
 }
 
-/* Deletion Track Processer Formatting */
-.track-delete {
-  padding: 1.5rem;
-  background: white;
-  border-radius: 12px;
+button {
+    cursor: pointer;
 }
 
-.track-delete label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
+h1,
+h2,
+h3,
+h4,
+p {
+    margin-top: 0;
 }
 
-.track-delete input {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
+/* =========================================
+   3. MAIN APPLICATION
+========================================= */
+
+.app-container {
+    width: 100%;
+    min-height: 100vh;
+    background: var(--page-bg);
 }
 
-.confirmation {
-  margin-top: 20px;
-  padding: 15px;
-  border: 1px solid #dc2626;
-  border-radius: 8px;
+.app-content {
+    width: 100%;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 24px;
+    min-width: 0;
 }
 
-.warning {
-  color: red;
-  font-weight: bold;
+/* =========================================
+   4. PAGE HEADER
+========================================= */
+
+.app-content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
 }
 
-.confirmation button {
-  margin-right: 10px;
+.app-content-headerText {
+    color: var(--text);
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0;
 }
 
-.track-delete .error {
-  color: red;
+.page-subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 8px;
 }
 
-.track-delete .success {
-  color: green;
+.header-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
-/* Label Break Formatting */
+.last-updated {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.app-content-headerButton {
+    padding: 10px 20px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+}
+
+.app-content-headerButton:hover {
+    background: #2563eb;
+}
+
+/* =========================================
+   5. MATERIAL UI GRID DASHBOARD
+========================================= */
+
+.dashboard-grid {
+    width: 100%;
+    margin: 0 !important;
+    min-width: 0;
+}
+
+.dashboard-grid > * {
+    min-width: 0;
+}
+
+.dashboard-grid .MuiGrid-container {
+    width: 100%;
+    min-width: 0;
+}
+
+/* =========================================
+   6. SHARED PANELS
+========================================= */
+
+.dashboard-panel,
+.table-section,
+.map-section,
+.history-section,
+.correlation-section,
+.identity-section,
+.status-section,
+.nearest-section,
+.simulation-panel {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.dashboard-panel h2,
+.table-section h2,
+.map-section h2,
+.history-section h2,
+.correlation-section h2,
+.identity-section h2,
+.status-section h2,
+.nearest-section h2 {
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 16px;
+}
+
+
+
+/* =========================================
+   7. DASHBOARD STATISTICS
+========================================= */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 115px;
+
+    padding: 20px;
+
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--accent);
+    border-radius: 10px;
+
+    transition: transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.stat-card:hover {
+    background: var(--panel-hover);
+    transform: translateY(-3px);
+}
+
+/*.stat-icon {*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*  justify-content: center;*/
+
+/*  min-width: 42px;*/
+/*  height: 42px;*/
+
+/*  border-radius: 10px;*/
+/*  background: #30435e;*/
+/*  color: white;*/
+/*  font-size: 20px;*/
+/*}*/
+
+.stat-info {
+    min-width: 0;
+}
+
+.stat-info h3 {
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 10px;
+}
+
+.stat-info p {
+    color: var(--text);
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Statistics responsive layout */
+
+@media (max-width: 900px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 500px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .stat-card {
+        min-height: 90px;
+        padding: 16px;
+    }
+}
+
+/* =========================================
+   8. TRACK OPERATIONS
+========================================= */
+
+.operations-grid {
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.dashboard-panel form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dashboard-panel input,
+.dashboard-panel select,
+.history-section input {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 12px;
+    background: #101c2d;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+}
+
+.dashboard-panel input:focus,
+.dashboard-panel select:focus,
+.history-section input:focus {
+    border-color: var(--accent);
+}
+
+.dashboard-panel input::placeholder {
+    color: var(--muted);
+}
+
+.dashboard-panel button,
+.history-section button {
+    padding: 10px 18px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.dashboard-panel button:hover,
+.history-section button:hover {
+    background: #2563eb;
+}
+
+.dashboard-panel button:disabled,
+.history-section button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   TRACK OPERATIONS MENU
+========================================= */
+
+.operations-grid {
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+/* Operation buttons container */
+.operation-button {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 18px;
+
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+
+    background: var(--accent);
+    color: white;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.operation-button:hover {
+    background: #2563eb;
+    border-color: #2563eb;
+    transform: translateY(-2px);
+}
+
+/* Selected operation panel */
+.operation-content {
+    width: 100%;
+    margin-top: 20px;
+    padding: 20px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: #101c2d;
+}
+
+/* Back button */
+.back-button {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 16px;
+
+    background: #35465f;
+    color: white;
+
+    border: none;
+    border-radius: 7px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.back-button:hover {
+    background: #526783;
+}
+
+/* Selected operation heading */
+.operation-content h2,
+.operation-content h3 {
+    color: var(--text);
+    margin-bottom: 16px;
+}
+
+/* Selected operation form */
+.operation-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+/* Selected operation inputs */
+.operation-content input,
+.operation-content select,
+.operation-content textarea {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 12px;
+
+    background: #101c2d;
+    color: var(--text);
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+/* Responsive operations */
+@media (max-width: 600px) {
+    .operation-button {
+        min-height: 55px;
+        width: 100%;
+    }
+
+    .operation-content {
+        padding: 14px;
+    }
+}
+
+/* =========================================
+   9. TRACK HISTORY
+========================================= */
+
+.history-section {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.history-section h4 {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.history-section input {
+    width: 100%;
+    max-width: 100%;
+}
+
+.history-section table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* =========================================
+   10. ALL TRACKS TABLE
+========================================= */
+
+.table-section {
+    width: 100%;
+    min-width: 0;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.table-header h2 {
+    margin: 0;
+}
+
+.table-scroll {
+    width: 100%;
+    max-height: 450px;
+    overflow-y: auto;
+    overflow-x: auto;
+    border-radius: 8px;
+}
+
+.table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.track-table {
+    width: 100%;
+    min-width: 950px;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.track-table th,
+.track-table td {
+    padding: 13px 12px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border);
+}
+
+.track-table th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #30435e;
+    color: #e2e8f0;
+    font-weight: 700;
+}
+
+.track-table td {
+    color: #dce5f2;
+}
+
+.track-table tbody tr:hover {
+    background: var(--panel-hover);
+}
+
+/* =========================================
+   11. SEARCH BAR
+========================================= */
+
+.search-bar {
+    width: 260px;
+    max-width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #101c2d;
+    color: white;
+    outline: none;
+}
+
+.search-bar:focus {
+    border-color: var(--accent);
+}
+
+.search-bar::placeholder {
+    color: var(--muted);
+}
+
+/* =========================================
+   12. MAP
+========================================= */
+
+.map-section {
+    width: 100%;
+    margin: 0;
+}
+
+.map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.map-header h2 {
+    margin: 0;
+}
+
+.live-indicator {
+    color: var(--friend);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.current-map {
+    width: 100%;
+    height: 450px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #e5e7eb;
+}
+
+.current-map .leaflet-container {
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    z-index: 0;
+}
+
+/* MAP MARKERS */
+
+.custom-track-icon {
+    background: transparent;
+    border: none;
+}
+
+.track-marker {
+    width: 16px;
+    height: 16px;
+    border: 2px solid white;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px #0006;
+}
+
+/* MAP LEGEND */
+
+.map-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 16px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* MAP POPUP */
+
+.track-popup {
+    color: #172033;
+    min-width: 180px;
+}
+
+.track-popup h3 {
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.track-popup p {
+    margin: 5px 0;
+    font-size: 12px;
+}
+
+/* =========================================
+   13. IDENTITY STATISTICS
+========================================= */
+
+.identity-section {
+    width: 100%;
+}
+
+.metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.metric-row:last-child {
+    border-bottom: none;
+}
+
+.metric-label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.metric-value {
+    color: var(--text);
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.metric-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* =========================================
+   14. TRACK STATUS
+========================================= */
+
+.status-section {
+    width: 100%;
+}
+
+.status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.status-row:last-child {
+    border-bottom: none;
+}
+
+.status-count {
+    color: var(--text);
+    font-size: 19px;
+    font-weight: 700;
+}
+
+/* STATUS BADGES */
+
+.track-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.track-status.active {
+    color: #4ade80;
+    background: #14532d66;
+}
+
+.track-status.inactive {
+    color: #f87171;
+    background: #7f1d1d66;
+}
+
+/* IDENTITY BADGES */
+
+.identity-badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* =========================================
+   15. NEAREST TRACKS
+========================================= */
+
+.nearest-section,
+.nearest-panel {
+    width: 100%;
+    min-width: 0;
+}
+
+.nearest-scroll {
+    width: 100%;
+    max-height: 360px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.nearest-section table,
+.nearest-panel table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.nearest-section th,
+.nearest-section td,
+.nearest-panel th,
+.nearest-panel td {
+    padding: 11px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.nearest-section th,
+.nearest-panel th {
+    background: #30435e;
+    color: #dce7f6;
+    font-weight: 700;
+}
+
+.nearest-section tr:hover,
+.nearest-panel tr:hover {
+    background: var(--panel-hover);
+}
+
+/* =========================================
+   16. CORRELATION
+========================================= */
+
+.correlation-section {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.correlation-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.correlation-section table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.correlation-section table th,
+.correlation-section table td {
+    padding: 11px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.correlation-section table th {
+    background: #30435e;
+    color: var(--text);
+}
+
+.correlation-section table tr:hover {
+    background: var(--panel-hover);
+}
+
+.correlation-section select {
+    max-width: 100%;
+    padding: 10px 12px;
+    background: #263852;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+/* =========================================
+   17. GENERAL ERRORS
+========================================= */
+
+.error,
+.error-message {
+    padding: 12px;
+    margin-bottom: 16px;
+    color: #fca5a5;
+    background: #451a24;
+    border-radius: 8px;
+}
+
+.error-message {
+    margin-bottom: 20px;
+}
+
+/* =========================================
+   18. SCROLLBARS
+========================================= */
+
+.table-scroll::-webkit-scrollbar,
+.table-wrapper::-webkit-scrollbar,
+.nearest-scroll::-webkit-scrollbar,
+.correlation-scroll::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb,
+.table-wrapper::-webkit-scrollbar-thumb,
+.nearest-scroll::-webkit-scrollbar-thumb,
+.correlation-scroll::-webkit-scrollbar-thumb {
+    background: #526783;
+    border-radius: 10px;
+}
+
+.table-scroll::-webkit-scrollbar-track,
+.table-wrapper::-webkit-scrollbar-track,
+.nearest-scroll::-webkit-scrollbar-track,
+.correlation-scroll::-webkit-scrollbar-track {
+    background: #172238;
+}
+
+/* =================================
+   COMPACT CREATE AND DELETE PANELS
+================================= */
+
+.compact-panel {
+    padding: 16px;
+    min-height: 0;
+    height: auto;
+    width: 100%;
+}
+
+.compact-panel h2,
+.compact-panel h3,
+.compact-panel h4 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.compact-panel input,
+.compact-panel select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+}
+
+.compact-panel button {
+    padding: 8px 16px;
+    margin-top: 6px;
+}
+
+.compact-panel p {
+    margin-bottom: 8px;
+}
+
+/* =========================================
+   19. RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .app-content {
+        padding: 18px;
+    }
+
+    .dashboard-panel,
+    .table-section,
+    .map-section,
+    .history-section {
+        padding: 16px;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .app-content {
+        padding: 12px;
+    }
+
+    .app-content-headerText {
+        font-size: 23px;
+    }
+
+    .app-content-header {
+        align-items: flex-start;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .dashboard-panel,
+    .table-section,
+    .map-section,
+    .history-section,
+    .correlation-section,
+    .identity-section,
+    .status-section,
+    .nearest-section {
+        padding: 14px;
+    }
+
+    .current-map {
+        height: 320px;
+    }
+
+    .table-scroll {
+        max-height: 350px;
+    }
+
+    .search-bar {
+        width: 100%;
+    }
+
+    .map-legend {
+        gap: 12px;
+    }
+
+    /* TRACK OPERATIONS MENU */
+
+    .operation-button {
+        width: 100%;
+        min-height: 90px;
+        padding: 18px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #263852;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .operation-button:hover {
+        background: #3b82f6;
+        transform: translateY(-2px);
+    }
+
+    .operation-content {
+        margin-top: 24px;
+        padding: 20px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #101c2d;
+    }
+
+    .back-button {
+        margin-bottom: 20px;
+        padding: 9px 15px;
+        background: #35465f;
+        color: white;
+        border: none;
+        border-radius: 7px;
+    }
+
+    .back-button:hover {
+        background: #526783;
+    }
+}
+
+/* Label Formatting */
 label {
-  display: block;
-  margin-bottom: 15px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+
+/* =========================================
+
+  TRACK REPLAY
+
+  ========================================= */
+.replay-page {
+    width: 100%;
+    min-width: 0;
+}
+
+.replay-panel {
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 20px;
+    padding: 24px;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.replay-panel h2 {
+    margin: 0 0 18px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.replay-section-heading,
+.replay-map-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.replay-section-heading h2,
+.replay-map-heading h2 {
+    margin: 0;
+}
+
+.replay-section-heading > span,
+.replay-map-heading p {
+    color: var(--muted);
+    font-size: 12px;
+    margin: 4px 0 0;
+}
+
+.replay-header-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.replay-live-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #3b82f6;
+}
+
+/* CONFIGURATION */
+.replay-form {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+}
+
+.replay-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+}
+
+.replay-field label {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.replay-field select,
+.replay-field input {
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #263852;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+    color-scheme: dark;
+}
+
+.replay-field select:focus,
+.replay-field input:focus {
+    border-color: var(--accent);
+}
+
+.replay-config-footer {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 22px;
+}
+
+.replay-available-count {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* BUTTONS */
+.replay-button {
+    padding: 11px 22px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.replay-primary {
+    background: #2563eb;
+}
+
+.replay-primary:hover:not(:disabled) {
+    background: #1d4ed8;
+}
+
+.replay-play {
+    background: #166534;
+}
+
+.replay-play:hover:not(:disabled) {
+    background: #15803d;
+}
+
+.replay-pause {
+    background: #92400e;
+}
+
+.replay-pause:hover:not(:disabled) {
+    background: #b45309;
+}
+
+.replay-reset {
+    background: #334155;
+    border-color: #475569;
+}
+
+.replay-reset:hover:not(:disabled) {
+    background: #475569;
+}
+
+.replay-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* MAP */
+.replay-map {
+    width: 100%;
+    height: 520px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.replay-map .leaflet-container {
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.replay-marker-wrapper {
+    background: transparent;
+    border: none;
+}
+
+.replay-track-marker {
+    width: 22px;
+    height: 22px;
+    border: 3px solid white;
+    border-radius: 50%;
+}
+
+.replay-popup {
+    color: #172033;
+    min-width: 180px;
+}
+
+.replay-popup p {
+    margin: 6px 0;
+    font-size: 12px;
+}
+
+/* IDENTITY */
+.replay-identity-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border: 1px solid;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.replay-identity-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.replay-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 18px 0;
+}
+
+.replay-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* PLAYBACK */
+.replay-playback-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    background: #142136;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.replay-controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.replay-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.replay-progress-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.replay-progress input[type="range"] {
+    width: 100%;
+    accent-color: #3b82f6;
+    cursor: pointer;
+}
+
+.replay-recorded-time,
+.replay-empty-message {
+    color: var(--muted);
+    font-size: 12px;
+    margin: 0;
+}
+
+/* CURRENT POSITION DETAILS */
+.replay-details-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.replay-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+    padding: 16px;
+    background: #142136;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+}
+
+.replay-detail span {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.replay-detail strong {
+    color: var(--text);
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1300px) {
+    .replay-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .replay-details-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .replay-panel {
+        padding: 14px;
+    }
+    .replay-form,
+    .replay-details-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .replay-map {
+        height: 350px;
+    }
+    .replay-controls {
+        flex-wrap: wrap;
+    }
+    .replay-controls .replay-button {
+        flex: 1;
+    }
+    .replay-legend {
+        gap: 12px;
+    }
+}
+
+
+/* =========================================
+   TRACK MONITORING SYSTEM - FINAL DESIGN
+========================================= */
+
+/* PAGE */
+.app-container {
+    width: 100%;
+    min-height: 100vh;
+    background: #101827;
+}
+
+.app-content {
+    width: 100%;
+    max-width: 1900px;
+    margin: 0 auto;
+    padding: 10px 14px;
+}
+
+/* =========================================
+   1. DASHBOARD TITLE - TOP
+========================================= */
+
+.dashboard-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 55px;
+
+    margin: 0 0 10px;
+    padding: 0;
+
+    background: transparent;
+    border: none;
+}
+
+.dashboard-header h1 {
+    color: #f1f5f9;
+    font-size: 25px;
+    font-weight: 700;
+    text-align: center;
+    margin: 0;
+}
+
+/* =========================================
+   2. TRACK OPERATIONS
+========================================= */
+
+.operations-panel {
+    width: 100%;
+    margin: 0 0 10px;
+    padding: 14px 16px;
+
+    background: #1b2940;
+    border: 1px solid #35465f;
+    border-radius: 7px;
+}
+
+.operations-panel h2 {
+    color: #f1f5f9;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.operations-buttons {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 9px;
+}
+
+.operations-buttons .operation-button {
+    width: 100%;
+    min-height: 38px;
+    padding: 8px;
+
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.operations-buttons .operation-button:hover {
+    background: #2563eb;
+}
+
+/* =========================================
+   3. MAIN DASHBOARD LAYOUT
+========================================= */
+
+.dashboard-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(0, 1.05fr)
+        minmax(175px, 0.38fr);
+
+    gap: 9px;
+    width: 100%;
+
+    /* All three columns stretch equally */
+    align-items: stretch;
+}
+
+/* =========================================
+   4. TRACK REPLAY
+========================================= */
+
+.replay-dashboard {
+    min-width: 0;
+    height: 100%;
+
+    padding: 10px;
+
+    background: #1b2940;
+    border: 1px solid #35465f;
+    border-radius: 7px;
+
+    overflow: hidden;
+}
+
+.replay-dashboard .replay-panel {
+    padding: 12px;
+    margin-bottom: 9px;
+}
+
+.replay-dashboard .replay-form {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.replay-dashboard .replay-field input,
+.replay-dashboard .replay-field select {
+    height: 34px;
+    font-size: 11px;
+}
+
+.replay-dashboard .replay-map {
+    width: 100%;
+    height: 260px;
+}
+
+.replay-dashboard .replay-playback-panel {
+    padding: 12px;
+}
+
+/* =========================================
+   5. ALL TRACKS
+========================================= */
+
+.track-list-dashboard {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+    height: 100%;
+
+    padding: 10px;
+
+    background: #1b2940;
+    border: 1px solid #35465f;
+    border-radius: 7px;
+
+    overflow: hidden;
+}
+
+/* Table container */
+.track-list-dashboard .table-section {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+
+    padding: 0;
+    margin: 0;
+
+    background: transparent;
+    border: none;
+}
+
+/* Table scrolling area */
+.track-list-dashboard .table-scroll {
+    flex: 1;
+    min-height: 0;
+
+    width: 100%;
+    height: 100%;
+    max-height: none;
+
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.track-list-dashboard .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.track-list-dashboard .track-table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    font-size: 10px;
+}
+
+.track-list-dashboard .track-table th,
+.track-list-dashboard .track-table td {
+    padding: 9px 7px;
+    font-size: 10px;
+}
+
+/* =========================================
+   6. STATISTICS SIDEBAR
+========================================= */
+
+.stats-dashboard {
+    align-self: start;
+
+    width: 100%;
+    height: auto;
+    min-width: 0;
+
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+.stats-dashboard .stats-grid {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    gap: 10px;
+    margin: 0;
+}
+
+.stats-dashboard .stat-card {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    min-height: 92px;
+    padding: 12px;
+
+    background: #1b2940;
+    border: 1px solid #35465f;
+    border-left: 4px solid var(--stat-color);
+
+    border-radius: 7px;
+}
+
+.stats-dashboard .stat-info h3 {
+    color: #a9b8cd;
+    font-size: 12px;
+    margin-bottom: 7px;
+}
+
+.stats-dashboard .stat-info p {
+    color: #f1f5f9;
+    font-size: 23px;
+    margin: 0;
+}
+
+/* =========================================
+   7. RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .dashboard-layout {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stats-dashboard {
+        grid-column: 1 / -1;
+    }
+
+    .stats-dashboard .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+
+    .app-content {
+        padding: 10px;
+    }
+
+    .dashboard-header {
+        height: 50px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 20px;
+    }
+
+    .operations-buttons {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .replay-dashboard .replay-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .replay-dashboard .replay-map {
+        height: 300px;
+    }
+
+    .stats-dashboard {
+        grid-column: auto;
+    }
+
+    .stats-dashboard .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+/* =========================================
+   ALL TRACKS - INDEPENDENT SCROLLBAR
+========================================= */
+
+.track-list-dashboard {
+    display: flex;
+    flex-direction: column;
+
+    height: 100%;
+    min-height: 0;
+    min-width: 0;
+
+    overflow: hidden;
+}
+
+/* All Tracks section */
+.track-list-dashboard .table-section {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+
+    overflow: hidden;
+}
+
+/* Only this container scrolls */
+.track-list-dashboard .table-scroll {
+    flex: 1;
+    min-height: 0;
+
+    height: 0;
+    max-height: none;
+
+    overflow-y: scroll;
+    overflow-x: auto;
+
+    scrollbar-width: thin;
+    scrollbar-color: #526783 #172238;
+}
+
+/* Table */
+.track-list-dashboard .track-table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+}
+
+/* Sticky headings */
+.track-list-dashboard .track-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: #30435e;
+}
+
+/* Chrome / Edge scrollbar */
+.track-list-dashboard .table-scroll::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+.track-list-dashboard .table-scroll::-webkit-scrollbar-thumb {
+    background: #526783;
+    border-radius: 10px;
+}
+
+.track-list-dashboard .table-scroll::-webkit-scrollbar-track {
+    background: #172238;
+}
+
+/* MAIN DASHBOARD LAYOUT */
+.dashboard-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(0, 1.05fr)
+        minmax(175px, 0.38fr);
+
+    gap: 9px;
+    width: 100%;
+
+    /* Important: fixed dashboard height */
+    height: 650px;
+    min-height: 0;
+
+    align-items: stretch;
+}
+
+.track-list-dashboard {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.track-list-dashboard .table-section {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.track-list-dashboard .table-scroll {
+    flex: 1;
+    min-height: 0;
+    height: 0;
+    overflow-y: auto;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #526783 #172238;
+}
+
+.track-list-dashboard .track-table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+}
+
+.track-list-dashboard .track-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: #30435e;
+}
+
+.track-list-dashboard .table-scroll::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+.track-list-dashboard .table-scroll::-webkit-scrollbar-thumb {
+    background: #526783;
+    border-radius: 10px;
 }
