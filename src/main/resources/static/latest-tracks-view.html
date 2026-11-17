@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Latest Records for Each Source and Track</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+<h1>Latest Records for Each Source and Track</h1>
+<hr>
+<p>Pull the latest observation snapshot deduplicated across unique Source and Track Number combinations.</p>
+
+<h2>Latest Tracks Table</h2>
+<div id="tableContainer">Loading latest records...</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', function() {
+        fetch('/api/tracks/latest')
+            .then(response => response.json())
+            .then(data => renderTable(data))
+            .catch(error => {
+                document.getElementById('tableContainer').innerHTML = `<p style="color:red;">Error loading latest records: ${error}</p>`;
+            });
+    });
+
+    function renderTable(tracks) {
+        const container = document.getElementById('tableContainer');
+        if (!tracks || tracks.length === 0) {
+            container.innerHTML = '<p>No track state history records available inside active database.</p>';
+            return;
+        }
+
+        let html = `<table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Source ID</th>
+                    <th>Sequence Number</th>
+                    <th>Path ID</th>
+                    <th>Track Number</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Speed</th>
+                    <th>Identity</th>
+                    <th>Status</th>
+                    <th>Created Time</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        tracks.forEach(t => {
+            html += `<tr>
+                <td>${t.trackId}</td>
+                <td>${t.sourceId || 'LEGACY'}</td>
+                <td>${t.sequenceNumber ?? 'N/A'}</td>
+                <td>${t.pathId ?? '-'}</td>
+                <td>${t.trackNumber || ''}</td>
+                <td>${t.latitude}</td>
+                <td>${t.longitude}</td>
+                <td>${t.speed}</td>
+                <td>${t.identityType || ''}</td>
+                <td>${t.trackStatus || ''}</td>
+                <td>${t.createdTime || ''}</td>
+            </tr>`;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+</script>
+
+<hr>
+<p><a href="index.html">Return Home</a></p>
+</body>
+</html>

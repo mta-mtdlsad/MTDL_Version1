@@ -1,0 +1,10 @@
+Paths:
+INSERT INTO paths (path_name, distance_km, start_latitude, start_longitude, end_latitude, end_longitude)
+SELECT
+    'Sector Route ' || i,
+    ROUND((10.0 + (random() * 90.0))::numeric, 2),
+    ROUND((20.0 + (random() * 10.0))::numeric, 6),
+    ROUND((50.0 + (random() * 10.0))::numeric, 6),
+    ROUND((20.0 + (random() * 10.0))::numeric, 6),
+    ROUND((50.0 + (random() * 10.0))::numeric, 6)
+FROM generate_series(1, 500) AS i;

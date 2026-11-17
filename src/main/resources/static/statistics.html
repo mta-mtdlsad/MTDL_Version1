@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>System Operational Metrics & Statistics</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; margin-bottom: 30px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; width: 40%; }
+    </style>
+</head>
+<body>
+<h1>System Operational Metrics Dashboard</h1>
+<hr>
+
+<h2>Operational Overview</h2>
+<div id="statsContainer">Loading system statistics...</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', function() {
+        loadStatistics();
+    });
+
+    function loadStatistics() {
+        fetch('api/statistics')
+            .then(response => response.json())
+            .then(data => renderStatistics(data))
+            .catch(error => {
+                document.getElementById('statsContainer').innerHTML = `<p style="color:red;">Error loading statistics: ${error}</p>`;
+            });
+    }
+
+    function renderStatistics(stats) {
+        const container = document.getElementById('statsContainer');
+        if (!stats) {
+            container.innerHTML = '<p>No statistics data available.</p>';
+            return;
+        }
+
+        let html = `
+            <h3>General & Classification Metrics</h3>
+            <table>
+                <tr>
+                    <th>Metric Description</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td>Total Track Records</td>
+                    <td>${stats.totalTracks ?? 0}</td>
+                </tr>
+                <tr>
+                    <td>Friend Identity Count</td>
+                    <td>${stats.friendCount ?? 0}</td>
+                </tr>
+                <tr>
+                    <td>Hostile Identity Count</td>
+                    <td>${stats.hostileCount ?? 0}</td>
+                </tr>
+                <tr>
+                    <td>Neutral Identity Count</td>
+                    <td>${stats.neutralCount ?? 0}</td>
+                </tr>
+                <tr>
+                    <td>Unknown Identity Count</td>
+                    <td>${stats.unknownCount ?? 0}</td>
+                </tr>
+                <tr>
+                    <td>Active Operational Status Count</td>
+                    <td>${stats.activeCount ?? 0}</td>
+                </tr>
+                <tr>
+                    <td>Inactive Operational Status Count</td>
+                    <td>${stats.inactiveCount ?? 0}</td>
+                </tr>
+            </table>`;
+
+        container.innerHTML = html;
+    }
+</script>
+
+<hr>
+<p><a href="index.html">Return Home</a></p>
+</body>
+</html>
