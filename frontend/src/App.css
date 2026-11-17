@@ -1,6 +1,6 @@
 /* =========================================
 
-  MTMS - COMPLETE APP.CSS
+  MTMS DASHBOARD - APP.CSS
 
   ========================================= */
 
@@ -10,11 +10,7 @@
 
 :root {
 
-  font-family: Arial, Helvetica, sans-serif;
-
-  color: #f1f5f9;
-
-  background: #101827;
+  font-family: 'Poppins', Arial, sans-serif;
 
 
 
@@ -42,11 +38,17 @@
 
   --unknown: #f59e0b;
 
+
+
+  color: var(--text);
+
+  background: var(--page-bg);
+
 }
 
 
 
-/* GLOBAL RESET */
+/* RESET */
 
 * {
 
@@ -62,13 +64,11 @@ body,
 
 #root {
 
-  margin: 0;
-
-  padding: 0;
+  width: 100%;
 
   min-height: 100%;
 
-  width: 100%;
+  margin: 0;
 
 }
 
@@ -99,6 +99,16 @@ select {
 button {
 
   cursor: pointer;
+
+}
+
+
+
+button:disabled {
+
+  cursor: not-allowed;
+
+  opacity: 0.5;
 
 }
 
@@ -148,7 +158,13 @@ p {
 
 
 
-/* PAGE HEADER */
+/* =========================================
+
+  PAGE HEADER
+
+  ========================================= */
+
+
 
 .app-content-header {
 
@@ -170,23 +186,61 @@ p {
 
 .app-content-headerText {
 
-  color: var(--text);
+  margin: 0;
 
   font-size: 30px;
 
   font-weight: 700;
 
-  margin: 0;
+  color: var(--text);
 
 }
 
 
 
-.app-content-headerButton {
+.page-subtitle {
+
+  margin: 5px 0 0;
+
+  font-size: 13px;
+
+  color: var(--muted);
+
+}
+
+
+
+.header-actions {
+
+  display: flex;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 16px;
+
+}
+
+
+
+.last-updated {
+
+  color: var(--muted);
+
+  font-size: 12px;
+
+}
+
+
+
+.app-content-headerButton,
+
+.refresh-button {
 
   padding: 10px 20px;
 
-  border: 0;
+  border: none;
 
   border-radius: 8px;
 
@@ -196,11 +250,15 @@ p {
 
   font-weight: 600;
 
+  transition: background 0.2s;
+
 }
 
 
 
-.app-content-headerButton:hover {
+.app-content-headerButton:hover:not(:disabled),
+
+.refresh-button:hover:not(:disabled) {
 
   background: #2563eb;
 
@@ -210,13 +268,15 @@ p {
 
 .error-message {
 
-  padding: 12px;
+  padding: 12px 16px;
 
   margin-bottom: 20px;
 
+  background: #451a24;
+
   color: #fca5a5;
 
-  background: #451a24;
+  border: 1px solid #7f1d1d;
 
   border-radius: 8px;
 
@@ -226,7 +286,7 @@ p {
 
 /* =========================================
 
-  MAIN DASHBOARD LAYOUT
+  MAIN DASHBOARD GRID
 
   ========================================= */
 
@@ -264,29 +324,45 @@ p {
 
   gap: 20px;
 
-  min-width: 0;
-
   width: 100%;
+
+  min-width: 0;
 
 }
 
 
 
-/* SHARED PANEL STYLE */
+/* =========================================
 
-.dashboard-panel,
+  SHARED PANEL STYLING
+
+  ========================================= */
+
+
 
 .map-section,
 
-.table-section,
-
 .correlation-section,
 
-.identity-section,
+.table-section,
 
-.status-section,
+.total-tracks-card,
 
-.nearest-section {
+.identity-panel,
+
+.status-panel,
+
+.nearest-panel,
+
+.simulation-panel {
+
+  width: 100%;
+
+  min-width: 0;
+
+  margin: 0;
+
+
 
   background: var(--panel-bg);
 
@@ -296,25 +372,27 @@ p {
 
   padding: 20px;
 
-  min-width: 0;
-
 }
 
 
 
-.dashboard-panel h2,
+/* Shared headings */
 
 .map-section h2,
 
-.table-section h2,
-
 .correlation-section h2,
 
-.identity-section h2,
+.table-section h2,
 
-.status-section h2,
+.total-tracks-card h2,
 
-.nearest-section h2 {
+.identity-panel h2,
+
+.status-panel h2,
+
+.nearest-panel h2,
+
+.simulation-panel h2 {
 
   color: var(--text);
 
@@ -323,6 +401,90 @@ p {
   font-weight: 700;
 
   margin: 0 0 16px;
+
+}
+
+
+
+/* Remove double panels inside wrappers */
+
+.identity-panel > .stats-section,
+
+.status-panel > .stats-section,
+
+.nearest-panel > .nearest-section,
+
+.simulation-panel > .stats-section {
+
+  background: transparent;
+
+  border: none;
+
+  box-shadow: none;
+
+  padding: 0;
+
+  margin: 0;
+
+  width: 100%;
+
+}
+
+
+
+/* =========================================
+
+  TOTAL TRACKS
+
+  ========================================= */
+
+
+
+.total-tracks-card {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+
+}
+
+
+
+.total-tracks-card h2 {
+
+  margin-bottom: 6px;
+
+  font-size: 16px;
+
+}
+
+
+
+.total-tracks-subtitle {
+
+  color: var(--muted);
+
+  font-size: 12px;
+
+  margin: 0;
+
+}
+
+
+
+.total-tracks-value {
+
+  color: #60a5fa;
+
+  font-size: 42px;
+
+  font-weight: 700;
+
+  line-height: 1;
 
 }
 
@@ -338,9 +500,7 @@ p {
 
 .map-section {
 
-  width: 100%;
-
-  margin: 0;
+  overflow: hidden;
 
 }
 
@@ -376,13 +536,15 @@ p {
 
   color: var(--friend);
 
-  font-size: 13px;
+  font-size: 12px;
 
   font-weight: 600;
 
 }
 
 
+
+/* Leaflet map */
 
 .current-map {
 
@@ -394,8 +556,6 @@ p {
 
   border-radius: 10px;
 
-  background: #e5e7eb;
-
 }
 
 
@@ -406,6 +566,16 @@ p {
 
   width: 100%;
 
+}
+
+
+
+.map-section .leaflet-container {
+
+  width: 100%;
+
+  height: 450px;
+
   border-radius: 10px;
 
   z-index: 0;
@@ -414,35 +584,7 @@ p {
 
 
 
-/* MAP MARKERS */
-
-.custom-track-icon {
-
-  background: transparent;
-
-  border: none;
-
-}
-
-
-
-.track-marker {
-
-  width: 16px;
-
-  height: 16px;
-
-  border: 2px solid white;
-
-  border-radius: 50%;
-
-  box-shadow: 0 2px 8px #0006;
-
-}
-
-
-
-/* MAP LEGEND */
+/* Map legend */
 
 .map-legend {
 
@@ -472,8 +614,6 @@ p {
 
   font-size: 12px;
 
-  font-weight: 600;
-
 }
 
 
@@ -486,29 +626,45 @@ p {
 
   border-radius: 50%;
 
-  flex-shrink: 0;
+}
+
+
+
+/* Track markers */
+
+.custom-track-icon {
+
+  background: transparent;
+
+  border: none;
 
 }
 
 
 
-/* MAP POPUP */
+.track-marker {
+
+  width: 16px;
+
+  height: 16px;
+
+  border-radius: 50%;
+
+  border: 2px solid white;
+
+  box-shadow: 0 2px 8px #0006;
+
+}
+
+
+
+/* Leaflet popups */
 
 .track-popup {
 
   color: #172033;
 
   min-width: 180px;
-
-}
-
-
-
-.track-popup h3 {
-
-  margin-bottom: 10px;
-
-  font-size: 15px;
 
 }
 
@@ -526,7 +682,7 @@ p {
 
 /* =========================================
 
-  CORRELATION - BELOW MAP
+  CORRELATION GROUP
 
   ========================================= */
 
@@ -534,35 +690,67 @@ p {
 
 .correlation-section {
 
-  width: 100%;
-
-  min-width: 0;
-
-  margin: 0;
-
   overflow: hidden;
 
 }
 
 
 
-.dashboard-left .map-section,
+.correlation-section h2,
 
-.dashboard-left .correlation-section {
+.correlation-section h3 {
 
-  width: 100%;
+  margin-bottom: 14px;
+
+}
+
+
+.correlation-panel .correlation-scroll,
+
+.correlation-section label {
+
+  color: var(--muted);
+
+  font-size: 13px;
 
 }
 
 
 
+.correlation-section select {
+
+  padding: 10px 12px;
+
+  max-width: 100%;
+
+  border: 1px solid var(--border);
+
+  border-radius: 8px;
+
+  background: #263852;
+
+  color: white;
+
+  outline: none;
+
+}
+
+
+
+.correlation-section select:focus {
+
+  border-color: var(--accent);
+
+}
+
+
+.correlation-section .correlation-scroll,
 .correlation-section .table-wrapper {
 
   width: 100%;
 
-  max-width: 100%;
-
   overflow-x: auto;
+  max-height: 285px;
 
 }
 
@@ -574,25 +762,42 @@ p {
 
   border-collapse: collapse;
 
+  font-size: 12px;
+
 }
 
 
 
-/* CORRELATION SELECT */
+.correlation-section th,
 
-.correlation-section select {
+.correlation-section td {
 
-  max-width: 100%;
+  padding: 11px 12px;
 
-  padding: 10px 12px;
+  text-align: left;
 
-  background: #263852;
+  white-space: nowrap;
+
+  border-bottom: 1px solid var(--border);
+  color: #dce5f2;
+
+}
+
+
+
+.correlation-section th {
+
+  background: #30435e;
 
   color: var(--text);
 
-  border: 1px solid var(--border);
+}
 
-  border-radius: 8px;
+
+
+.correlation-section tbody tr:hover {
+
+  background: var(--panel-hover);
 
 }
 
@@ -606,9 +811,9 @@ p {
 
 
 
-.identity-section {
+.identity-panel {
 
-  width: 100%;
+  overflow: hidden;
 
 }
 
@@ -648,11 +853,11 @@ p {
 
   gap: 9px;
 
-  color: var(--muted);
-
   font-size: 13px;
 
   font-weight: 600;
+
+  color: var(--muted);
 
 }
 
@@ -660,11 +865,11 @@ p {
 
 .metric-value {
 
-  color: var(--text);
-
   font-size: 19px;
 
   font-weight: 700;
+
+  color: var(--text);
 
 }
 
@@ -692,9 +897,9 @@ p {
 
 
 
-.status-section {
+.status-panel {
 
-  width: 100%;
+  overflow: hidden;
 
 }
 
@@ -738,8 +943,6 @@ p {
 
 
 
-/* STATUS BADGES */
-
 .track-status {
 
   display: inline-flex;
@@ -753,8 +956,6 @@ p {
   font-size: 11px;
 
   font-weight: 700;
-
-  white-space: nowrap;
 
 }
 
@@ -780,26 +981,6 @@ p {
 
 
 
-/* IDENTITY BADGES */
-
-.identity-badge {
-
-  display: inline-block;
-
-  padding: 5px 9px;
-
-  border-radius: 6px;
-
-  font-size: 11px;
-
-  font-weight: 700;
-
-  white-space: nowrap;
-
-}
-
-
-
 /* =========================================
 
   NEAREST SOURCES
@@ -808,33 +989,29 @@ p {
 
 
 
-.nearest-section {
+.nearest-panel {
 
-  width: 100%;
-
-  min-width: 0;
+  overflow: hidden;
 
 }
 
 
 
-.nearest-scroll {
+.nearest-panel .nearest-scroll,
+
+.nearest-panel .table-wrapper {
 
   width: 100%;
 
-  max-height: 360px;
+  max-height: 340px;
 
-  overflow-y: auto;
-
-  overflow-x: auto;
+  overflow: auto;
 
 }
 
 
 
-.nearest-section table,
-
-.dashboard-right table {
+.nearest-panel table {
 
   width: 100%;
 
@@ -846,17 +1023,15 @@ p {
 
 
 
-.nearest-section th,
+.nearest-panel th,
 
-.nearest-section td,
-
-.dashboard-right th,
-
-.dashboard-right td {
+.nearest-panel td {
 
   padding: 11px 10px;
 
   text-align: left;
+
+  white-space: nowrap;
 
   border-bottom: 1px solid var(--border);
 
@@ -864,23 +1039,23 @@ p {
 
 
 
-.nearest-section th,
-
-.dashboard-right th {
+.nearest-panel th {
 
   background: #30435e;
 
-  color: #dce7f6;
+  color: var(--text);
 
-  font-weight: 700;
+  position: sticky;
+
+  top: 0;
+
+  z-index: 1;
 
 }
 
 
 
-.nearest-section tr:hover,
-
-.dashboard-right table tr:hover {
+.nearest-panel tbody tr:hover {
 
   background: var(--panel-hover);
 
@@ -890,7 +1065,125 @@ p {
 
 /* =========================================
 
-  TRACK LIST
+  SIMULATION CONTROL
+
+  ========================================= */
+
+
+
+.simulation-panel {
+
+  margin-bottom: 24px;
+
+}
+
+
+
+.simulation-panel h2 {
+
+  margin-bottom: 16px;
+
+}
+
+
+
+.simulation-panel p {
+
+  color: var(--muted);
+
+  font-size: 14px;
+
+  margin-bottom: 16px;
+
+}
+
+
+
+.simulation-panel strong {
+
+  color: var(--text);
+
+}
+
+
+
+.simulation-panel button {
+
+  min-width: 155px;
+
+  padding: 11px 18px;
+
+  border-radius: 8px;
+
+  border: 1px solid var(--border);
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  transition: background 0.2s;
+
+}
+
+
+
+.simulation-panel button:first-child {
+
+  background: #166534;
+
+  color: white;
+
+  border-color: #15803d;
+
+}
+
+
+
+.simulation-panel button:first-child:hover:not(:disabled) {
+
+  background: #15803d;
+
+}
+
+
+
+.simulation-panel button:last-child {
+
+  background: #991b1b;
+
+  color: white;
+
+  border-color: #b91c1c;
+
+}
+
+
+
+.simulation-panel button:last-child:hover:not(:disabled) {
+
+  background: #b91c1c;
+
+}
+
+
+
+.simulation-panel button:disabled {
+
+  background: #34445c;
+
+  color: #9ca3af;
+
+  border-color: #46546a;
+
+  opacity: 0.55;
+
+}
+
+
+
+/* =========================================
+
+  CURRENT TRACK TABLE
 
   ========================================= */
 
@@ -900,9 +1193,7 @@ p {
 
   width: 100%;
 
-  min-width: 0;
-
-  margin-bottom: 24px;
+  overflow: hidden;
 
 }
 
@@ -972,6 +1263,9 @@ p {
 
 
 
+
+.table-section .table-scroll,
+
 .table-wrapper {
 
   width: 100%;
@@ -979,6 +1273,7 @@ p {
   max-width: 100%;
 
   overflow-x: auto;
+  max-height: 250px;
 
 }
 
@@ -1002,7 +1297,7 @@ p {
 
 .track-table td {
 
-  padding: 13px 12px;
+  padding: 12px;
 
   text-align: left;
 
@@ -1042,17 +1337,25 @@ p {
 
 
 
-/* GENERAL TABLES */
+/* =========================================
 
-.correlation-section table th,
+  BADGES
 
-.correlation-section table td {
+  ========================================= */
 
-  padding: 11px 10px;
 
-  text-align: left;
 
-  border-bottom: 1px solid var(--border);
+.identity-badge {
+
+  display: inline-block;
+
+  padding: 5px 9px;
+
+  border-radius: 6px;
+
+  font-size: 11px;
+
+  font-weight: 700;
 
   white-space: nowrap;
 
@@ -1060,19 +1363,41 @@ p {
 
 
 
-.correlation-section table th {
+.identity-badge.friend {
 
-  background: #30435e;
+  color: #4ade80;
 
-  color: var(--text);
+  background: #14532d66;
 
 }
 
 
 
-.correlation-section table tr:hover {
+.identity-badge.hostile {
 
-  background: var(--panel-hover);
+  color: #f87171;
+
+  background: #7f1d1d66;
+
+}
+
+
+
+.identity-badge.neutral {
+
+  color: #60a5fa;
+
+  background: #1e40af66;
+
+}
+
+
+
+.identity-badge.unknown {
+
+  color: #fbbf24;
+
+  background: #92400e66;
 
 }
 
@@ -1086,7 +1411,23 @@ p {
 
 
 
+.table-wrapper,
+
+.correlation-scroll,
+
+.nearest-scroll {
+
+  scrollbar-width: thin;
+
+  scrollbar-color: #526783 #172238;
+
+}
+
+
+
 .table-wrapper::-webkit-scrollbar,
+
+.correlation-scroll::-webkit-scrollbar,
 
 .nearest-scroll::-webkit-scrollbar {
 
@@ -1100,6 +1441,8 @@ p {
 
 .table-wrapper::-webkit-scrollbar-thumb,
 
+.correlation-scroll::-webkit-scrollbar-thumb,
+
 .nearest-scroll::-webkit-scrollbar-thumb {
 
   background: #526783;
@@ -1112,6 +1455,8 @@ p {
 
 .table-wrapper::-webkit-scrollbar-track,
 
+.correlation-scroll::-webkit-scrollbar-track,
+
 .nearest-scroll::-webkit-scrollbar-track {
 
   background: #172238;
@@ -1122,13 +1467,15 @@ p {
 
 /* =========================================
 
-  RESPONSIVE
+  RESPONSIVE DESIGN
 
   ========================================= */
 
 
 
 @media (max-width: 1100px) {
+
+
 
   .dashboard-grid {
 
@@ -1146,11 +1493,21 @@ p {
 
   }
 
+
+
+  .nearest-panel .nearest-scroll {
+
+    max-height: 300px;
+
+  }
+
 }
 
 
 
 @media (max-width: 600px) {
+
+
 
   .app-content {
 
@@ -1186,19 +1543,21 @@ p {
 
 
 
-  .dashboard-panel,
-
   .map-section,
-
-  .table-section,
 
   .correlation-section,
 
-  .identity-section,
+  .table-section,
 
-  .status-section,
+  .total-tracks-card,
 
-  .nearest-section {
+  .identity-panel,
+
+  .status-panel,
+
+  .nearest-panel,
+
+  .simulation-panel {
 
     padding: 14px;
 
@@ -1206,9 +1565,21 @@ p {
 
 
 
-  .current-map {
+  .current-map,
+
+  .map-section .leaflet-container {
 
     height: 320px;
+
+  }
+
+
+
+  .header-actions {
+
+    width: 100%;
+
+    justify-content: space-between;
 
   }
 
@@ -1222,10 +1593,19 @@ p {
 
 
 
-  .map-legend {
+  .total-tracks-value {
 
-    gap: 12px;
+    font-size: 34px;
 
   }
+
+
+
+  .simulation-panel button {
+
+    min-width: 120px;
+
+  }
+
 
 }

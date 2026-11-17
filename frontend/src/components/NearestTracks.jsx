@@ -28,11 +28,11 @@ function NearestTracks() {
 
       return (
         <>
-                <div className="table-header">
-                    <h2>Nearest Sources</h2>
-                </div>
-                <div>
-                    <table>
+            <div className="table-header">
+                <h2>Nearest Sources</h2>
+            </div>
+            <div>
+                <table>
                 <thead>
                 <tr>
                   <th>Source ID</th>

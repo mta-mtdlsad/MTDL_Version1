@@ -22,7 +22,7 @@ function TrackStatus({ tracks = [] }) {
 
     return (
 
-        <section className="dashboard-panel">
+        <section className="status-panel">
 
             <h2>Track Status</h2>
 

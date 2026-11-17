@@ -44,8 +44,8 @@ function Correlation() {
                 <div className="table-header">
                     <h2>Correlation Group Information</h2>
                 </div>
-                <div className="table-wrapper">
-                    <table className="track-table">
+                <div>
+                    <table>
                         <thead>
                         <tr>
                             <th>Group ID</th>
@@ -69,8 +69,8 @@ function Correlation() {
                 <div className="table-header">
                     <h2>Correlated Tracks</h2>
                 </div>
-                <div className="table-wrapper">
-                    <table className="track-table">
+                <div>
+                    <table>
                         <thead>
                         <tr>
                             <th>Track ID</th>
