@@ -1,13 +1,21 @@
-import React from 'react';
-import OperationalPicture from './pages/OperationalPicture';
-import './App.css';
-import 'leaflet/dist/leaflet.css';
-import DefaultLayout from "./layouts/DefaultLayout.jsx";
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import OperationalPicture from "./pages/OperationalPicture";
+import Sidebar from "./components/Sidebar";
+import "./styles/App.css";
 
 function App() {
     return (
-            <OperationalPicture />
+        <BrowserRouter>
+            <div className="app-layout">
+                <Sidebar />
+                <main className="main-content">
+                    <Routes>
+                        <Route path="/" element={<OperationalPicture />} />
+                    </Routes>
+                </main>
+            </div>
+        </BrowserRouter>
     );
 }
+
 export default App;

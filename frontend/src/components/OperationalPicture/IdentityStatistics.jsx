@@ -1,5 +1,5 @@
 import React from 'react';
-import { identityColors } from './CurrentMap';
+import { identityColors } from './CurrentMap.jsx';
 
 function IdentityStatistics({ tracks = [] }) {
     const identities = [
@@ -38,7 +38,5 @@ function IdentityStatistics({ tracks = [] }) {
     );
 
 }
-
-
 
 export default IdentityStatistics;

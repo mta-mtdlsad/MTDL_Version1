@@ -1,6 +1,6 @@
 import React from "react";
 import {useState, useEffect} from 'react';
-import '../App.css'
+import '../../styles/App.css'
 
 function Correlation() {
     const [selectedMethod, setSelectedMethod] = useState("");
@@ -21,6 +21,16 @@ function Correlation() {
                 setLoading(false);
             });
     }, []);
+
+    if(groups.length < 1)
+        return (
+            <>
+                <div className="table-header">
+                    <h2>Correlation Group Information</h2>
+                </div>
+                <p>There is currently no tracks.</p>
+            </>
+        );
 
     return (
         <>
