@@ -103,4 +103,9 @@ public class TrackController {
             return ResponseEntity.status(404).body("No database rows matched '" + trackNumber + "'.");
         }
     }
+
+    @GetMapping("/current")
+    public List<Track> getCurrentTracks(){
+        return trackService.getLatestTracksView();
+    }
 }
