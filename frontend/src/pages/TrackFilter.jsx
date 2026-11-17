@@ -33,6 +33,9 @@ export default function TrackFilter() {
             const data = await response.json();
             setTracks(data);
             setSearched(true);
+            setIdentity("");
+            setTrackStatus("");
+            setMinimumSpeed("");
 
         } catch (error){
             console.log("Error:", error);

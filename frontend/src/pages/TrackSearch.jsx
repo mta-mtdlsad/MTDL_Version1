@@ -26,9 +26,10 @@ export default function TrackSearch() {
             }
 
             const data = await response.json();
-            console.log("api response:", data);
             setTracks(data);
             setSearched(true);
+
+            setTrackNumber("");
         } catch (error){
             console.log("Error:", error);
             setError("Unable to fetch tracks.")
