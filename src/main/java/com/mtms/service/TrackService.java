@@ -163,15 +163,29 @@ public class TrackService {
     public List<Map<String, Object>> getNearestTracksWithDistance() {
         List<Object[]> rows = trackRepository.selectNearestTracksWithDistanceRaw();
         List<Map<String, Object>> results = new ArrayList<>();
-
+        Set<String> seenPairs = new HashSet<>();
         for (Object[] row : rows) {
+            String sourceId = row[0].toString();
+            String nearestSourceId = row[1].toString();
+            // Create the same key regardless of source order
+            String pairKey = sourceId.compareTo(nearestSourceId) < 0
+                    ? sourceId + "|" + nearestSourceId
+                    : nearestSourceId + "|" + sourceId;
+            // Skip pairs already added
+            if (!seenPairs.add(pairKey)) {
+                continue;
+            }
             Map<String, Object> item = new HashMap<>();
-            item.put("sourceId", row[0]);
-            item.put("nearestSourceId", row[1]);
+            item.put("sourceId", sourceId);
+            item.put("nearestSourceId", nearestSourceId);
             item.put("distanceKm", row[2]);
             results.add(item);
         }
+
+
+
         return results;
+
     }
 
 
@@ -198,12 +212,14 @@ public class TrackService {
 
         track.setReceiveTime(LocalDateTime.now());
 
+        // 1. Duplicate check -> received + 1, duplicate + 1, rejected + 1, failure + 0
         if (track.getSourceId() != null && track.getSequenceNumber() != null &&
                 trackRepository.existsBySourceIdAndSequenceNumber(track.getSourceId(), track.getSequenceNumber())) {
             handleDuplicate(track);
             return;
         }
 
+        // 2. Out-of-order check -> received + 1, rejected + 1, failure + 0
         LocalDateTime latestSavedTime = trackRepository.selectLatestTimestampForSource(track.getSourceId());
         Integer latestSequence = trackRepository.selectLatestSequenceForSource(track.getSourceId());
 
@@ -215,20 +231,18 @@ public class TrackService {
                     ? "Incoming timestamp is older than current source history state"
                     : "Sequence number is smaller than the last sequence number of that source";
             alertService.createAlert(track.getTrackNumber(), track.getSourceId(), "Out-of-order message: " + reason, "Out-of-order message");
+            sourceService.syncSourceMetrics(track.getSourceId(), track.getSequenceNumber(), "REJECTED", 0);
+            return;
         }
 
+        // 3. ValidationService check -> received + 1, rejected + 1, failure + errors.size()
         List<String> errors = validationService.getValidationErrors(track);
         if (errors.isEmpty()) {
             saveTrackWithAssociations(track);
         } else {
-            sourceService.syncSourceMetrics(track.getSourceId(), track.getSequenceNumber(), "REJECTED");
+            sourceService.syncSourceMetrics(track.getSourceId(), track.getSequenceNumber(), "REJECTED", errors.size());
             for (String error : errors) {
-                String resolvedEvent = "Track validation failure";
-                String errLower = error.toLowerCase();
-                if (errLower.contains("source id") || errLower.contains("null")) {
-                    resolvedEvent = "Malformed message";
-                }
-                alertService.createAlert(track.getTrackNumber(), track.getSourceId(), error, resolvedEvent);
+                alertService.createAlert(track.getTrackNumber(), track.getSourceId(), error, "Track validation failure");
             }
         }
     }

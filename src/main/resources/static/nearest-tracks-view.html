@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nearest Source Proximity</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+<h1>Nearest Source Proximity Analysis</h1>
+<hr>
+<p>
+    Evaluates the latest reported position of each source against all other sources to calculate the closest neighbor distance.
+</p>
+
+<h2>Proximity Results Table</h2>
+<div id="tableContainer">Calculating proximity metrics...</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', function() {
+        fetch('/api/tracks/nearest')
+            .then(response => response.json())
+            .then(data => renderTable(data))
+            .catch(error => {
+                document.getElementById('tableContainer').innerHTML = `<p style="color:red;">Error loading proximity data: ${error}</p>`;
+            });
+    });
+
+    function renderTable(rows) {
+        const container = document.getElementById('tableContainer');
+        if (!rows || rows.length === 0) {
+            container.innerHTML = '<p>Insufficient data: You must have at least 2 active sources in the database to calculate proximity.</p>';
+            return;
+        }
+
+        let html = `<table>
+            <thead>
+                <tr>
+                    <th>Source</th>
+                    <th>Nearest Source</th>
+                    <th>Distance (km)</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        rows.forEach(row => {
+            html += `<tr>
+                <td><strong>${row.sourceId || 'N/A'}</strong></td>
+                <td><strong>${row.nearestSourceId || 'N/A'}</strong></td>
+                <td>${row.distanceKm != null ? row.distanceKm + ' km' : 'N/A'}</td>
+            </tr>`;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+</script>
+
+<hr>
+<p><a href="/index.html">Return Home</a></p>
+</body>
+</html>

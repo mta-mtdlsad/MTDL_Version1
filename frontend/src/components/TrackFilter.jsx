@@ -76,7 +76,7 @@ export default function TrackFilter() {
                     placeholder="e.g.450.00"
                 />
             </label>
-            <button type="button" onClick={getTracks} disabled={loading}>Search</button>
+            <button type="operation-button" onClick={getTracks} disabled={loading}>Filter</button>
 
             {searched && tracks.length === 0 && (
                 <div>

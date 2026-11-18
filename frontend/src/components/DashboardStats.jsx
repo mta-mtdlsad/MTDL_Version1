@@ -54,25 +54,25 @@ export default function DashboardStats() {
             id: 'total',
             title: 'Total Tracks',
             value: totalTracks,
-            color: '#3b82f6'
+            // color: '#3b82f6'
         },
         {
             id: 'active',
             title: 'Active Tracks',
             value: activeTracks,
-            color: '#22c55e'
+            // color: '#22c55e'
         },
         {
             id: 'unknown',
             title: 'Unknown Identity',
             value: unknownTracks,
-            color: '#a855f7'
+            // color: '#a855f7'
         },
         {
             id: 'inactive',
             title: 'Inactive Tracks',
             value: inactiveTracks,
-            color: '#ef4444'
+            // color: '#ef4444'
         }
     ];
 
@@ -98,8 +98,7 @@ export default function DashboardStats() {
             {stats.map((stat) => (
 
                 <div
-                    className="stat-card"
-                    key={stat.id}
+                    className={`stat-card stat-${stat.id}`}                    key={stat.id}
                     style={{
                         '--stat-color': stat.color
                     }}

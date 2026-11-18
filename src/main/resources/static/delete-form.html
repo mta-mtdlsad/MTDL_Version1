@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Track Record</title>
+</head>
+<body>
+<h1>Remove Track Record</h1>
+<hr>
+<p style="font-weight:bold;">Warning: This action will permanently remove matching records from the database.</p>
+
+<form action="api/tracks/delete" method="POST">
+    <p>
+        <label for="trackNumber">Track Number to Delete:</label><br>
+        <input type="text" id="trackNumber" name="trackNumber" required placeholder="e.g. TRK10001">
+    </p>
+    <p>
+        <button type="submit">Permanently Delete Track Record</button>
+    </p>
+</form>
+<hr>
+<p><a href="index.html">Return Home</a></p>
+</body>
+</html>

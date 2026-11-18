@@ -243,6 +243,7 @@ p {
     margin: 0 0 10px;
 }
 
+
 .stat-info p {
     color: var(--text);
     font-size: 28px;
@@ -269,6 +270,25 @@ p {
         padding: 16px;
     }
 }
+
+/* Individual statistics accent colors */
+
+.stat-total {
+    --accent: #3b82f6;
+}
+
+.stat-active {
+    --accent: #05c34e;
+}
+
+.stat-unknown {
+    --accent: #f59e0b;
+}
+
+.stat-inactive {
+    --accent: #f13f3f;
+}
+
 
 /* =========================================
    8. TRACK OPERATIONS
@@ -1036,12 +1056,6 @@ p {
     }
 }
 
-/* Label Formatting */
-
-label {
-    display: block;
-    margin-bottom: 15px;
-}
 
 /* =========================================
 
@@ -1387,4 +1401,11 @@ label {
     .replay-legend {
         gap: 12px;
     }
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
 }

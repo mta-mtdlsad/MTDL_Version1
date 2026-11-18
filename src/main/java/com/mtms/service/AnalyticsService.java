@@ -81,6 +81,8 @@ public class AnalyticsService {
         return stats;
     }
 
+
+
     public Map<String, Object> getAlertSummary() {
         int totalAlerts = 0;
 

@@ -41,13 +41,15 @@ export default function TrackSearch() {
     return (
         <Card title="Search Tracks">
 
-            <label>Track Number: &ensp; <br/>
+            <label>
+                Track Number:
                 <input type="text"
                        placeholder={"e.g.TRK10001"}
                        value={trackNumber}
                        onChange={(e) => setTrackNumber(e.target.value)}
                 />
             </label>
+
             {error && <p className="error">{error}</p>}
             <button type="button" onClick={getTracks} disabled={loading}>Search</button>
 

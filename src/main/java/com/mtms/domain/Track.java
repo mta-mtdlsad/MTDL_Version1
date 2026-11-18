@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Table(name = "tracks")
@@ -110,17 +109,5 @@ public class Track {
                 ", createdTime=" + createdTime +
                 ", receiveTime=" + receiveTime +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Track track = (Track) o;
-        return Double.compare(latitude, track.latitude) == 0 && Double.compare(longitude, track.longitude) == 0 && Double.compare(speed, track.speed) == 0 && Objects.equals(trackId, track.trackId) && Objects.equals(source, track.source) && Objects.equals(sourceId, track.sourceId) && Objects.equals(sequenceNumber, track.sequenceNumber) && Objects.equals(path, track.path) && Objects.equals(pathId, track.pathId) && Objects.equals(trackNumber, track.trackNumber) && Objects.equals(identityType, track.identityType) && Objects.equals(trackStatus, track.trackStatus) && Objects.equals(createdTime, track.createdTime) && Objects.equals(receiveTime, track.receiveTime);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(trackId, source, sourceId, sequenceNumber, path, pathId, trackNumber, latitude, longitude, speed, identityType, trackStatus, createdTime, receiveTime);
     }
 }
