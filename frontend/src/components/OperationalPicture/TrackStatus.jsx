@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../styles/App.css'
 
 function TrackStatus({tracks = []}) {
     const activeCount = tracks.filter(
@@ -8,15 +9,15 @@ function TrackStatus({tracks = []}) {
         track => track.trackStatus === 'INACTIVE'
     ).length;
     return (
-        <section className="status-panel">
+        <section className="dashboard-panel">
             <h2>Track Status</h2>
-            <div className="metric-row">
+            <div className="dashboard-row">
                 <span className="track-status active">
                     ACTIVE
                 </span>
                 <strong>{activeCount}</strong>
             </div>
-            <div className="metric-row">
+            <div className="dashboard-row">
                 <span className="track-status inactive">
                     INACTIVE
                 </span>

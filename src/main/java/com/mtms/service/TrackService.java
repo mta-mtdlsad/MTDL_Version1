@@ -160,11 +160,21 @@ public class TrackService {
     public List<Map<String, Object>> getNearestTracksWithDistance() {
         List<Object[]> rows = trackRepository.selectNearestTracksWithDistanceRaw();
         List<Map<String, Object>> results = new ArrayList<>();
-
+        Set<String> seenPairs = new HashSet<>();
         for (Object[] row : rows) {
+            String sourceId = row[0].toString();
+            String nearestSourceId = row[1].toString();
+            // Create the same key regardless of source order
+            String pairKey = sourceId.compareTo(nearestSourceId) < 0
+                    ? sourceId + "|" + nearestSourceId
+                    : nearestSourceId + "|" + sourceId;
+            // Skip pairs already added
+            if (!seenPairs.add(pairKey)) {
+                continue;
+            }
             Map<String, Object> item = new HashMap<>();
-            item.put("sourceId", row[0]);
-            item.put("nearestSourceId", row[1]);
+            item.put("sourceId", sourceId);
+            item.put("nearestSourceId", nearestSourceId);
             item.put("distanceKm", row[2]);
             results.add(item);
         }

@@ -80,7 +80,7 @@ function OperationalPicture() {
                 {/* HEADER */}
                 <header className="app-content-header">
                     <div>
-                        <h1 className="app-content-headerText">
+                        <h1 className="app-content-header-text">
                             Operational Picture
                         </h1>
                         <p className="page-subtitle">
@@ -105,21 +105,18 @@ function OperationalPicture() {
 
                 {error && (<p className="error-message" role="alert">{error}</p>)}
 
-                <Grid container spacing={3} className="dashboard-grid">
+                <Grid container spacing={3}>
+
+                    {/* Row 1 */}
                     <Grid size={12}>
                         <Grid container spacing={3}>
-                            <Grid size={{xs: 12, md: 7}}>
-                                <section className="map-section">
-                                    <div className="map-header">
-                                        <h2>Current Track Locations</h2>
-                                        <span className="live-indicator">
-                                            ● Live Updates
-                                        </span>
 
-                                    </div>
-                                    <CurrentMap tracks={tracks}/>
-                                </section>
+                            {/* Column 1 */}
+                            <Grid size={{xs: 12, md: 7}}>
+                                <CurrentMap tracks={tracks}/>
                             </Grid>
+
+                            {/* Column 2 */}
                             <Grid size={{xs: 12, md: 2}}>
                                 <Grid container spacing={3}>
                                     <Grid size={{sm: 6, xs: 12, md: 6, lg: 12}}>
@@ -140,41 +137,36 @@ function OperationalPicture() {
                                         <TrackStatus tracks={tracks}/>
                                     </Grid>
                                 </Grid>
-
                             </Grid>
+
+                            {/* Column 3 */}
                             <Grid size={{xs: 12, md: 3}}>
-                                <Grid size={{sm: 6, xs: 12, md: 6, lg: 12}}>
-                                    <section className="simulation-panel">
+                                <Grid container spacing={3}>
+                                    <Grid size={{sm: 6, xs: 12, md: 6, lg: 12}}>
                                         <SimulationStatus
                                             onSimulationChange={handleSimulationChange}
                                         />
-                                    </section>
-                                </Grid>
-                                <Grid size={{sm: 6, xs: 12, md: 6, lg: 12}}>
-                                    <div className="nearest-panel">
-                                        <div className="nearest-scroll">
-                                            <NearestTracks/>
-                                        </div>
-                                    </div>
+                                    </Grid>
+                                    <Grid size={{sm: 6, xs: 12, md: 6, lg: 12}}>
+                                        <NearestTracks/>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
+
+                    {/* Row 2 */}
                     <Grid size={12}>
                         <Grid container spacing={3}>
+
+                            {/* Column 1 */}
                             <Grid size={{xs: 12, md: 7}}>
-                                <section className="table-section">
-                                    <table-scroll>
-                                        <CurrentTracks filteredTracks={tracks}/>
-                                    </table-scroll>
-                                </section>
+                                <CurrentTracks filteredTracks={tracks}/>
                             </Grid>
+
+                            {/* Column 2 */}
                             <Grid size={{xs: 12, md: 5}}>
-                                <section className="correlation-section">
-                                    <div className="correlation-scroll">
-                                        <Correlation/>
-                                    </div>
-                                </section>
+                                <Correlation/>
                             </Grid>
                         </Grid>
                     </Grid>

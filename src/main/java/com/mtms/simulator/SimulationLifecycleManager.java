@@ -59,6 +59,9 @@ public class SimulationLifecycleManager {
                 if (!"RUNNING".equalsIgnoreCase(simulationState)) return;
 
                 log.info("[TRAFFIC DROP] Halting simulation streams for 16s to trigger STALE status thresholds...");
+                if (activeEngine != null) {
+                    activeEngine.stop();
+                }
                 Thread.sleep(16000);
 
                 if (!"RUNNING".equalsIgnoreCase(simulationState)) return;
@@ -67,10 +70,13 @@ public class SimulationLifecycleManager {
                 Thread.sleep(45000);
 
                 log.info("[SIMULATION ENDS HERE]");
+                new Thread(this::stopSimulation, "sim-auto-stop").start();
+
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         });
+
 
         return true;
     }

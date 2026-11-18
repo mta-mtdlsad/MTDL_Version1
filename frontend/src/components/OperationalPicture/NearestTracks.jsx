@@ -27,20 +27,20 @@ function NearestTracks() {
     if (error) return <p>Error: {error}</p>;
     if (tracks.length < 1)
         return (
-            <>
+            <div className="dashboard-panel">
                 <div className="table-header">
                     <h2>Current Track List</h2>
                 </div>
                 <p>There is currently no tracks.</p>
-            </>
+            </div>
         );
 
     return (
-        <>
-            <div className="table-header">
-                <h2>Nearest Sources</h2>
-            </div>
-            <div>
+        <div className="dashboard-panel">
+            <div className="table-scroll" style={{maxHeight: "355px"}}>
+                <div className="table-header">
+                    <h2>Nearest Sources</h2>
+                </div>
                 <table>
                     <thead>
                     <tr>
@@ -60,7 +60,7 @@ function NearestTracks() {
                     </tbody>
                 </table>
             </div>
-        </>
+        </div>
     )
 }
 

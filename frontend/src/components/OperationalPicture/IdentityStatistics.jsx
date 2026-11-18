@@ -1,5 +1,6 @@
 import React from 'react';
 import { identityColors } from './CurrentMap.jsx';
+import '../../styles/App.css'
 
 function IdentityStatistics({ tracks = [] }) {
     const identities = [
@@ -10,7 +11,7 @@ function IdentityStatistics({ tracks = [] }) {
     ];
 
     return (
-        <section className="identity-panel">
+        <section className="dashboard-panel">
             <h2>Identity Types</h2>
 
             {identities.map(identity => {
@@ -19,7 +20,7 @@ function IdentityStatistics({ tracks = [] }) {
                 ).length;
 
                 return (
-                    <div className="metric-row" key={identity}>
+                    <div className="dashboard-row" key={identity}>
                         <div className="metric-label">
                             <span
                                 className="metric-dot"

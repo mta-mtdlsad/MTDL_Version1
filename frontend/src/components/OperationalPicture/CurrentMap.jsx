@@ -33,7 +33,14 @@ function createTrackIcon(identity) {
 }
 function CurrentMap({ tracks = [] }) {
     return (
-        <div>
+        <section className="dashboard-panel">
+            <div className="map-header">
+                <h2>Current Track Locations</h2>
+                <span className="live-indicator">
+                                                ● Live Updates
+                                            </span>
+
+            </div>
             <div className="current-map">
                 <MapContainer
                     center={[24.4539, 54.3773]}
@@ -71,13 +78,13 @@ function CurrentMap({ tracks = [] }) {
                 {Object.entries(identityColors).map(
                     ([identity, color]) => (
                         <div className="legend-item" key={identity}>
-       <span className="legend-dot" style={{ backgroundColor: color }}/>
+                            <span className="legend-dot" style={{ backgroundColor: color }}/>
                             {identity}
                         </div>
                     )
                 )}
             </div>
-        </div>
+        </section>
     );
 }
 

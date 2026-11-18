@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import '../../styles/App.css'
 
 export default function SimulationStatus({onSimulationChange}) {
     // Stores the current simulation state (LOADING, RUNNING, or STOPPED)
@@ -69,7 +70,7 @@ export default function SimulationStatus({onSimulationChange}) {
     }, []);
     // Render the simulation status and control buttons
     return (
-        <section className="stats-section">
+        <section className="dashboard-panel">
 
             {/* Section heading */}
             <h2>Simulation Control</h2>
@@ -87,7 +88,7 @@ export default function SimulationStatus({onSimulationChange}) {
 
                 {/* Start button: enabled only when simulation is stopped */}
                 <button
-                    className="refresh-button"
+                    className="start-button"
                     disabled={loading || state !== 'STOPPED'}
                     onClick={() => controlSimulation('START')}
                 >
@@ -96,7 +97,7 @@ export default function SimulationStatus({onSimulationChange}) {
 
                 {/* Stop button: enabled only when simulation is running */}
                 <button
-                    className="refresh-button"
+                    className="stop-button"
                     disabled={loading || state !== 'RUNNING'}
                     onClick={() => controlSimulation('STOP')}
                 >

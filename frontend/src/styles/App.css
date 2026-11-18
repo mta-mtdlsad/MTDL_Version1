@@ -1,9 +1,10 @@
 /* =========================================
 
-  MTMS DASHBOARD - APP.CSS
+  MTDL-SAD DASHBOARD - APP.CSS
 
   ========================================= */
-/* THEME */
+
+/* ----- GENERAL THEME ------ */
 :root {
     font-family: 'Poppins', Arial, sans-serif;
     --page-bg: #101827;
@@ -20,12 +21,9 @@
     color: var(--text);
     background: var(--page-bg);
 }
-
-/* RESET */
 * {
     box-sizing: border-box;
 }
-
 html,
 body,
 #root {
@@ -33,90 +31,26 @@ body,
     min-height: 100%;
     margin: 0;
 }
-
 body {
     background: var(--page-bg);
     color: var(--text);
 }
-
-button,
-input,
-select {
-    font: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-button:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-}
-
 h1,
 h2,
 h3,
 p {
     margin-top: 0;
 }
-
-/* MAIN APPLICATION */
-.app-container {
-    width: 100%;
-    min-height: 100vh;
-    background: var(--page-bg);
+button,
+input,
+select {
+    font: inherit;
 }
 
-.app-content {
-    width: 100%;
-    max-width: 1800px;
-    margin: 0 auto;
-    padding: 24px;
-    min-width: 0;
-}
 
-/* =========================================
-
-  PAGE HEADER
-
-  ========================================= */
-.app-content-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 24px;
-}
-
-.app-content-headerText {
-    margin: 0;
-    font-size: 30px;
-    font-weight: 700;
-    color: var(--text);
-}
-
-.page-subtitle {
-    margin: 5px 0 0;
-    font-size: 13px;
-    color: var(--muted);
-}
-
-.header-actions {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-}
-
-.last-updated {
-    color: var(--muted);
-    font-size: 12px;
-}
-
-.app-content-headerButton,
-.refresh-button {
+/* ----- GENERAL BUTTONS ----- */
+button {
+    cursor: pointer;
     padding: 10px 20px;
     border: none;
     border-radius: 8px;
@@ -125,245 +59,20 @@ p {
     font-weight: 600;
     transition: background 0.2s;
 }
-
-.app-content-headerButton:hover:not(:disabled),
-.refresh-button:hover:not(:disabled) {
+button:disabled {
+    cursor: not-allowed;
+    background: #34445c;
+    color: #9ca3af;
+    border-color: #46546a;
+    opacity: 0.55;
+}
+button:hover:not(:disabled) {
     background: #2563eb;
 }
 
-.error-message {
-    padding: 12px 16px;
-    margin-bottom: 20px;
-    background: #451a24;
-    color: #fca5a5;
-    border: 1px solid #7f1d1d;
-    border-radius: 8px;
-}
 
-/* =========================================
-
-  MAIN DASHBOARD GRID
-
-  ========================================= */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns:
-
-    minmax(0, 2fr)
-
-    minmax(320px, 1fr);
-    gap: 20px;
-    align-items: start;
-    width: 100%;
-    margin-bottom: 24px;
-}
-
-.dashboard-left,
-.dashboard-right {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-    min-width: 0;
-}
-
-/* =========================================
-
-  SHARED PANEL STYLING
-
-  ========================================= */
-.map-section,
-.correlation-section,
-.table-section,
-.total-tracks-card,
-.identity-panel,
-.status-panel,
-.nearest-panel,
-.simulation-panel {
-    width: 100%;
-    min-width: 0;
-    margin: 0;
-    background: var(--panel-bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-}
-
-/* Shared headings */
-.map-section h2,
-.correlation-section h2,
-.table-section h2,
-.total-tracks-card h2,
-.identity-panel h2,
-.status-panel h2,
-.nearest-panel h2,
-.simulation-panel h2 {
-    color: var(--text);
-    font-size: 18px;
-    font-weight: 700;
-    margin: 0 0 16px;
-}
-
-/* Remove double panels inside wrappers */
-.identity-panel > .stats-section,
-.status-panel > .stats-section,
-.nearest-panel > .nearest-section,
-.simulation-panel > .stats-section {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-}
-
-/* =========================================
-
-  TOTAL TRACKS
-
-  ========================================= */
-.total-tracks-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-}
-
-.total-tracks-card h2 {
-    margin-bottom: 6px;
-    font-size: 16px;
-}
-
-.total-tracks-subtitle {
-    color: var(--muted);
-    font-size: 12px;
-    margin: 0;
-}
-
-.total-tracks-value {
-    color: #60a5fa;
-    font-size: 42px;
-    font-weight: 700;
-    line-height: 1;
-}
-
-/* =========================================
-
-  MAP
-
-  ========================================= */
-.map-section {
-    overflow: hidden;
-}
-
-.map-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 16px;
-}
-
-.map-header h2 {
-    margin: 0;
-}
-
-.live-indicator {
-    color: var(--friend);
-    font-size: 12px;
-    font-weight: 600;
-}
-
-/* Leaflet map */
-.current-map {
-    width: 100%;
-    height: 450px;
-    overflow: hidden;
-    border-radius: 10px;
-}
-
-.current-map .leaflet-container {
-    height: 100%;
-    width: 100%;
-}
-
-.map-section .leaflet-container {
-    width: 100%;
-    height: 450px;
-    border-radius: 10px;
-    z-index: 0;
-}
-
-/* Map legend */
-.map-legend {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 18px;
-    margin-top: 16px;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    color: var(--muted);
-    font-size: 12px;
-}
-
-.legend-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-}
-
-/* Track markers */
-.custom-track-icon {
-    background: transparent;
-    border: none;
-}
-
-.track-marker {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 2px solid white;
-    box-shadow: 0 2px 8px #0006;
-}
-
-/* Leaflet popups */
-.track-popup {
-    color: #172033;
-    min-width: 180px;
-}
-
-.track-popup p {
-    margin: 5px 0;
-    font-size: 12px;
-}
-
-/* =========================================
-
-  CORRELATION GROUP
-
-  ========================================= */
-.correlation-section {
-    overflow: hidden;
-}
-
-.correlation-section h2,
-.correlation-section h3 {
-    margin-bottom: 14px;
-}
-
-.correlation-panel .correlation-scroll,
-.correlation-section label {
-    color: var(--muted);
-    font-size: 13px;
-}
-
-.correlation-section select {
+/* ----- GENERAL SELECT ----- */
+select {
     padding: 10px 12px;
     max-width: 100%;
     border: 1px solid var(--border);
@@ -373,51 +82,119 @@ p {
     outline: none;
 }
 
-.correlation-section select:focus {
+select:focus {
     border-color: var(--accent);
 }
 
-.correlation-section .correlation-scroll,
-.correlation-section .table-wrapper {
+
+/* ----- APP CONTAINER (MAIN APPLICATION) ----- */
+.app-container {
     width: 100%;
-    overflow-x: auto;
-    max-height: 285px;
+    min-height: 100vh;
+    background: var(--page-bg);
+}
+.app-content {
+    width: 100%;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 24px;
+    min-width: 0;
 }
 
-.correlation-section table {
-    width: 100%;
-    border-collapse: collapse;
+
+/* ----- PAGE HEADER ----- */
+.app-content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.app-content-header-text {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--text);
+}
+.page-subtitle {
+    margin: 5px 0 0;
+    font-size: 13px;
+    color: var(--muted);
+}
+.header-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+.last-updated {
+    color: var(--muted);
     font-size: 12px;
 }
-
-.correlation-section th,
-.correlation-section td {
-    padding: 11px 12px;
-    text-align: left;
-    white-space: nowrap;
-    border-bottom: 1px solid var(--border);
-    color: #dce5f2;
+.error-message {
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    background: #451a24;
+    color: #fca5a5;
+    border: 1px solid #7f1d1d;
+    border-radius: 8px;
 }
 
-.correlation-section th {
-    background: #30435e;
+
+/* ----- SHARED PANEL STYLING ----- */
+.dashboard-panel,
+.total-tracks-card {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    overflow: hidden;
+}
+.dashboard-panel h2,
+.total-tracks-card h2 {
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 16px;
+}
+.dashboard-panel h3 {
+    margin-bottom: 14px;
+}
+.dashboard-panel p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+.dashboard-panel strong {
     color: var(--text);
 }
 
-.correlation-section tbody tr:hover {
-    background: var(--panel-hover);
+
+/* ----- TOTAL TRACKS STYLING ----- */
+.total-tracks-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+.total-tracks-card h2 {
+    margin-bottom: 6px;
+    font-size: 16px;
+}
+.total-tracks-value {
+    color: #60a5fa;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1;
 }
 
-/* =========================================
 
-  IDENTITY STATISTICS
-
-  ========================================= */
-.identity-panel {
-    overflow: hidden;
-}
-
-.metric-row {
+/* ----- STATISTICS STYLING ----- */
+.dashboard-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -425,11 +202,10 @@ p {
     padding: 12px 0;
     border-bottom: 1px solid var(--border);
 }
-
-.metric-row:last-child {
+.dashboard-row:last-child {
     border-bottom: none;
 }
-
+/* IDENTITY */
 .metric-label {
     display: flex;
     align-items: center;
@@ -438,48 +214,42 @@ p {
     font-weight: 600;
     color: var(--muted);
 }
-
-.metric-value {
-    font-size: 19px;
-    font-weight: 700;
-    color: var(--text);
-}
-
 .metric-dot {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     flex-shrink: 0;
 }
-
-/* =========================================
-
-  TRACK STATUS
-
-  ========================================= */
-.status-panel {
-    overflow: hidden;
+.identity-badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
 }
-
-.status-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
+.identity-badge.friend {
+    color: #4ade80;
+    background: #14532d66;
 }
-
-.status-row:last-child {
-    border-bottom: none;
+.identity-badge.hostile {
+    color: #f87171;
+    background: #7f1d1d66;
 }
-
+.identity-badge.neutral {
+    color: #60a5fa;
+    background: #1e40af66;
+}
+.identity-badge.unknown {
+    color: #fbbf24;
+    background: #92400e66;
+}
+/* STATUS */
 .status-count {
     color: var(--text);
     font-size: 19px;
     font-weight: 700;
 }
-
 .track-status {
     display: inline-flex;
     align-items: center;
@@ -488,129 +258,34 @@ p {
     font-size: 11px;
     font-weight: 700;
 }
-
 .track-status.active {
     color: #4ade80;
     background: #14532d66;
 }
-
 .track-status.inactive {
     color: #f87171;
     background: #7f1d1d66;
 }
 
-/* =========================================
 
-  NEAREST SOURCES
-
-  ========================================= */
-.nearest-panel {
-    overflow: hidden;
-}
-
-.nearest-panel .nearest-scroll,
-.nearest-panel .table-wrapper {
-    width: 100%;
-    max-height: 340px;
-    overflow: auto;
-}
-
-.nearest-panel table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-}
-
-.nearest-panel th,
-.nearest-panel td {
-    padding: 11px 10px;
-    text-align: left;
-    white-space: nowrap;
-    border-bottom: 1px solid var(--border);
-}
-
-.nearest-panel th {
-    background: #30435e;
-    color: var(--text);
-    position: sticky;
-    top: 0;
-    z-index: 1;
-}
-
-.nearest-panel tbody tr:hover {
-    background: var(--panel-hover);
-}
-
-/* =========================================
-
-  SIMULATION CONTROL
-
-  ========================================= */
-.simulation-panel {
-    margin-bottom: 24px;
-}
-
-.simulation-panel h2 {
-    margin-bottom: 16px;
-}
-
-.simulation-panel p {
-    color: var(--muted);
-    font-size: 14px;
-    margin-bottom: 16px;
-}
-
-.simulation-panel strong {
-    color: var(--text);
-}
-
-.simulation-panel button {
-    min-width: 155px;
-    padding: 11px 18px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    font-size: 13px;
-    font-weight: 600;
-    transition: background 0.2s;
-}
-
-.simulation-panel button:first-child {
+/* ----- SIMULATION BUTTONS STYLING ----- */
+.start-button {
     background: #166534;
-    color: white;
     border-color: #15803d;
 }
-
-.simulation-panel button:first-child:hover:not(:disabled) {
+.start-button:hover:not(:disabled) {
     background: #15803d;
 }
-
-.simulation-panel button:last-child {
+.stop-button {
     background: #991b1b;
-    color: white;
     border-color: #b91c1c;
 }
-
-.simulation-panel button:last-child:hover:not(:disabled) {
+.stop-button:hover:not(:disabled) {
     background: #b91c1c;
 }
 
-.simulation-panel button:disabled {
-    background: #34445c;
-    color: #9ca3af;
-    border-color: #46546a;
-    opacity: 0.55;
-}
 
-/* =========================================
-
-  CURRENT TRACK TABLE
-
-  ========================================= */
-.table-section {
-    width: 100%;
-    overflow: hidden;
-}
-
+/* ----- TABLE STYLING ----- */
 .table-header {
     display: flex;
     justify-content: space-between;
@@ -619,11 +294,60 @@ p {
     gap: 16px;
     margin-bottom: 16px;
 }
-
 .table-header h2 {
     margin: 0;
 }
+.dashboard-panel .table-scroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    max-height: 250px;
+}
 
+.dashboard-panel table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.dashboard-panel th,
+.dashboard-panel td {
+    padding: 11px 10px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border);
+}
+.dashboard-panel th {
+    background: #30435e;
+    color: var(--text);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+.dashboard-panel td {
+    color: #dce5f2;
+}
+.dashboard-panel tbody tr:hover {
+    background: var(--panel-hover);
+}
+
+
+/* ----- SCROLLBAR AND SEARCHBAR STYLING ----- */
+.table-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #526783 #172238;
+}
+.table-scroll::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+.table-scroll::-webkit-scrollbar-thumb {
+    background: #526783;
+    border-radius: 10px;
+}
+.table-scroll::-webkit-scrollbar-track {
+    background: #172238;
+}
 .search-bar {
     width: 260px;
     max-width: 100%;
@@ -634,187 +358,113 @@ p {
     color: white;
     outline: none;
 }
-
 .search-bar:focus {
     border-color: var(--accent);
 }
-
 .search-bar::placeholder {
     color: var(--muted);
 }
 
-.table-section .table-scroll,
-.table-wrapper {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: auto;
-    max-height: 250px;
-}
 
-.track-table {
+/* ----- MAP STYLING ----- */
+.map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.live-indicator {
+    color: var(--friend);
+    font-size: 12px;
+    font-weight: 600;
+}
+/* Leaflet map */
+.current-map {
     width: 100%;
-    min-width: 1000px;
-    border-collapse: collapse;
+    height: 450px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+.current-map .leaflet-container {
+    height: 100%;
+    width: 100%;
+}
+.dashboard-panel .leaflet-container {
+    width: 100%;
+    height: 450px;
+    border-radius: 10px;
+    z-index: 0;
+}
+/* Map legend */
+.map-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 16px;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--muted);
+    font-size: 12px;
+}
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+/* Track markers */
+.custom-track-icon {
+    background: transparent;
+    border: none;
+}
+.track-marker {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px #0006;
+}
+/* Leaflet popups */
+.track-popup {
+    color: #172033;
+    min-width: 180px;
+}
+.track-popup p {
+    margin: 5px 0;
+    color: #263852;
     font-size: 12px;
 }
 
-.track-table th,
-.track-table td {
-    padding: 12px;
-    text-align: left;
-    white-space: nowrap;
-    border-bottom: 1px solid var(--border);
-}
 
-.track-table th {
-    background: #30435e;
-    color: #e2e8f0;
-    font-weight: 700;
-}
-
-.track-table td {
-    color: #dce5f2;
-}
-
-.track-table tbody tr:hover {
-    background: var(--panel-hover);
-}
-
-/* =========================================
-
-  BADGES
-
-  ========================================= */
-.identity-badge {
-    display: inline-block;
-    padding: 5px 9px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.identity-badge.friend {
-    color: #4ade80;
-    background: #14532d66;
-}
-
-.identity-badge.hostile {
-    color: #f87171;
-    background: #7f1d1d66;
-}
-
-.identity-badge.neutral {
-    color: #60a5fa;
-    background: #1e40af66;
-}
-
-.identity-badge.unknown {
-    color: #fbbf24;
-    background: #92400e66;
-}
-
-/* =========================================
-
-  SCROLLBARS
-
-  ========================================= */
-.table-wrapper,
-.correlation-scroll,
-.nearest-scroll {
-    scrollbar-width: thin;
-    scrollbar-color: #526783 #172238;
-}
-
-.table-wrapper::-webkit-scrollbar,
-.correlation-scroll::-webkit-scrollbar,
-.nearest-scroll::-webkit-scrollbar {
-    width: 7px;
-    height: 7px;
-}
-
-.table-wrapper::-webkit-scrollbar-thumb,
-.correlation-scroll::-webkit-scrollbar-thumb,
-.nearest-scroll::-webkit-scrollbar-thumb {
-    background: #526783;
-    border-radius: 10px;
-}
-
-.table-wrapper::-webkit-scrollbar-track,
-.correlation-scroll::-webkit-scrollbar-track,
-.nearest-scroll::-webkit-scrollbar-track {
-    background: #172238;
-}
-
-/* =========================================
-
-  RESPONSIVE DESIGN
-
-  ========================================= */
-@media (max-width: 1100px) {
-    .dashboard-grid {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .dashboard-left,
-    .dashboard-right {
-        width: 100%;
-    }
-
-    .nearest-panel .nearest-scroll {
-        max-height: 300px;
-    }
-}
-
+/* ------ RESPONSIVE DESIGN ----- */
 @media (max-width: 600px) {
     .app-content {
         padding: 12px;
     }
-
     .app-content-headerText {
         font-size: 23px;
     }
-
-    .dashboard-grid {
-        gap: 14px;
-    }
-
-    .dashboard-left,
-    .dashboard-right {
-        gap: 14px;
-    }
-
-    .map-section,
-    .correlation-section,
-    .table-section,
-    .total-tracks-card,
-    .identity-panel,
-    .status-panel,
-    .nearest-panel,
-    .simulation-panel {
+    .dashboard-panel {
         padding: 14px;
     }
-
     .current-map,
-    .map-section .leaflet-container {
+    .dashboard-panel .leaflet-container {
         height: 320px;
     }
-
     .header-actions {
         width: 100%;
         justify-content: space-between;
     }
-
     .search-bar {
         width: 100%;
     }
-
     .total-tracks-value {
         font-size: 34px;
-    }
-
-    .simulation-panel button {
-        min-width: 120px;
     }
 }
 
@@ -829,7 +479,6 @@ p {
     min-height: 100vh;
     background: var(--page-bg);
 }
-
 /* LEFT SIDEBAR */
 .sidebar {
     width: 240px;
@@ -844,7 +493,6 @@ p {
     border-right: 1px solid var(--border);
     z-index: 100;
 }
-
 /* MAIN DASHBOARD CONTENT */
 .main-content {
     flex: 1;
@@ -853,44 +501,28 @@ p {
     margin-left: 0;
     min-height: 100vh;
 }
-
 /* EXISTING OPERATIONAL PICTURE */
 .main-content .app-container {
     width: 100%;
     min-width: 0;
 }
-
 .main-content .app-content {
     width: 100%;
     max-width: 1800px;
     margin: 0 auto;
     padding: 24px;
 }
-
-/* PREVENT GRID OVERFLOW */
-.main-content .dashboard-grid {
-    width: 100%;
-    min-width: 0;
-}
-
-.main-content .dashboard-left,
-.main-content .dashboard-right {
-    min-width: 0;
-}
-
 /* RESPONSIVE LAYOUT */
 @media (max-width: 768px) {
     .sidebar {
         width: 180px;
         min-width: 180px;
     }
-
     .main-content {
         margin-left: 0;
         width: auto;
     }
 }
-
 @media (max-width: 600px) {
     .main-content .app-content {
         padding: 12px;
