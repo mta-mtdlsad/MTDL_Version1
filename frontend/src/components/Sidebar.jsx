@@ -11,10 +11,11 @@ export default function Sidebar() {
                      className={({isActive}) => `sidebar-link ${isActive ? "active" : ""}`}>
                 Operational Picture
             </NavLink>
-            <NavLink to="/dashboard2"
+            <NavLink to="/TrackOperations"
                      className={({isActive}) => `sidebar-link ${isActive ? "active" : ""}`}>
-                Track Operations</NavLink>
-            <NavLink to="/dashboard3"
+                Track Operations
+            </NavLink>
+            <NavLink to="/AlertsAndSourceHealth"
                      className={({isActive}) => `sidebar-link ${isActive ? "active" : ""}`}>
                 Alerts and Source Health
             </NavLink>

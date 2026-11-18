@@ -13,6 +13,6 @@ public interface AlertRepository extends CrudRepository<Alert, Long> {
 
     List<Alert> findAllByOrderByAlertTimeDescAlertIdDesc();
 
-    @Query("SELECT a FROM Alert a WHERE UPPER(a.alertSeverity) = UPPER(:severity) ORDER BY a.alertTime ASC, a.alertId ASC")
+    @Query("SELECT a FROM Alert a WHERE UPPER(a.alertSeverity) = UPPER(:severity) ORDER BY a.alertTime DESC, a.alertId ASC")
     List<Alert> selectSeverity(@Param("severity") String severity);
 }

@@ -84,7 +84,7 @@ function OperationalPicture() {
                             Operational Picture
                         </h1>
                         <p className="page-subtitle">
-                            Real-time track monitoring dashboard
+                            Real-Time Track Monitoring Dashboard
                         </p>
                     </div>
                     <div className="header-actions">

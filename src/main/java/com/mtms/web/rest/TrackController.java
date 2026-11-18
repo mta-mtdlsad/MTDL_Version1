@@ -50,14 +50,15 @@ public class TrackController {
     @GetMapping("/history")
     public ResponseEntity<?> getTrackHistory(
             @RequestParam("start") String start,
-            @RequestParam("end") String end) {
+            @RequestParam("end") String end,
+            @RequestParam(value = "trackNumber", required = false) String trackNumber) {
 
         if (start == null || start.trim().isEmpty() || end == null || end.trim().isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Start and end timestamps are required."));
         }
 
         try {
-            List<Track> historyResults = trackService.getTrackHistory(start, end);
+            List<Track> historyResults = trackService.getTrackHistory(start, end, trackNumber);
             return ResponseEntity.ok(historyResults);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", "Invalid date format: " + e.getMessage()));

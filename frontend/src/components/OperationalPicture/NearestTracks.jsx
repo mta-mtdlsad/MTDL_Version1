@@ -37,7 +37,7 @@ function NearestTracks() {
 
     return (
         <div className="dashboard-panel">
-            <div className="table-scroll" style={{maxHeight: "355px"}}>
+            <div className="dashboard-scroll" style={{maxHeight: "355px"}}>
                 <div className="table-header">
                     <h2>Nearest Sources</h2>
                 </div>

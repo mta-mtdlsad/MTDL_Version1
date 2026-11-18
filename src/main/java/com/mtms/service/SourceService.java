@@ -21,20 +21,26 @@ public class SourceService {
         this.alertService = alertService;
     }
 
-    // Atomic database-level upsert preventing race conditions under concurrent UDP traffic
+    // Fail Counter: only incremented when ValidationService conditions fail
     public void syncSourceMetrics(String sourceId, Integer sequenceNumber, String status) {
+        syncSourceMetrics(sourceId, sequenceNumber, status, 0);
+    }
+
+    // Atomic database-level upsert preventing race conditions under concurrent UDP traffic
+    public void syncSourceMetrics(String sourceId, Integer sequenceNumber, String status, int isFail) {
         if (sourceId == null || !sourceId.matches("^[A-Za-z0-9_-]{2,30}$")) {
             return;
         }
 
         int seqVal = sequenceNumber != null ? sequenceNumber : 0;
         int isAcc = "ACCEPTED".equals(status) ? 1 : 0;
-        int isRej = "REJECTED".equals(status) ? 1 : 0;
+        int isRej = ("REJECTED".equals(status) || "FAILURE".equals(status)
+                || "DUPLICATE".equals(status)) ? 1 : 0;
         int isDup = "DUPLICATE".equals(status) ? 1 : 0;
-        int isFail = "FAILURE".equals(status) ? 1 : 0;
 
         sourceRepository.syncSourceMetrics(sourceId, seqVal, isAcc, isRej, isDup, isFail);
     }
+
 
     public void evaluateSourceHealth() {
         try {

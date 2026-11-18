@@ -1,9 +1,11 @@
 package com.mtms.web.rest;
 
 import com.mtms.constant.MTMSConstants;
+import com.mtms.domain.Alert;
 import com.mtms.domain.Track;
 import com.mtms.service.AnalyticsService;
 import com.mtms.service.TrackService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -58,10 +60,26 @@ public class ReportController {
         return stats;
     }
 
+    @GetMapping("/analytics/overall")
+    public Map<String, Object> getOverallAnalytics() {
+        return analyticsService.getOverallStatistics();
+    }
+
+
     @GetMapping("/reports/alerts/summary")
     public Map<String, Object> getAlertSummaryReport() {
         return analyticsService.getAlertSummary();
     }
+
+    @GetMapping("/reports/alerts/by-severity")
+    public ResponseEntity<List<Alert>> getAlertsBySeverity(@RequestParam("severity") String severity) {
+        if (severity == null || severity.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        List<Alert> alerts = analyticsService.getAlertsBySeverity(severity.trim().toUpperCase());
+        return ResponseEntity.ok(alerts);
+    }
+
 
     @GetMapping("/tracks/latest")
     public List<Track> getLatestTracks() {

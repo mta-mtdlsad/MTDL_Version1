@@ -50,6 +50,12 @@ public interface TrackRepository extends CrudRepository<Track, Long> {
     // Fetches all tracks stored in the database ordered for replay data
     List<Track> findAllByOrderByCreatedTimeAscTrackIdAsc();
 
+    // Selects tracks within a specific time window and track number
+    @Query("SELECT t FROM Track t WHERE (:trackNumber IS NULL OR t.trackNumber = :trackNumber) AND t.createdTime BETWEEN :start AND :end ORDER BY t.createdTime ASC, t.trackId ASC")
+    List<Track> selectByTrackNumberAndTimeWindow(@Param("start") LocalDateTime start,
+                                                 @Param("end") LocalDateTime end,
+                                                 @Param("trackNumber") String trackNumber);
+
     // Selects tracks within a specific time window
     @Query("SELECT t FROM Track t WHERE t.createdTime BETWEEN :start AND :end ORDER BY t.createdTime ASC, t.trackId ASC")
     List<Track> selectByTimeWindow(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
@@ -59,9 +65,13 @@ public interface TrackRepository extends CrudRepository<Track, Long> {
     List<Track> selectByStatus(@Param("status") String status);
 
     // Finds tracks by combined dynamic criteria (identity, status, min speed)
-    @Query("SELECT t FROM Track t WHERE (:identity IS NULL OR UPPER(t.identityType) = UPPER(:identity)) " +
-            "AND (:status IS NULL OR UPPER(t.trackStatus) = UPPER(:status)) " +
-            "AND (:minSpeed IS NULL OR t.speed >= :minSpeed) " +
+//    @Query("SELECT t FROM Track t WHERE (:identity IS NULL OR UPPER(t.identityType) = UPPER(:identity)) " +
+//            "AND (:status IS NULL OR UPPER(t.trackStatus) = UPPER(:status)) " +
+//            "AND (:minSpeed IS NULL OR t.speed >= :minSpeed) " +
+//            "ORDER BY t.createdTime DESC, t.trackId DESC")
+    @Query("SELECT t FROM Track t WHERE UPPER(t.identityType) = UPPER(COALESCE(:identity, t.identityType)) " +
+            "AND UPPER(t.trackStatus) = UPPER(COALESCE(:status, t.trackStatus)) " +
+            "AND t.speed >= COALESCE(:minSpeed, t.speed) " +
             "ORDER BY t.createdTime DESC, t.trackId DESC")
     List<Track> findTracksByCombinedCriteria(
             @Param("identity") String identity,

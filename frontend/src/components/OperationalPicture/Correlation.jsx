@@ -34,7 +34,7 @@ function Correlation() {
 
     return (
         <section className="dashboard-panel">
-            <div className="table-scroll">
+            <div className="dashboard-scroll">
                 {/* Render the matching UI, or a fallback prompt if nothing is selected */}
                 <div className="table-header">
                     <h2>Select Correlation Group</h2>

@@ -297,7 +297,7 @@ select:focus {
 .table-header h2 {
     margin: 0;
 }
-.dashboard-panel .table-scroll {
+.dashboard-panel .dashboard-scroll {
     width: 100%;
     max-width: 100%;
     overflow-x: auto;
@@ -333,19 +333,19 @@ select:focus {
 
 
 /* ----- SCROLLBAR AND SEARCHBAR STYLING ----- */
-.table-scroll {
+.dashboard-scroll {
     scrollbar-width: thin;
     scrollbar-color: #526783 #172238;
 }
-.table-scroll::-webkit-scrollbar {
+.dashboard-scroll::-webkit-scrollbar {
     width: 7px;
     height: 7px;
 }
-.table-scroll::-webkit-scrollbar-thumb {
+.dashboard-scroll::-webkit-scrollbar-thumb {
     background: #526783;
     border-radius: 10px;
 }
-.table-scroll::-webkit-scrollbar-track {
+.dashboard-scroll::-webkit-scrollbar-track {
     background: #172238;
 }
 .search-bar {

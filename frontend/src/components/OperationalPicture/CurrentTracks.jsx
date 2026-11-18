@@ -17,7 +17,7 @@ function CurrentTracks({filteredTracks = []}) {
         );
     return (
         <section className="dashboard-panel">
-            <div className="table-scroll">
+            <div className="dashboard-scroll">
                 <div className="table-header">
                     <h2>Current Track List</h2>
                 </div>
