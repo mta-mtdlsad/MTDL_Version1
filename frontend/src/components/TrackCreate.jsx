@@ -2,7 +2,6 @@ import { useState, useRef } from "react";
 import "../App.css";
 import Card from './Card.jsx'
 
-
 export default function TrackCreate() {
 
     // Store form values & validation errors

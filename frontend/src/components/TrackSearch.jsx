@@ -61,8 +61,10 @@ export default function TrackSearch() {
                 <div>
                     <br/>
                     <h3>Tracks Results</h3>
-                    <div className="track-table-container">
-                        <table>
+                    <div className="table-scroll">
+
+                        <table className="track-table">
+
                             <thead>
                             <tr>
                                 <th>Source ID</th>
@@ -94,9 +96,13 @@ export default function TrackSearch() {
                                     <td>{track.receiveTime}</td>
                                     <td>{track.pathId}</td>
                                 </tr>
+
                             ))}
+
                             </tbody>
+
                         </table>
+
                     </div>
                 </div>
             )}
