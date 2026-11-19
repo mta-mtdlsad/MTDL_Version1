@@ -1,0 +1,138 @@
+import Card from './Card.jsx'
+import {useState } from 'react'
+import TrackReplay from "./TrackReplay.jsx";
+import { platformTypeLabel } from '../../utils/trackSymbology.js';
+
+export default function TrackHistory() {
+
+    const [endTime, setEndTime] = useState("")
+    const [startTime, setStartTime] = useState("")
+    const [trackNumber, setTrackNumber] = useState("")
+    const [tracks, setTracks] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [loaded, setLoaded] = useState(false)
+    const [error, setError] = useState(null)
+
+    // method to fetch api request
+    const handleGetAllHistory = async () => {
+
+        setLoading(true)
+        setError(null)
+        setTracks([])
+
+        try {
+
+            const params = new URLSearchParams({start: startTime, end: endTime, trackNumber:trackNumber})
+            const response = await fetch(`/api/tracks/history?${params.toString()}`)
+
+            // const response = await fetch('/api/tracks/history')
+
+            if (!response.ok) {
+                throw new Error(`HTTP Error: ${response.status}`)
+            }
+
+            const data = await response.json()
+            setTracks(data)
+            setLoaded(true)
+
+        } catch (error) {setError(error.message)
+
+        }
+
+        finally {
+            setLoading(false)
+        }
+    }
+
+    return (
+
+        <Card title="Track History and Replay">
+            {/*user inputs - Start Time*/}
+            <label>Track Number:&ensp;
+                <input type="text"
+                       placeholder={"e.g.TRK10001"}
+                       value={trackNumber}
+                       onChange={(e) => setTrackNumber(e.target.value)}
+                />
+            </label>
+            <label>Enter Start Time:&ensp;
+                <input
+                    type="datetime-local"
+                    value={startTime}
+                    onChange={event => setStartTime(event.target.value)}
+                />
+            </label>
+            {/*user inputs - End Time*/}
+            <label>Enter End Time:&ensp;
+                <input
+                    type="datetime-local"
+                    value={endTime}
+                    onChange={event => setEndTime(event.target.value)}
+                />
+            </label>
+
+            {/*button function using method onclick + disappears once its done loading */}
+
+            <button onClick={handleGetAllHistory} disabled={loading || !startTime || !endTime }>
+                {loading ? 'Loading...' : 'Get Track History'}
+            </button>
+
+            {/*If in case of error or no tracks found */}
+            {error && <p className="error">{error}</p>}
+
+            {loaded && !error && tracks.length === 0 && (
+                <p><br/>No tracks found</p>)}
+
+            {tracks.length > 0 && (
+                <div>
+                    <br/>
+                    <h3>Tracks Results</h3>
+                    <div className="table-scroll">
+                        <table className="track-table">
+
+                            <thead>
+                            <tr>
+                                <th>Source ID</th>
+                                <th>Sequence Number</th>
+                                <th>Track Number</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                                <th>Speed</th>
+                                <th>Platform Type</th>
+                                <th>Identity</th>
+                                <th>Status</th>
+                                <th>Created Time</th>
+                                <th>Received Time</th>
+                                <th>Path ID</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {tracks.map(track => (
+                                <tr key={track.trackId}>
+                                    <td> {track.sourceId}</td>
+                                    <td> {track.sequenceNumber}</td>
+                                    <td> {track.trackNumber}</td>
+                                    <td> {track.latitude}</td>
+                                    <td> {track.longitude}</td>
+                                    <td> {track.speed}</td>
+                                    <td>{platformTypeLabel(track.platformType)}</td>
+                                    <td>{track.identityType}</td>
+                                    <td>{track.trackStatus}</td>
+                                    <td>{track.createdTime}</td>
+                                    <td>{track.receiveTime}</td>
+                                    <td>{track.pathId}</td>
+                                </tr>
+
+                            ))}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            )}
+        </Card>
+    )
+}

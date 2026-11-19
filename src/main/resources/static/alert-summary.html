@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Alert Summary & Metrics</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; margin-bottom: 30px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; width: 40%; }
+    </style>
+</head>
+<body>
+<h1>System Alert Summary Dashboard</h1>
+<hr>
+
+<div id="summaryContainer">Loading alert summary metrics...</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', function() {
+        // Updated endpoint matching ReportController mapping
+        fetch('api/reports/alerts/summary')
+            .then(response => response.json())
+            .then(data => renderSummary(data))
+            .catch(error => {
+                document.getElementById('summaryContainer').innerHTML = `<p style="color:red;">Error loading alert summary: ${error}</p>`;
+            });
+    });
+
+    function renderSummary(summary) {
+        const container = document.getElementById('summaryContainer');
+        if (!summary) {
+            container.innerHTML = '<p>No summary metrics available.</p>';
+            return;
+        }
+
+        let html = `
+            <h3>General Metric</h3>
+            <table>
+                <tr>
+                    <th>Metric Description</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td>Total Recorded Alerts</td>
+                    <td>${summary.totalAlerts ?? 0}</td>
+                </tr>
+            </table>
+
+            <h3>Severity Breakdown</h3>
+            <table>
+                <tr>
+                    <th>Severity Level</th>
+                    <th>Count</th>
+                </tr>`;
+
+        const severities = summary.severitySummary || {};
+        for (const [severity, count] of Object.entries(severities)) {
+            html += `
+                <tr>
+                    <td>${severity}</td>
+                    <td>${count}</td>
+                </tr>`;
+        }
+
+        html += `</table>
+
+            <h3>Event Type Breakdown</h3>
+            <table>
+                <tr>
+                    <th>Event Type</th>
+                    <th>Count</th>
+                </tr>`;
+
+        const eventTypes = summary.eventTypeSummary || {};
+        if (Object.keys(eventTypes).length === 0) {
+            html += `<tr><td colspan="2">No event types recorded.</td></tr>`;
+        } else {
+            for (const [eventType, count] of Object.entries(eventTypes)) {
+                html += `
+                    <tr>
+                        <td>${eventType}</td>
+                        <td>${count}</td>
+                    </tr>`;
+            }
+        }
+
+        html += `</table>`;
+        container.innerHTML = html;
+    }
+</script>
+
+<hr>
+<p><a href="index.html">Return Home</a></p>
+</body>
+</html>

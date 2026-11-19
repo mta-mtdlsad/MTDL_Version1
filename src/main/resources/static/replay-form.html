@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Historical Track Replay</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+<h1>Historical Time-Window Replay</h1>
+<hr>
+<form id="replayForm">
+    <p>
+        <label for="start">Start Date and Time:</label><br>
+        <input type="datetime-local" id="start" name="start" required>
+    </p>
+    <p>
+        <label for="end">End Date and Time:</label><br>
+        <input type="datetime-local" id="end" name="end" required>
+    </p>
+    <p>
+        <label for="speed">Replay Playback Delay Speed Choice:</label><br>
+        <select id="speed" name="speed" required>
+            <option value="">-- Select Playback Delay Interval --</option>
+            <option value="2000">HALF Speed (2000 ms delay)</option>
+            <option value="1000">NORMAL Speed (1000 ms delay)</option>
+            <option value="500">DOUBLE Speed (500 ms delay)</option>
+        </select>
+    </p>
+    <p>
+        <button type="submit">Initialize History Playback</button>
+    </p>
+</form>
+
+<hr>
+<h2>Timeline Replay Results Table</h2>
+<div id="tableContainer">Select a time window above to load history records.</div>
+
+<script>
+    document.getElementById('replayForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const start = document.getElementById('start').value;
+        const end = document.getElementById('end').value;
+
+        const params = new URLSearchParams();
+        if (start) params.append('start', start);
+        if (end) params.append('end', end);
+
+        fetch(`api/tracks/history?${params.toString()}`)
+            .then(response => response.json())
+            .then(data => renderTable(data))
+            .catch(error => {
+                document.getElementById('tableContainer').innerHTML = `<p style="color:red;">Error loading timeline history: ${error}</p>`;
+            });
+    });
+
+    function renderTable(tracks) {
+        const container = document.getElementById('tableContainer');
+        if (!tracks || tracks.length === 0) {
+            container.innerHTML = '<p>No selected-window records available within the chosen time window parameters.</p>';
+            return;
+        }
+
+        let html = `<table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Source ID</th>
+                    <th>Sequence Number</th>
+                    <th>Path ID</th>
+                    <th>Track Number</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Speed</th>
+                    <th>Identity</th>
+                    <th>Status</th>
+                    <th>Created Time</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        tracks.forEach(t => {
+            html += `<tr>
+                <td>${t.trackId}</td>
+                <td>${t.sourceId || 'LEGACY'}</td>
+                <td>${t.sequenceNumber ?? 'N/A'}</td>
+                <td>${t.pathId ?? '-'}</td>
+                <td>${t.trackNumber || ''}</td>
+                <td>${t.latitude}</td>
+                <td>${t.longitude}</td>
+                <td>${t.speed}</td>
+                <td>${t.identityType || ''}</td>
+                <td>${t.trackStatus || ''}</td>
+                <td>${t.createdTime || ''}</td>
+            </tr>`;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+</script>
+
+<hr>
+<p><a href="index.html">Return Home</a></p>
+</body>
+</html>

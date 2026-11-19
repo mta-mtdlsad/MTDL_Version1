@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Filter Tracks</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+<h1>Filter Tracks by Combined Conditions</h1>
+<hr>
+
+<form id="filterForm">
+    <p>
+        <label for="category">Identity Classification Type:</label><br>
+        <select id="category" name="category">
+            <option value="">-- All Identities (No Filter) --</option>
+            <option value="FRIEND">FRIEND</option>
+            <option value="HOSTILE">HOSTILE</option>
+            <option value="NEUTRAL">NEUTRAL</option>
+            <option value="UNKNOWN">UNKNOWN</option>
+        </select>
+    </p>
+    <p>
+        <label for="status">Filter by Track Operational Status:</label><br>
+        <select id="status" name="status">
+            <option value="">-- All Statuses (No Filter) --</option>
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="INACTIVE">INACTIVE</option>
+        </select>
+    </p>
+    <p>
+        <label for="minimumSpeed">Filter by Minimum Speed Threshold:</label><br>
+        <input type="number" id="minimumSpeed" name="minimumSpeed" step="any" placeholder="e.g. 700.00">
+    </p>
+    <p>
+        <button type="submit">Apply Combined Filters</button>
+    </p>
+</form>
+
+<hr>
+<h2>Filtered Results Table</h2>
+<div id="tableContainer">Submit filter parameters above to populate track results.</div>
+
+<script>
+    document.getElementById('filterForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const category = document.getElementById('category').value;
+        const status = document.getElementById('status').value;
+        const minSpeed = document.getElementById('minimumSpeed').value;
+
+        const params = new URLSearchParams();
+        if (category) params.append('category', category);
+        if (status) params.append('status', status);
+        if (minSpeed) params.append('minimumSpeed', minSpeed);
+
+        fetch(`api/tracks/filter?${params.toString()}`)
+            .then(response => response.json())
+            .then(data => renderTable(data))
+            .catch(error => {
+                document.getElementById('tableContainer').innerHTML = `<p style="color:red;">Error loading filtered tracks: ${error}</p>`;
+            });
+    });
+
+    function renderTable(tracks) {
+        const container = document.getElementById('tableContainer');
+        if (!tracks || tracks.length === 0) {
+            container.innerHTML = '<p>No Tracks available matching selection criteria.</p>';
+            return;
+        }
+
+        let html = `<table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Source ID</th>
+                    <th>Sequence Number</th>
+                    <th>Path ID</th>
+                    <th>Track Number</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Speed</th>
+                    <th>Identity</th>
+                    <th>Status</th>
+                    <th>Created Time</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        tracks.forEach(t => {
+            html += `<tr>
+                <td>${t.trackId}</td>
+                <td>${t.sourceId || 'LEGACY'}</td>
+                <td>${t.sequenceNumber ?? 'N/A'}</td>
+                <td>${t.pathId ?? '-'}</td>
+                <td>${t.trackNumber || ''}</td>
+                <td>${t.latitude}</td>
+                <td>${t.longitude}</td>
+                <td>${t.speed}</td>
+                <td>${t.identityType || ''}</td>
+                <td>${t.trackStatus || ''}</td>
+                <td>${t.createdTime || ''}</td>
+            </tr>`;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+</script>
+
+<hr>
+<p><a href="index.html">Return Home</a></p>
+</body>
+</html>
