@@ -179,12 +179,15 @@ public class TrackSimulatorV2 extends SimulatorV2{
             identity = "UNKNOWN";
 
 
+        //Manual correlation
         GeoPath path = allPaths.get(selected_track-1);
+        if(selected_track == 2) path = allPaths.get(selected_track-2);
         LatLonPoint point = path.getPoints().get(totalSent / (total_sources * tracks_per_source));
         String trackType = path.getPathType();
         double latitude = point.getLat();
         double longitude = point.getLon();
         double speed = 300.0 + random.nextInt(1500);
+        if(selected_track == 1 || selected_track == 2) speed = 500.0;
 
         // Timestamp of the simulated observation.
         String observationTime = LocalDateTime.now().format(TIME_FORMAT);

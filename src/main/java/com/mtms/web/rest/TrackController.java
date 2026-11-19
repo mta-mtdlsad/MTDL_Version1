@@ -152,22 +152,6 @@ public class TrackController {
         };
     }
 
-    @GetMapping(value = "/search", params = "!track_number")
-    public ModelAndView showSearchForm(){
-        return new ModelAndView("forward:/search-form.html");
-    }
-/*
-    @GetMapping(value = "/history", params = "!search")
-    public ModelAndView showHistoryForm(){
-        return new ModelAndView("forward:/search-trackNo-form.html");
-    }*/
-
-    @GetMapping(value = "/maintenance")
-    public ModelAndView showDeleteForm(){
-        return new ModelAndView("forward:/delete-form.html");
-    }
-
-
     @GetMapping("/latest")
     public List<Track> getLatestTracks() {
         return trackService.getLatestTracksView();

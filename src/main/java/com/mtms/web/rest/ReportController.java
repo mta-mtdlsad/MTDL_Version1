@@ -4,8 +4,10 @@ import com.mtms.constant.MTMSConstants;
 import com.mtms.model.Track;
 import com.mtms.service.AlertService;
 import com.mtms.service.TrackService;
+import com.mtms.util.FilterParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,18 +43,20 @@ public class ReportController {
         if(tracks != null) return trackService.correlateTrack(tracks.get(0), null);
         else return tracks;
     }
-
+*/
     // Returns any correlated tracks
     @RequestMapping("/analytics/correlations")
     public Map<Track, List<Track>> getCorrelatedTracks() {
         return trackService.correlateTracks();
-    }*/
+    }
 
+/*
 
     @GetMapping("/analytics/correlations")
     public List<Map<String, Object>> getCorrelations() {
         return trackService.getCorrelatedTrackGroups();
     }
+*/
 
 
     @GetMapping("/statistics")

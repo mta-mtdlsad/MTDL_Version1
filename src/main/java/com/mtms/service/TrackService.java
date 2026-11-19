@@ -126,27 +126,19 @@ public class TrackService {
         return track_repo.findAll(spec, sort);
     }
 
-    // Returns any correlated tracks without repeating
-    // (if A is correlated with B, no need to return that B is correlated with A)
+    // Returns any correlated tracks
     public Map<Track, List<Track>> correlateTracks() {
         FilterParameters filterParams = new FilterParameters();
         filterParams.setStatus("ACTIVE");
         List<Track> allActiveTracks = filterTracks(filterParams);
         Map<Track, List<Track>> correlationMap = new HashMap<>();
-        List<Track> updatedActiveTracks = new ArrayList<>(allActiveTracks);
         List<Track> listOfTracks;
         for (Track track : allActiveTracks) {
-            if (!updatedActiveTracks.contains(track)) continue;
-            listOfTracks = correlateTrack(track, updatedActiveTracks);
+            listOfTracks = correlateTrack(track, allActiveTracks);
             if (!listOfTracks.isEmpty()) {
+                listOfTracks.add(track);
                 correlationMap.put(track, listOfTracks);
-                // Maybe should rethink, if both A and B are removed
-                // and C is correlated with B only, it will not show
-                for (Track correlatedTrack : listOfTracks)
-                    updatedActiveTracks.remove(correlatedTrack);
             }
-            updatedActiveTracks.remove(track);
-            if (updatedActiveTracks.isEmpty()) break;
         }
         return correlationMap;
     }
