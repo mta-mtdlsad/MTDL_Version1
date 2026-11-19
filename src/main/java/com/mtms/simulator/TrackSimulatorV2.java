@@ -21,7 +21,7 @@ public class TrackSimulatorV2 extends SimulatorV2{
     protected List<String> scenarios;
     protected Map<String, Long> sourcesAndSequences;
     protected Map<String, List<GeoPath>> sourcesAndPaths;
-    List<GeoPath> allpaths;
+    List<GeoPath> allPaths;
     protected String[] sources;
 
     public TrackSimulatorV2() {
@@ -70,7 +70,7 @@ public class TrackSimulatorV2 extends SimulatorV2{
         double[] lat = {23.5, 25.5, 24.0};
         double[] lon = {54.5, 54.0, 54.0};
         String[] type = {"LAND", "SEA", "AIR"};
-        allpaths = new ArrayList<>();
+        allPaths = new ArrayList<>();
         int numOfPaths = 0;
 
         for(int i = 0; i < lat.length; i++) {
@@ -87,9 +87,9 @@ public class TrackSimulatorV2 extends SimulatorV2{
                     type[i]
             );
             //sourcesAndPaths.put(sources[i], paths);
-            allpaths.addAll(paths);
+            allPaths.addAll(paths);
         }
-        Collections.shuffle(allpaths);
+        Collections.shuffle(allPaths);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class TrackSimulatorV2 extends SimulatorV2{
 
         int selected_track = (totalSent % (total_sources * tracks_per_source)) + 1;
 
-        String trackNumber = String.format("TRK%03d", selected_track);
+        String trackNumber = String.format("TRK%05d", selected_track);
 
         String status;
         String identity;
@@ -179,7 +179,7 @@ public class TrackSimulatorV2 extends SimulatorV2{
             identity = "UNKNOWN";
 
 
-        GeoPath path = allpaths.get(selected_track);
+        GeoPath path = allPaths.get(selected_track-1);
         LatLonPoint point = path.getPoints().get(totalSent / (total_sources * tracks_per_source));
         String trackType = path.getPathType();
         double latitude = point.getLat();

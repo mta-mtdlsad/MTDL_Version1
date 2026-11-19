@@ -28,13 +28,13 @@ function CurrentTracks({filteredTracks = []}) {
                         <th>Source ID</th>
                         <th>Sequence</th>
                         <th>Track Number</th>
+                        <th>Track Type</th>
                         <th>Latitude</th>
                         <th>Longitude</th>
                         <th>Speed</th>
                         <th>Identity Type</th>
                         <th>Status</th>
                         <th>Created Time</th>
-                        <th>Recieved Time</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -44,6 +44,7 @@ function CurrentTracks({filteredTracks = []}) {
                             <td>{track.sourceId}</td>
                             <td>{track.sequenceNumber}</td>
                             <td>{track.trackNumber}</td>
+                            <td>{track.trackType ?? "N/A"}</td>
                             <td>{track.latitude}</td>
                             <td>{track.longitude}</td>
                             <td>{track.speed}</td>
@@ -76,7 +77,6 @@ function CurrentTracks({filteredTracks = []}) {
                                 </span>
                             </td>
                             <td>{track.createdTime}</td>
-                            <td>{track.receiveTime}</td>
                         </tr>
                     ))}
                     </tbody>

@@ -1,6 +1,7 @@
 import Card from './Card.jsx'
-import {useState } from 'react'
+import React, {useState } from 'react'
 import TrackReplay from "./TrackReplay.jsx";
+import {identityColors} from "../OperationalPicture/CurrentMap.jsx";
 
 export default function TrackHistory() {
 
@@ -87,44 +88,65 @@ export default function TrackHistory() {
                     <br/>
                     <h3>Tracks Results</h3>
                     <div className="table-scroll">
-                        <table className="track-table">
-
+                        <table>
                             <thead>
                             <tr>
+                                <th>Track ID</th>
                                 <th>Source ID</th>
-                                <th>Sequence Number</th>
+                                <th>Sequence</th>
                                 <th>Track Number</th>
+                                <th>Track Type</th>
                                 <th>Latitude</th>
                                 <th>Longitude</th>
                                 <th>Speed</th>
-                                <th>Identity</th>
+                                <th>Identity Type</th>
                                 <th>Status</th>
                                 <th>Created Time</th>
-                                <th>Received Time</th>
-                                <th>Path ID</th>
                             </tr>
                             </thead>
-
                             <tbody>
                             {tracks.map(track => (
                                 <tr key={track.trackId}>
-                                    <td> {track.sourceId}</td>
-                                    <td> {track.sequenceNumber}</td>
-                                    <td> {track.trackNumber}</td>
-                                    <td> {track.latitude}</td>
-                                    <td> {track.longitude}</td>
-                                    <td> {track.speed}</td>
-                                    <td>{track.identityType}</td>
-                                    <td>{track.trackStatus}</td>
+                                    <td>{track.trackId}</td>
+                                    <td>{track.sourceId}</td>
+                                    <td>{track.sequenceNumber}</td>
+                                    <td>{track.trackNumber}</td>
+                                    <td>{track.trackType ?? "N/A"}</td>
+                                    <td>{track.latitude}</td>
+                                    <td>{track.longitude}</td>
+                                    <td>{track.speed}</td>
+                                    {/* IDENTITY */}
+                                    <td>
+                                <span
+                                    className="identity-badge"
+                                    style={{
+                                        color:
+                                            identityColors[track.identityType],
+                                        backgroundColor:
+                                            identityColors[track.identityType] +
+                                            '22'
+                                    }}
+                                >
+                                    {track.identityType}
+                                </span>
+                                    </td>
+                                    {/* STATUS */}
+                                    <td>
+                                <span
+                                    className={
+                                        'track-status ' +
+                                        (track.trackStatus === 'ACTIVE'
+                                            ? 'active'
+                                            : 'inactive')
+                                    }
+                                >
+                                    {track.trackStatus}
+                                </span>
+                                    </td>
                                     <td>{track.createdTime}</td>
-                                    <td>{track.receiveTime}</td>
-                                    <td>{track.pathId}</td>
                                 </tr>
-
                             ))}
-
                             </tbody>
-
                         </table>
 
                     </div>

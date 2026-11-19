@@ -1,5 +1,5 @@
 import Card from './Card.jsx'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {identityColors} from "../OperationalPicture/CurrentMap.jsx";
 
 export default function TrackList() {
@@ -61,32 +61,33 @@ export default function TrackList() {
 
                 <div className="table-scroll" style={{maxHeight: "305px"}}>
 
-                    <table className="track-table">
-
+                    <table>
                         <thead>
                         <tr>
+                            <th>Track ID</th>
                             <th>Source ID</th>
-                            <th>Sequence Number</th>
+                            <th>Sequence</th>
                             <th>Track Number</th>
+                            <th>Track Type</th>
                             <th>Latitude</th>
                             <th>Longitude</th>
                             <th>Speed</th>
-                            <th>Identity</th>
+                            <th>Identity Type</th>
                             <th>Status</th>
                             <th>Created Time</th>
-                            <th>Received Time</th>
                         </tr>
                         </thead>
-
                         <tbody>
                         {tracks.map(track => (
                             <tr key={track.trackId}>
-                                <td> {track.sourceId}</td>
-                                <td> {track.sequenceNumber}</td>
-                                <td> {track.trackNumber}</td>
-                                <td> {track.latitude}</td>
-                                <td> {track.longitude}</td>
-                                <td> {track.speed}</td>
+                                <td>{track.trackId}</td>
+                                <td>{track.sourceId}</td>
+                                <td>{track.sequenceNumber}</td>
+                                <td>{track.trackNumber}</td>
+                                <td>{track.trackType ?? "N/A"}</td>
+                                <td>{track.latitude}</td>
+                                <td>{track.longitude}</td>
+                                <td>{track.speed}</td>
                                 {/* IDENTITY */}
                                 <td>
                                 <span
@@ -116,13 +117,9 @@ export default function TrackList() {
                                 </span>
                                 </td>
                                 <td>{track.createdTime}</td>
-                                <td>{track.receiveTime}</td>
                             </tr>
-
                         ))}
-
                         </tbody>
-
                     </table>
 
                 </div>
