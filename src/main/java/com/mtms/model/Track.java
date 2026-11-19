@@ -16,6 +16,7 @@ public class Track{
     String sourceId;
     int sequenceNumber;
     String trackNumber;
+    String trackType;
     double latitude;
     double longitude;
     double speed;
@@ -67,6 +68,19 @@ public class Track{
         this.trackStatus = trackStatus;
         this.createdTime = createdTime;
         this.recievedTime = LocalDateTime.now();
+    }
+
+    public Track(String sourceId, int sequenceNumber, String trackNumber, String trackType, double latitude, double longitude, double speed, String identityType, String trackStatus, LocalDateTime createdTime) {
+        this.sourceId = sourceId;
+        this.sequenceNumber = sequenceNumber;
+        this.trackNumber = trackNumber;
+        this.trackType = trackType;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.speed = speed;
+        this.identityType = identityType;
+        this.trackStatus = trackStatus;
+        this.createdTime = createdTime;
     }
 
     public int getTrackId() {
@@ -155,6 +169,14 @@ public class Track{
 
     public void setRecievedTime(LocalDateTime recievedTime) {
         this.recievedTime = recievedTime;
+    }
+
+    public String getTrackType() {
+        return trackType;
+    }
+
+    public void setTrackType(String trackType) {
+        this.trackType = trackType;
     }
 
     @Override

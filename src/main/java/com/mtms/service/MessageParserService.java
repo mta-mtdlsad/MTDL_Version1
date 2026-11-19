@@ -25,7 +25,7 @@ public class MessageParserService {
         // Extract track number if available.
         String trackNumber = fields.length > 2 ? fields[2].trim() : null;
         // Check number of fields.
-        if (fields.length != 9) {
+        if (fields.length != 10) {
             rejectMalformed(trackNumber, "Malformed message: 9 fields required, received " + fields.length);
         }
         // Check missing fields.
@@ -41,13 +41,14 @@ public class MessageParserService {
             String sourceId = fields[0];
             int sequence = Integer.parseInt(fields[1]);
             trackNumber = fields[2];
-            double latitude = Double.parseDouble(fields[3]);
-            double longitude = Double.parseDouble(fields[4]);
-            double speed = Double.parseDouble(fields[5]);
-            String identity = fields[6];
-            String status = fields[7];
-            LocalDateTime createdTime = LocalDateTime.parse(fields[8]);
-            track = new Track(sourceId, sequence, trackNumber, latitude, longitude, speed, identity, status, createdTime);
+            String trackType = fields[3];
+            double latitude = Double.parseDouble(fields[4]);
+            double longitude = Double.parseDouble(fields[5]);
+            double speed = Double.parseDouble(fields[6]);
+            String identity = fields[7];
+            String status = fields[8];
+            LocalDateTime createdTime = LocalDateTime.parse(fields[9]);
+            track = new Track(sourceId, sequence, trackNumber, trackType, latitude, longitude, speed, identity, status, createdTime);
 
         } catch (NumberFormatException e) {
             rejectMalformed(trackNumber, "Malformed message: Invalid number format");

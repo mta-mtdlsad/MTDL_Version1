@@ -13,9 +13,9 @@ public class MTMSApplication {
         // Start Spring Boot
         ConfigurableApplicationContext context = SpringApplication.run(MTMSApplication.class, args);
         // Get the simulator from Spring
-        TrackSimulator simulator = context.getBean(TrackSimulator.class);
+        //TrackSimulator simulator = context.getBean(TrackSimulator.class);
         // Start the simulator
-        simulator.initializeSimulator("MIXED", 1, 12345L, new int[]{3, 2, 20, 100});
+        //simulator.initializeSimulator("MIXED", 1, 12345L, new int[]{3, 2, 20, 100});
 
     }
 }
