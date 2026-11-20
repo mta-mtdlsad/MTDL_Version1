@@ -1,6 +1,7 @@
 package com.mtms.simulator;
 
 import com.mtms.network.UDPSender;
+import com.mtms.network.UDPStartupListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Component
 public class Simulator {
+    @Autowired
+    protected UDPStartupListener startupListener;
     @Autowired
     protected UDPSender sender;
     // Controls whether the simulation is running.

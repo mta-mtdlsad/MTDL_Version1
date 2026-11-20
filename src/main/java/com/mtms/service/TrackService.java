@@ -126,27 +126,19 @@ public class TrackService {
         return track_repo.findAll(spec, sort);
     }
 
-    // Returns any correlated tracks without repeating
-    // (if A is correlated with B, no need to return that B is correlated with A)
+    // Returns any correlated tracks
     public Map<Track, List<Track>> correlateTracks() {
         FilterParameters filterParams = new FilterParameters();
         filterParams.setStatus("ACTIVE");
         List<Track> allActiveTracks = filterTracks(filterParams);
         Map<Track, List<Track>> correlationMap = new HashMap<>();
-        List<Track> updatedActiveTracks = new ArrayList<>(allActiveTracks);
         List<Track> listOfTracks;
         for (Track track : allActiveTracks) {
-            if (!updatedActiveTracks.contains(track)) continue;
-            listOfTracks = correlateTrack(track, updatedActiveTracks);
+            listOfTracks = correlateTrack(track, allActiveTracks);
             if (!listOfTracks.isEmpty()) {
+                listOfTracks.add(track);
                 correlationMap.put(track, listOfTracks);
-                // Maybe should rethink, if both A and B are removed
-                // and C is correlated with B only, it will not show
-                for (Track correlatedTrack : listOfTracks)
-                    updatedActiveTracks.remove(correlatedTrack);
             }
-            updatedActiveTracks.remove(track);
-            if (updatedActiveTracks.isEmpty()) break;
         }
         return correlationMap;
     }
@@ -215,124 +207,13 @@ public class TrackService {
         return LocalDateTime.parse(normalized);
     }
 
-    public List<Map<String, Object>> getCorrelatedTrackGroups() {
-        List<Object[]> pairs = track_repo.findCorrelatedTrackPairsRaw();
-        if (pairs.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        Map<Long, Map<String, Object>> trackDetails = new LinkedHashMap<>();
-        Map<Long, Set<Long>> adjacency = new LinkedHashMap<>();
-        Map<Long, Double> minDistanceByTrack = new HashMap<>();
-        Map<Long, Double> minTimeDiffByTrack = new HashMap<>();
-
-        for (Object[] row : pairs) {
-            Long id1 = ((Number) row[0]).longValue();
-            Long id2 = ((Number) row[10]).longValue();
-            double distKm = ((Number) row[20]).doubleValue();
-            double timeDiffSec = ((Number) row[21]).doubleValue();
-
-            trackDetails.putIfAbsent(id1, extractTrackMap(row, 0));
-            trackDetails.putIfAbsent(id2, extractTrackMap(row, 10));
-
-            adjacency.computeIfAbsent(id1, k -> new LinkedHashSet<>()).add(id2);
-            adjacency.computeIfAbsent(id2, k -> new LinkedHashSet<>()).add(id1);
-
-            minDistanceByTrack.merge(id1, distKm, Math::min);
-            minDistanceByTrack.merge(id2, distKm, Math::min);
-            minTimeDiffByTrack.merge(id1, timeDiffSec, Math::min);
-            minTimeDiffByTrack.merge(id2, timeDiffSec, Math::min);
-        }
-
-        List<Map<String, Object>> groups = new ArrayList<>();
-        Set<Long> visited = new HashSet<>();
-        int groupNumber = 1;
-
-        for (Long startId : trackDetails.keySet()) {
-            if (visited.contains(startId)) continue;
-
-            List<Map<String, Object>> groupTracks = new ArrayList<>();
-            Queue<Long> queue = new LinkedList<>();
-            queue.add(startId);
-            visited.add(startId);
-
-            double maxGroupDist = 0.0;
-            double maxGroupTimeDiff = 0.0;
-
-            while (!queue.isEmpty()) {
-                Long currentId = queue.poll();
-                Map<String, Object> trackMap = trackDetails.get(currentId);
-                groupTracks.add(trackMap);
-
-                maxGroupDist = Math.max(maxGroupDist, minDistanceByTrack.getOrDefault(currentId, 0.0));
-                maxGroupTimeDiff = Math.max(maxGroupTimeDiff, minTimeDiffByTrack.getOrDefault(currentId, 0.0));
-
-                for (Long neighbor : adjacency.getOrDefault(currentId, Collections.emptySet())) {
-                    if (visited.add(neighbor)) {
-                        queue.add(neighbor);
-                    }
-                }
-            }
-
-            groupTracks.sort(Comparator.comparing(t -> String.valueOf(t.get("sourceId"))));
-
-            Map<String, Object> groupObj = new LinkedHashMap<>();
-            groupObj.put("groupId", groupNumber++);
-            groupObj.put("sourceCount", groupTracks.size());
-            groupObj.put("maxDistanceKm", Math.round(maxGroupDist * 1000.0) / 1000.0);
-            groupObj.put("maxTimeDiffSec", Math.round(maxGroupTimeDiff * 10.0) / 10.0);
-            groupObj.put("tracks", groupTracks);
-            groups.add(groupObj);
-        }
-
-        return groups;
-    }
-
-    private Map<String, Object> extractTrackMap(Object[] row, int offset) {
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("trackId", row[offset]);
-        map.put("sourceId", row[offset + 1]);
-        map.put("sequenceNumber", row[offset + 2]);
-        map.put("trackNumber", row[offset + 3]);
-        map.put("latitude", row[offset + 4]);
-        map.put("longitude", row[offset + 5]);
-        map.put("speed", row[offset + 6]);
-        map.put("identityType", row[offset + 7]);
-        map.put("trackStatus", row[offset + 8]);
-        map.put("createdTime", row[offset + 9] != null ? row[offset + 9].toString() : null);
-        return map;
-    }
-
-
-    public List<Track> getLatestTracksView() {
-        return track_repo.selectLatestTracksView();
-    }
     public List<Map<String, Object>> getNearestTracksWithDistance() {
         List<Object[]> rows = track_repo.selectNearestTracksWithDistanceRaw();
         List<Map<String, Object>> results = new ArrayList<>();
-        Set<String> seenPairs = new HashSet<>();
-        for (Object[] row : rows) {
-            String sourceId = row[0].toString();
-            String nearestSourceId = row[1].toString();
-            // Create the same key regardless of source order
-            String pairKey = sourceId.compareTo(nearestSourceId) < 0
-                    ? sourceId + "|" + nearestSourceId
-                    : nearestSourceId + "|" + sourceId;
-            // Skip pairs already added
-            if (!seenPairs.add(pairKey)) {
-                continue;
-            }
-            Map<String, Object> item = new HashMap<>();
-            item.put("sourceId", sourceId);
-            item.put("nearestSourceId", nearestSourceId);
-            item.put("distanceKm", row[2]);
-            results.add(item);
-        }
-
-
-
         return results;
-
+    }
+    public List<Track> getLatestTracksView() {
+        return track_repo.selectLatestTracksView();
     }
 
     // Calculates the nearest distinct current track for each current track.
@@ -385,4 +266,67 @@ public class TrackService {
                 * Math.pow(Math.sin(lonDelta / 2), 2);
         return 6371.0 * 2 * Math.asin(Math.sqrt(Math.min(1.0, a)));
     }
+
+    public List<Map<String, Object>> getNearestUniqueTracks(String selectedTrackId) {
+        List<Track> currentTracks = getLatestTracksView();
+        // Remove tracks without a track number
+        currentTracks = currentTracks.stream()
+                .filter(t -> t.getTrackNumber() != null)
+                .toList();
+        List<Map<String, Object>> results = new ArrayList<>();
+        Set<String> seenPairs = new HashSet<>();
+        for (Track selected : currentTracks) {
+            // Filter by selected track ID when provided
+            if (selectedTrackId != null &&
+                    !String.valueOf(selected.getTrackId()).equals(selectedTrackId)) {
+                continue;
+            }
+            Track nearest = null;
+            double minDistance = Double.MAX_VALUE;
+            for (Track candidate : currentTracks) {
+                // Skip the same track
+                if (selected.getTrackId() == candidate.getTrackId()) {
+                    continue;
+                }
+                // Skip observations of the same track number
+                if (selected.getTrackNumber().equals(candidate.getTrackNumber())) {
+                    continue;
+                }
+                double distance = calculate_distance(
+                        selected.getLatitude(),
+                        selected.getLongitude(),
+                        candidate.getLatitude(),
+                        candidate.getLongitude()
+                );
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearest = candidate;
+                }
+            }
+            if (nearest == null) {
+                continue;
+            }
+            // Prevent repeated pairs such as A-B and B-A
+            int firstId = Math.min(selected.getTrackId(), nearest.getTrackId());
+            int secondId = Math.max(selected.getTrackId(), nearest.getTrackId());
+            String pairKey = firstId + "-" + secondId;
+            if (!seenPairs.add(pairKey)) {
+                continue;
+            }
+            Map<String, Object> item = new LinkedHashMap<>();
+            item.put("trackId", selected.getTrackId());
+            item.put("sourceId", selected.getSourceId());
+            item.put("trackNumber", selected.getTrackNumber());
+            item.put("trackType", selected.getTrackType());
+            item.put("nearestTrackId", nearest.getTrackId());
+            item.put("nearestSourceId", nearest.getSourceId());
+            item.put("nearestTrackNumber", nearest.getTrackNumber());
+            item.put("nearestTrackType", nearest.getTrackType());
+            item.put("distanceKm", Math.round(minDistance * 1000.0) / 1000.0);
+            results.add(item);
+        }
+        results.sort(Comparator.comparingDouble(r -> ((Number) r.get("distanceKm")).doubleValue()));
+        return results;
+    }
+
 }

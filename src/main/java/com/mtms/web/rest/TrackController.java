@@ -2,12 +2,10 @@ package com.mtms.web.rest;
 import com.mtms.util.FilterParameters;
 import com.mtms.model.Track;
 import com.mtms.service.MessageProcessorService;
-import com.mtms.service.SourceHealthService;
 import com.mtms.service.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -106,9 +104,6 @@ public class TrackController {
         }
     }
 
-
-    // !!! Functions below deal with redirecting so HTML pages are functional !!!
-
     @PostMapping(value = "/createTrack")
     public ResponseEntity<?> createTrackFromForm(
             @RequestParam("sourceId") String sourceId,
@@ -152,39 +147,13 @@ public class TrackController {
         };
     }
 
-    @GetMapping(value = "/search", params = "!track_number")
-    public ModelAndView showSearchForm(){
-        return new ModelAndView("forward:/search-form.html");
-    }
-/*
-    @GetMapping(value = "/history", params = "!search")
-    public ModelAndView showHistoryForm(){
-        return new ModelAndView("forward:/search-trackNo-form.html");
-    }*/
-
-    @GetMapping(value = "/maintenance")
-    public ModelAndView showDeleteForm(){
-        return new ModelAndView("forward:/delete-form.html");
-    }
-
-
-    @GetMapping("/latest")
+    @GetMapping("/current")
     public List<Track> getLatestTracks() {
         return trackService.getLatestTracksView();
     }
 
-    @GetMapping("/nearest")
-    public List<Map<String, Object>> getNearestTracks() {
-        return trackService.getNearestTracksWithDistance();
-    }
-
-    // GET /api/tracks/nearest-tracks?type=ALL or type=AIR
-    @GetMapping("/nearest-tracks")
-    public ResponseEntity<List<Map<String, Object>>> getNearestCurrentTracks(
-            @RequestParam(defaultValue = "ALL") String type) {
-        if (!type.equalsIgnoreCase("ALL") && !type.equalsIgnoreCase("AIR")) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(trackService.getNearestCurrentTracks(type.equalsIgnoreCase("AIR")));
+    @GetMapping("/nearest-unique")
+    public ResponseEntity<List<Map<String, Object>>> getNearestUniqueTracks(@RequestParam(required = false) String trackId) {
+        return ResponseEntity.ok(trackService.getNearestUniqueTracks(trackId));
     }
 }

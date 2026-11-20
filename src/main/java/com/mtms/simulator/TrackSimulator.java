@@ -21,7 +21,7 @@ public class TrackSimulator extends Simulator {
     protected List<String> scenarios;
     protected Map<String, Long> sourcesAndSequences;
     protected Map<String, List<GeoPath>> sourcesAndPaths;
-    List<GeoPath> allPaths;
+    protected List<GeoPath> allPaths;
     protected String[] sources;
 
     public TrackSimulator() {
@@ -64,39 +64,7 @@ public class TrackSimulator extends Simulator {
 
     @Override
     protected void generatePaths() {
-        //double[] lat = {24.0, 24.0, 25.0, 25.5, 26.0};
-        //double[] lon = {55.0, 54.0, 55.5, 54.5, 55.5};
-        //land, sea, air
-        double[] lat = {23.5, 25.5, 24.0};
-        double[] lon = {54.5, 54.0, 54.0};
-        String[] type = {"LAND", "SEA", "AIR"};
-        allPaths = new ArrayList<>();
-        int numOfPaths = 0;
-        int radiusKm = 0;
-
-        for(int i = 0; i < lat.length; i++) {
-            if(i == 2) {
-                numOfPaths = 40;
-                radiusKm = 250;
-            }
-            else {
-                numOfPaths = 30;
-                radiusKm = 150;
-            }
-            RandomPathGenerator pathGenerator = new RandomPathGenerator();
-            List<GeoPath> paths = pathGenerator.generateRandomPaths(
-                    lat[i],
-                    lon[i],
-                    radiusKm,
-                    numOfPaths,
-                    12,
-                    12,
-                    type[i]
-            );
-            //sourcesAndPaths.put(sources[i], paths);
-            allPaths.addAll(paths);
-        }
-        Collections.shuffle(allPaths);
+        allPaths = startupListener.getPaths();
     }
 
     @Override
@@ -137,7 +105,10 @@ public class TrackSimulator extends Simulator {
 
     // Simulates a single track based on randomly generated values
     // scenario, identity, and status are selected based on WeightedSelectors
-    protected String simulateTrack(int totalSent, String scenario, int total_sources, int tracks_per_source) {
+    protected String simulateTrack(int totalSent, String scenario, int total_sources, int tracks_per_source) throws Exception {
+        // Predefined correlation, out-of-order, and duplicates
+        if(totalSent == 0 || totalSent % 100 == 0) predefinedTracks();
+
         String source = sources[totalSent % total_sources];
         long sequence = sourcesAndSequences.get(source) + 1;
         sourcesAndSequences.replace(source, sequence);
@@ -186,20 +157,12 @@ public class TrackSimulator extends Simulator {
             identity = "UNKNOWN";
 
 
-        //Manual correlation
         GeoPath path = allPaths.get(selected_track-1);
-        if(selected_track == 2) path = allPaths.get(selected_track-2);
-        if(selected_track == 36) path = allPaths.get(selected_track-2);
-
         LatLonPoint point = path.getPoints().get(totalSent / (total_sources * tracks_per_source));
         String trackType = path.getPathType();
         double latitude = point.getLat();
         double longitude = point.getLon();
         double speed = 300.0 + random.nextInt(1500);
-
-        //Manual correlation
-        if(selected_track == 1 || selected_track == 2) speed = 500.0 + random.nextDouble();
-        if(selected_track == 35 || selected_track == 36) speed = 700.0 + random.nextDouble();
 
         // Timestamp of the simulated observation.
         String observationTime = LocalDateTime.now().format(TIME_FORMAT);
@@ -218,5 +181,53 @@ public class TrackSimulator extends Simulator {
                 identity,
                 status,
                 observationTime
-        );}
+        );
+    }
+
+    protected void predefinedTracks() throws Exception {
+        long sequenceLinkA = sourcesAndSequences.get("LINK-A") + 1;
+        long sequenceLinkB = sourcesAndSequences.get("LINK-B") + 1;
+        long sequenceLinkC = sourcesAndSequences.get("LINK-C") + 1;
+        String timeNow = LocalDateTime.now().format(TIME_FORMAT);
+
+        // First observation
+        sender.sendMessage(
+                "LINK-A|" + sequenceLinkA + "|TRK00101|AIR|24.971600|54.594600|450|FRIEND|ACTIVE|" + timeNow
+        );
+        // Higher sequence number
+        sender.sendMessage(
+                "LINK-A|" + (sequenceLinkA + 2) + "|TRK00101|AIR|24.971700|54.594700|455|FRIEND|ACTIVE|" + timeNow
+        );
+        // Duplicate: sequence 1 already exists
+        sender.sendMessage(
+                "LINK-A|" + sequenceLinkA + "|TRK00101|AIR|24.971700|54.594700|455|FRIEND|ACTIVE|" + timeNow
+        );
+        // Out of order: sequence 2 arrives after sequence 3
+        sender.sendMessage(
+                "LINK-A|" + (sequenceLinkA + 1) + "|TRK00101|AIR|24.971800|54.594800|460|FRIEND|ACTIVE|" + timeNow
+        );
+        // Different source: speed invalid
+        sender.sendMessage(
+                "LINK-B|" + sequenceLinkB + "|TRK00102|AIR|24.972000|54.595000|3000|FRIEND|ACTIVE|" + timeNow
+        );
+
+        // Correlation
+        sender.sendMessage(
+                "LINK-B|" + (sequenceLinkB + 1) + "|TRK00106|AIR|24.171600|54.194600|600|FRIEND|ACTIVE|" + timeNow
+        );
+        sender.sendMessage(
+                "LINK-C|" + sequenceLinkC + "|TRK00107|AIR|24.171700|54.194700|605|FRIEND|ACTIVE|" + timeNow
+        );
+
+        // Correlation
+        sender.sendMessage(
+                "LINK-A|" + (sequenceLinkA + 3) + "|TRK00105|AIR|24.571800|54.594800|460|FRIEND|ACTIVE|" + timeNow
+        );
+        sender.sendMessage(
+                "LINK-B|" + (sequenceLinkB + 2) + "|TRK00106|AIR|24.571600|54.594600|600|FRIEND|ACTIVE|" + timeNow
+        );
+        sender.sendMessage(
+                "LINK-C|" + (sequenceLinkC + 1) + "|TRK00107|AIR|24.571700|54.594700|605|FRIEND|ACTIVE|" + timeNow
+        );
+    }
 }

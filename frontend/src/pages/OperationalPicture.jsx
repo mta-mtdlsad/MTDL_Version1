@@ -17,7 +17,7 @@ function OperationalPicture() {
 
     // Fetch latest tracks from Spring Boot
     const fetchTracks = useCallback(async (signal) => {
-        const response = await fetch('/api/tracks/latest', {
+        const response = await fetch('/api/tracks/current', {
             cache: 'no-store',
             signal
         });
