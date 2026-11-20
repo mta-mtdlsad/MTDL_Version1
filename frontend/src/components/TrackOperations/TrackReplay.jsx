@@ -272,9 +272,9 @@ function TrackReplay() {
                                 setSpeed(Number(e.target.value))
                             }
                         >
-                            <option value={0.5}>Half Speed (0.5Ã—)</option>
-                            <option value={1}>Normal (1Ã—)</option>
-                            <option value={2}>Double Speed (2Ã—)</option>
+                            <option value={0.5}>Half Speed (0.5×)</option>
+                            <option value={1}>Normal (1×)</option>
+                            <option value={2}>Double Speed (2×)</option>
                         </select>
                     </div>
                 </div>
@@ -419,21 +419,21 @@ function TrackReplay() {
                             onClick={startPlayback}
                             disabled={history.length < 2 || playing}
                         >
-                            â–¶ Play
+                            ▶ Play
                         </button>
                         <button
                             className="replay-button replay-pause"
                             onClick={pausePlayback}
                             disabled={!playing}
                         >
-                            âšâš Pause
+                            ❚❚ Pause
                         </button>
                         <button
                             className="replay-button replay-reset"
                             onClick={resetPlayback}
                             disabled={history.length === 0}
                         >
-                            â†º Reset
+                            ↺ Reset
                         </button>
                     </div>
                     {/* Playback progress */}

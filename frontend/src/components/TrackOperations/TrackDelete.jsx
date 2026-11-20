@@ -100,7 +100,7 @@ export default function TrackDelete() {
                         type="text"
                         value={trackNumber}
                         onChange={(event) => {setTrackNumber(event.target.value);setError("");}}
-                        placeholder="e.g.TRK10001"
+                        placeholder="e.g.TRK00001"
                     >
                     </input>
                 </label>

@@ -23,7 +23,7 @@ public class Track{
     String identityType;
     String trackStatus;
     LocalDateTime createdTime;
-    LocalDateTime recievedTime;
+    LocalDateTime receivedTime;
 
     public Track(){
 
@@ -40,10 +40,10 @@ public class Track{
         this.identityType = identityType;
         this.trackStatus = trackStatus;
         this.createdTime = createdTime;
-        this.recievedTime = LocalDateTime.now();
+        this.receivedTime = LocalDateTime.now();
     }
 
-    public Track(int trackId, String sourceId, int sequenceNumber, String trackNumber, double latitude, double longitude, double speed, String identityType, String trackStatus, LocalDateTime createdTime, LocalDateTime recievedTime) {
+    public Track(int trackId, String sourceId, int sequenceNumber, String trackNumber, double latitude, double longitude, double speed, String identityType, String trackStatus, LocalDateTime createdTime, LocalDateTime receivedTime) {
         this.trackId = trackId;
         this.sourceId = sourceId;
         this.sequenceNumber = sequenceNumber;
@@ -54,7 +54,7 @@ public class Track{
         this.identityType = identityType;
         this.trackStatus = trackStatus;
         this.createdTime = createdTime;
-        this.recievedTime = recievedTime;
+        this.receivedTime = receivedTime;
     }
 
     public Track(String sourceId, int sequenceNumber, String trackNumber, double latitude, double longitude, double speed, String identityType, String trackStatus, LocalDateTime createdTime) {
@@ -67,7 +67,7 @@ public class Track{
         this.identityType = identityType;
         this.trackStatus = trackStatus;
         this.createdTime = createdTime;
-        this.recievedTime = LocalDateTime.now();
+        this.receivedTime = LocalDateTime.now();
     }
 
     public Track(String sourceId, int sequenceNumber, String trackNumber, String trackType, double latitude, double longitude, double speed, String identityType, String trackStatus, LocalDateTime createdTime) {
@@ -123,8 +123,8 @@ public class Track{
         return createdTime;
     }
 
-    public LocalDateTime getRecievedTime() {
-        return recievedTime;
+    public LocalDateTime getReceivedTime() {
+        return receivedTime;
     }
 
     public void setTrackId(int trackId) {
@@ -167,8 +167,8 @@ public class Track{
         this.createdTime = createdTime;
     }
 
-    public void setRecievedTime(LocalDateTime recievedTime) {
-        this.recievedTime = recievedTime;
+    public void setReceivedTime(LocalDateTime recievedTime) {
+        this.receivedTime = recievedTime;
     }
 
     public String getTrackType() {
@@ -183,12 +183,12 @@ public class Track{
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Track track = (Track) o;
-        return trackId == track.trackId && sequenceNumber == track.sequenceNumber && Double.compare(latitude, track.latitude) == 0 && Double.compare(longitude, track.longitude) == 0 && Double.compare(speed, track.speed) == 0 && Objects.equals(sourceId, track.sourceId) && Objects.equals(trackNumber, track.trackNumber) && Objects.equals(identityType, track.identityType) && Objects.equals(trackStatus, track.trackStatus) && Objects.equals(createdTime, track.createdTime) && Objects.equals(recievedTime, track.recievedTime);
+        return trackId == track.trackId && sequenceNumber == track.sequenceNumber && Double.compare(latitude, track.latitude) == 0 && Double.compare(longitude, track.longitude) == 0 && Double.compare(speed, track.speed) == 0 && Objects.equals(sourceId, track.sourceId) && Objects.equals(trackNumber, track.trackNumber) && Objects.equals(identityType, track.identityType) && Objects.equals(trackStatus, track.trackStatus) && Objects.equals(createdTime, track.createdTime) && Objects.equals(receivedTime, track.receivedTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(trackId, sourceId, sequenceNumber, trackNumber, latitude, longitude, speed, identityType, trackStatus, createdTime, recievedTime);
+        return Objects.hash(trackId, sourceId, sequenceNumber, trackNumber, latitude, longitude, speed, identityType, trackStatus, createdTime, receivedTime);
     }
 
     @Override
@@ -204,7 +204,7 @@ public class Track{
                 ", identityType='" + identityType + '\'' +
                 ", trackStatus='" + trackStatus + '\'' +
                 ", createdTime=" + createdTime +
-                ", recievedTime=" + recievedTime +
+                ", receivedTime=" + receivedTime +
                 '}';
     }
 }

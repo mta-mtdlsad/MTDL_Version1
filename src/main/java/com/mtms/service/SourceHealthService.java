@@ -59,10 +59,10 @@ public class SourceHealthService {
     // Call during startup, not inside the UDP receive loop.
     public Boolean registerSource(String sourceId) throws Exception {
         Source saved = source_repo.findBySourceId(sourceId).orElseGet(() -> {
-                    Source source = new Source();
-                    source.setSourceId(sourceId);
-                    return source_repo.save(source);
-                });
+            Source source = new Source();
+            source.setSourceId(sourceId);
+            return source_repo.save(source);
+        });
 
         SourceState state = new SourceState();
         state.lastReceived = saved.getLastSeen();
@@ -190,17 +190,46 @@ public class SourceHealthService {
         }
     }
 
-    public void recordOutcome(String sourceId, LocalDateTime receivedAt, String outcome, int sequence) {
-        if (!List.of("ACCEPTED", "REJECTED", "DUPLICATE", "FAILURE"
+    public void recordOutcome(
+            String sourceId,
+            LocalDateTime receivedAt,
+            String outcome,
+            int sequence
+
+    ) {
+        if (!List.of(
+                "ACCEPTED", "REJECTED", "DUPLICATE", "FAILURE"
         ).contains(outcome)) {
             throw new IllegalArgumentException("Invalid outcome");
         }
         int accepted = outcome.equals("ACCEPTED") ? 1 : 0;
         int rejected = outcome.equals("REJECTED") ? 1 : 0;
         int duplicate = outcome.equals("DUPLICATE") ? 1 : 0;
-        int failure = (outcome.equals("REJECTED") || outcome.equals("DUPLICATE")) ? 1 : 0;
+        int failure = outcome.equals("FAILURE") ? 1 : 0;
         int highest = accepted == 1 ? sequence : 0;
-        source_repo.recordOutcome(sourceId, receivedAt, highest, accepted, rejected, duplicate, failure);
+        source_repo.recordOutcome(
+                sourceId,
+                receivedAt,
+                highest,
+                accepted,
+                rejected,
+                duplicate,
+                failure
+
+        );
+        SourceState state = states.computeIfAbsent(
+                sourceId, id -> new SourceState()
+        );
+        // Do not move the receive time backwards.
+        if (state.lastReceived == null ||
+                receivedAt.isAfter(state.lastReceived)) {
+            state.lastReceived = receivedAt;
+        }
+        // Restore ACTIVE only while the source is recently receiving.
+        if (calculateStatus(state).equals("ACTIVE")) {
+            state.status = "ACTIVE";
+            source_repo.markSourceActive(sourceId);
+        }
     }
 
 }

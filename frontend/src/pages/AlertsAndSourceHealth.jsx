@@ -9,6 +9,37 @@ import TrackStatisticsCard from '../components/cards/TrackStatisticsCard.jsx';
 import OverallAnalyticsCard from '../components/cards/OverallAnalyticsCard.jsx';
 import AlertEventsCard from '../components/cards/AlertEventsCard.jsx';
 import SourceRegistryCard from '../components/cards/SourceRegistryCard.jsx';
+// Classify alerts into three event types
+function getEventType(alert) {
+    const message = String(
+        alert.alertMessage ?? alert.message ?? ''
+    ).toLowerCase();
+    const eventType = String(
+        alert.eventType ?? ''
+    ).toLowerCase();
+    if (
+        eventType.includes('duplicate') ||
+        message.includes('duplicate')
+    ) {
+        return 'DUPLICATE';
+    }
+    if (
+        eventType.includes('out_of_order') ||
+        eventType.includes('out of order') ||
+        eventType.includes('out-of-order') ||
+        message.includes('out-of-order') ||
+        message.includes('out of order')
+    ) {
+        return 'OUT_OF_ORDER';
+    }
+    if (
+        eventType.includes('source') ||
+        message.includes('source')
+    ) {
+        return 'SOURCE_HEALTH';
+    }
+    return 'REJECTED';
+}
 export default function AlertsDashboardSection() {
     const [summary, setSummary] = useState(null);
     const [trackStats, setTrackStats] = useState(null);
@@ -20,7 +51,7 @@ export default function AlertsDashboardSection() {
     const [refreshing, setRefreshing] = useState(false);
     const [lastUpdated, setLastUpdated] = useState(null);
     const [error, setError] = useState(null);
-    // Fetch all dashboard data
+    // Fetch dashboard data
     const refreshDashboard = useCallback(async () => {
         const results = await Promise.allSettled([
             fetchAllAlerts(),
@@ -35,7 +66,7 @@ export default function AlertsDashboardSection() {
         ]);
         const [alertResult, sourceResult, statsResult, trackResult] = results;
         const errors = [];
-        // Alert data and summary
+        // ALERT SUMMARY
         if (alertResult.status === 'fulfilled') {
             const alertData = Array.isArray(alertResult.value)
                 ? alertResult.value : [];
@@ -45,7 +76,12 @@ export default function AlertsDashboardSection() {
                 MEDIUM: 0,
                 LOW: 0
             };
-            const eventTypeSummary = {};
+            const eventTypeSummary = {
+                DUPLICATE: 0,
+                OUT_OF_ORDER: 0,
+                REJECTED: 0,
+                SOURCE_HEALTH: 0
+            };
             alertData.forEach(alert => {
                 const severity = String(
                     alert.alertSeverity ?? ''
@@ -53,10 +89,8 @@ export default function AlertsDashboardSection() {
                 if (severity in severitySummary) {
                     severitySummary[severity]++;
                 }
-                if (alert.eventType) {
-                    eventTypeSummary[alert.eventType] =
-                        (eventTypeSummary[alert.eventType] ?? 0) + 1;
-                }
+                const eventType = getEventType(alert);
+                eventTypeSummary[eventType]++;
             });
             setSummary({
                 totalAlerts: alertData.length,
@@ -68,7 +102,7 @@ export default function AlertsDashboardSection() {
         }
         let sourceData = [];
         let trackData = [];
-        // Source registry
+        // SOURCE REGISTRY
         if (sourceResult.status === 'fulfilled') {
             sourceData = Array.isArray(sourceResult.value)
                 ? sourceResult.value : [];
@@ -76,20 +110,20 @@ export default function AlertsDashboardSection() {
         } else {
             errors.push('Sources: ' + sourceResult.reason.message);
         }
-        // Track statistics
+        // TRACK STATISTICS
         if (statsResult.status === 'fulfilled') {
             setTrackStats(statsResult.value);
         } else {
             errors.push('Statistics: ' + statsResult.reason.message);
         }
-        // Track data
+        // TRACK DATA
         if (trackResult.status === 'fulfilled') {
             trackData = Array.isArray(trackResult.value)
                 ? trackResult.value : [];
         } else {
             errors.push('Tracks: ' + trackResult.reason.message);
         }
-        // Overall analytics
+        // OVERALL ANALYTICS
         if (
             sourceResult.status === 'fulfilled' &&
             trackResult.status === 'fulfilled'
@@ -103,7 +137,7 @@ export default function AlertsDashboardSection() {
             const duplicate = sum('duplicateCount');
             const failures = sum('processingFailureCount');
             setOverallAnalytics({
-                totalProcessed: accepted + rejected + duplicate + failures,
+                totalProcessed: sum('receivedCount'),
                 acceptedCount: accepted,
                 rejectedCount: rejected,
                 duplicateCount: duplicate,
@@ -116,7 +150,7 @@ export default function AlertsDashboardSection() {
         setLastUpdated(new Date());
         setLoading(false);
     }, []);
-    // Manual refresh without reloading the page
+    // MANUAL REFRESH
     const handleRefresh = async () => {
         setRefreshing(true);
         try {
@@ -127,7 +161,7 @@ export default function AlertsDashboardSection() {
             setRefreshing(false);
         }
     };
-    // Automatically refresh every 2 seconds
+    // AUTO REFRESH EVERY 2 SECONDS
     useEffect(() => {
         let active = true;
         let busy = false;
@@ -152,14 +186,14 @@ export default function AlertsDashboardSection() {
             clearInterval(intervalId);
         };
     }, [refreshDashboard]);
-    // Filter alerts by severity
+    // FILTER ALERTS BY SEVERITY
     const filteredAlerts = selectedSeverity === 'ALL'
         ? alerts
         : alerts.filter(alert =>
             String(alert.alertSeverity ?? '').toUpperCase()
             === selectedSeverity
         );
-    // Loading screen
+    // LOADING
     if (loading) {
         return (
             <div className="app-container">
@@ -181,6 +215,8 @@ export default function AlertsDashboardSection() {
                     </div>
                     <div className="header-actions">
 
+
+
             <span className="last-updated">
 
               {lastUpdated
@@ -197,27 +233,28 @@ export default function AlertsDashboardSection() {
                         </button>
                     </div>
                 </header>
-                {/* ERROR MESSAGE */}
+                {/* ERROR */}
                 {error && (
                     <div role="alert" className="error-message">
                         <strong>Error:</strong> {error}
                     </div>
                 )}
                 <Grid container spacing={3}>
-                    {/* ROW 1: ALERT SUMMARY */}
+                    {/* ALERT SUMMARY */}
                     <Grid size={12}>
                         <AlertSummaryCard summary={summary}/>
                     </Grid>
-                    {/* ROW 2: TRACK STATISTICS AND ANALYTICS */}
+                    {/* TRACK STATISTICS */}
                     <Grid size={{xs: 12, lg: 5}}>
                         <TrackStatisticsCard stats={trackStats}/>
                     </Grid>
+                    {/* OVERALL ANALYTICS */}
                     <Grid size={{xs: 12, lg: 7}}>
                         <OverallAnalyticsCard
                             analytics={overallAnalytics}
                         />
                     </Grid>
-                    {/* ROW 3: SOURCE REGISTRY */}
+                    {/* SOURCE REGISTRY */}
                     <Grid size={12}>
                         <SourceRegistryCard
                             sources={sources}
@@ -225,7 +262,7 @@ export default function AlertsDashboardSection() {
                             error={null}
                         />
                     </Grid>
-                    {/* ROW 4: ALERT EVENTS */}
+                    {/* ALERT EVENTS */}
                     <Grid size={12}>
                         <AlertEventsCard
                             alerts={filteredAlerts}

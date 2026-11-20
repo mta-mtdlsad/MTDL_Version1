@@ -84,7 +84,16 @@ public class MessageProcessorService {
 
         } catch (Exception e) {
             System.err.println("Track processing failed: " + e.getMessage());
-            return new ProcessingResult(Outcome.FAILURE, false);
+            ProcessingResult result = new ProcessingResult(Outcome.FAILURE, false);
+            try {
+                updateSource(track, result);
+            } catch (Exception updateError) {
+                System.err.println(
+                        "Failed to record processing failure: "
+                                + updateError.getMessage()
+                );
+            }
+            return result;
         }
     }
 

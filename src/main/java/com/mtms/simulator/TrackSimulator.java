@@ -78,6 +78,8 @@ public class TrackSimulator extends Simulator {
         int totalSent = 0;
         try {
             while(running.get()) {
+                // Predefined correlation, out-of-order, and duplicates
+                if(totalSent % 100 == 0) predefinedTracks();
                 String message = simulateTrack(totalSent, scenario, sourceNum, tracksPerSource);
                 sender.sendMessage(message); // Send the message through UDP.
                 totalSent++;
@@ -105,10 +107,7 @@ public class TrackSimulator extends Simulator {
 
     // Simulates a single track based on randomly generated values
     // scenario, identity, and status are selected based on WeightedSelectors
-    protected String simulateTrack(int totalSent, String scenario, int total_sources, int tracks_per_source) throws Exception {
-        // Predefined correlation, out-of-order, and duplicates
-        if(totalSent == 0 || totalSent % 100 == 0) predefinedTracks();
-
+    protected String simulateTrack(int totalSent, String scenario, int total_sources, int tracks_per_source) {
         String source = sources[totalSent % total_sources];
         long sequence = sourcesAndSequences.get(source) + 1;
         sourcesAndSequences.replace(source, sequence);
@@ -153,16 +152,17 @@ public class TrackSimulator extends Simulator {
             }
         }
 
-        if((totalSent > (total_sources * tracks_per_source)) && (random.nextInt(5) == 1))
-            identity = "UNKNOWN";
-
-
         GeoPath path = allPaths.get(selected_track-1);
         LatLonPoint point = path.getPoints().get(totalSent / (total_sources * tracks_per_source));
         String trackType = path.getPathType();
         double latitude = point.getLat();
         double longitude = point.getLon();
         double speed = 300.0 + random.nextInt(1500);
+
+        if((sequence < 33) && (random.nextInt(5) == 1)){
+            identity = "UNKNOWN";
+            trackType = "UNKNOWN";
+        }
 
         // Timestamp of the simulated observation.
         String observationTime = LocalDateTime.now().format(TIME_FORMAT);
@@ -229,5 +229,8 @@ public class TrackSimulator extends Simulator {
         sender.sendMessage(
                 "LINK-C|" + (sequenceLinkC + 1) + "|TRK00107|AIR|24.571700|54.594700|605|FRIEND|ACTIVE|" + timeNow
         );
+        sourcesAndSequences.replace("LINK-A", sequenceLinkA + 3);
+        sourcesAndSequences.replace("LINK-B", sequenceLinkB + 2);
+        sourcesAndSequences.replace("LINK-C", sequenceLinkC + 1);
     }
 }

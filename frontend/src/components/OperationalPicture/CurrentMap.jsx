@@ -20,7 +20,7 @@ function CurrentMap({ tracks = [] }) {
             <div className="map-header">
                 <h2>Current Track Locations</h2>
                 <span className="live-indicator">
-                                                â— Live Updates
+                                                ● Live Updates
                                             </span>
 
             </div>

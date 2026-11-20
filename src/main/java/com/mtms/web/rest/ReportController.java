@@ -20,44 +20,12 @@ import java.util.Map;
 public class ReportController {
     @Autowired
     private TrackService trackService;
-    @Autowired
-    private AlertService alertService;
-/*
-    // Returns identity and severity statistics
-    @RequestMapping("/statistics")
-    public List<Map> getStatistics() {
-        List<Map> results = Arrays.asList(
-                trackService.getIdentityStatistics(),
-                alertService.getSeverityStatistics()
-        );
-        return results;
-    }
 
-    // Returns any correlated tracks for a specific observation (given sourceId and sequenceNumber)
-    @RequestMapping("/analytics/correlations/{sourceId}/{sequenceNumber}")
-    public List<Track> getCorrelatedTracks(@PathVariable String sourceId, @PathVariable String sequenceNumber) {
-        FilterParameters filterParams = new FilterParameters();
-        filterParams.setSourceId(sourceId);
-        filterParams.setSequenceNumber(sequenceNumber);
-        List<Track> tracks = trackService.filterTracks(filterParams);
-        if(tracks != null) return trackService.correlateTrack(tracks.get(0), null);
-        else return tracks;
-    }
-*/
     // Returns any correlated tracks
     @RequestMapping("/analytics/correlations")
     public Map<Track, List<Track>> getCorrelatedTracks() {
         return trackService.correlateTracks();
     }
-
-/*
-
-    @GetMapping("/analytics/correlations")
-    public List<Map<String, Object>> getCorrelations() {
-        return trackService.getCorrelatedTrackGroups();
-    }
-*/
-
 
     @GetMapping("/statistics")
     public Map<String, Object> getStatistics() {

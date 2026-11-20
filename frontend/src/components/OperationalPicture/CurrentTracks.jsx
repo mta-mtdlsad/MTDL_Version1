@@ -1,6 +1,7 @@
 import React from 'react';
 import '../../styles/App.css'
 import {identityColors} from "./CurrentMap.jsx";
+import {PlatformBadge} from "../TrackBadges.jsx";
 
 
 function CurrentTracks({filteredTracks = []}) {
@@ -44,7 +45,7 @@ function CurrentTracks({filteredTracks = []}) {
                             <td>{track.sourceId}</td>
                             <td>{track.sequenceNumber}</td>
                             <td>{track.trackNumber}</td>
-                            <td>{track.trackType ?? "N/A"}</td>
+                            <td><PlatformBadge value={track.trackType ?? track.platformType} /></td>
                             <td>{track.latitude}</td>
                             <td>{track.longitude}</td>
                             <td>{track.speed}</td>

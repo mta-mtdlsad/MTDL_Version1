@@ -5,7 +5,7 @@ const SEVERITIES = [
     {value: 'MEDIUM', label: 'MEDIUM'},
     {value: 'LOW', label: 'LOW'}
 ];
-// Match severity to badge colours
+// Severity badge colours
 function severityClass(severity) {
     switch (String(severity ?? '').toUpperCase()) {
         case 'HIGH':
@@ -16,6 +16,43 @@ function severityClass(severity) {
             return 'neutral';
     }
 }
+// Identify alert event type
+function getEventType(alert) {
+    const message = String(
+        alert.alertMessage ?? alert.message ?? ''
+    ).toLowerCase();
+    const eventType = String(
+        alert.eventType ?? ''
+    ).toLowerCase();
+    if (
+        eventType.includes('duplicate') ||
+        message.includes('duplicate')
+    ) {
+        return 'DUPLICATE';
+    }
+    if (
+        eventType.includes('out_of_order') ||
+        eventType.includes('out of order') ||
+        eventType.includes('out-of-order') ||
+        message.includes('out-of-order') ||
+        message.includes('out of order')
+    ) {
+        return 'OUT OF ORDER';
+    }
+    if (
+        eventType.includes('source') ||
+        message.includes('source')
+    ) {
+        return 'SOURCE HEALTH';
+    }
+    return 'REJECTED';
+}
+// Event type colours
+const eventColors = {
+    DUPLICATE: '#22c55e',
+    'OUT OF ORDER': '#f59e0b',
+    REJECTED: '#ef4444'
+};
 export default function AlertEventsCard({
                                             alerts = [],
                                             selectedSeverity,
@@ -85,49 +122,63 @@ export default function AlertEventsCard({
                             <th>Severity</th>
                             <th>Event Type</th>
                             <th>Message</th>
-                            <th>Track Number</th>
-                            <th>Source ID</th>
                             <th>Alert Time</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {alerts.map((alert, index) => (
-                            <tr key={alert.alertId ?? index}>
-                                <td>
+                        {alerts.map((alert, index) => {
+                            const eventType = getEventType(alert);
+                            const color = eventColors[eventType];
+                            return (
+                                <tr key={alert.alertId ?? index}>
+                                    {/* SEVERITY */}
+                                    <td>
 
-                    <span
-                        className={`identity-badge ${
-                            severityClass(
-                                alert.alertSeverity
-                            )
-                        }`}
-                    >
+                      <span
+                          className={`identity-badge ${
+                              severityClass(
+                                  alert.alertSeverity
+                              )
+                          }`}
+                      >
 
-                      {alert.alertSeverity ?? 'UNKNOWN'}
+                        {alert.alertSeverity ?? 'UNKNOWN'}
 
-                    </span>
-                                </td>
-                                <td style={{whiteSpace: 'normal', minWidth: 240}}>
-                                    {alert.alertMessage ?? alert.message ?? '-'}
-                                </td>
-                                <td style={{
-                                    whiteSpace: 'normal',
-                                    minWidth: 240
-                                }}>
-                                    {alert.alertMessage ??
-                                        alert.message ?? '-'}
-                                </td>
-                                <td>
-                                    {alert.trackNumber ?? '-'}
-                                </td>
-                                <td>
-                                    {alert.sourceId ?? '-'}
-                                </td>
-                                <td>
-                                    {alert.alertTime ?? '-'}
-                                </td>
-                            </tr>
-                        ))}
+                      </span>
+                                    </td>
+                                    {/* EVENT TYPE */}
+                                    <td>
+
+                      <span
+                          className="identity-badge"
+                          style={{
+                              backgroundColor: `${color}25`,
+                              color: color,
+                              fontWeight: 600
+                          }}
+                      >
+
+                        {eventType}
+
+                      </span>
+                                    </td>
+                                    {/* MESSAGE */}
+                                    <td
+                                        style={{
+                                            whiteSpace: 'normal',
+                                            minWidth: 240
+                                        }}
+                                    >
+                                        {alert.alertMessage ??
+                                            alert.message ?? '-'}
+                                    </td>
+                                    {/* ALERT TIME */}
+                                    <td>
+                                        {alert.alertTime ?? '-'}
+                                    </td>
+                                </tr>
+                            );
+                        })}
                         </tbody>
                     </table>
                 </div>

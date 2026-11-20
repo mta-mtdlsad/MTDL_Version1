@@ -1,12 +1,10 @@
--------------------- Fixed App.css --------------------
+/* =========================================
 
-    /* =========================================
+     MTDL-SAD DASHBOARD - APP.CSS
 
-      MTDL-SAD DASHBOARD - APP.CSS
+     ========================================= */
 
-      ========================================= */
-
-    /* ----- GENERAL THEME ------ */
+/* ----- GENERAL THEME ------ */
 :root {
     font-family: 'Poppins', Arial, sans-serif;
     --page-bg: #101827;
@@ -334,6 +332,10 @@ select:focus {
 }
 
 
+
+
+
+
 /* ----- SCROLLBAR AND SEARCHBAR STYLING ----- */
 .dashboard-scroll {
     scrollbar-width: thin;
@@ -638,7 +640,7 @@ select:focus {
         grid-template-columns: 1fr;
     }
 }
-/* Shared instructor platform symbology: identity colour + white SVG platform icon */
+/*  platform symbology: identity colour + white SVG platform icon */
 .track-marker, .replay-track-marker {
     width: 30px; height: 30px; border: 2px solid #fff; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
@@ -650,3 +652,8 @@ select:focus {
 .platform-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; margin-top: 8px; }
 .platform-legend-item { display: flex; align-items: center; gap: 6px; color: var(--muted, #64748b); font-size: 12px; font-weight: 600; }
 .platform-legend-item img { width: 19px; height: 19px; object-fit: contain; background: #64748b; border-radius: 50%; padding: 2px; box-sizing: content-box; }
+
+/* Track Type SVG symbols in track tables only; no identity styling changes */
+.table-platform-badge { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.table-platform-symbol { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #475569; flex: 0 0 28px; }
+.table-platform-symbol img { display: block; width: 19px; height: 19px; }

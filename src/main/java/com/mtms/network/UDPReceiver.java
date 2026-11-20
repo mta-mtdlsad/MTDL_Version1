@@ -25,7 +25,9 @@ public class UDPReceiver {
 
 
     // Store each message with its source and receive time.
-    private record ReceivedMessage(String text, String sourceId, LocalDateTime receivedAt) {}
+    private record ReceivedMessage(String text, String sourceId, LocalDateTime receivedAt) {
+    }
+
     @Autowired
     private MessageParserService parser;
     @Autowired
@@ -190,23 +192,27 @@ public class UDPReceiver {
                         }
                     }
                 } catch (IllegalArgumentException e) {
-                    // Invalid or malformed UDP message.
+                    // Malformed messages never reach MessageProcessorService.
                     rejectedCount.incrementAndGet();
-                    failureCount.incrementAndGet();
-                    outcome = "REJECTED";
-                    System.out.println("Rejected UDP message: " + e.getMessage());
+                    if (item.sourceId() != null) {
+                        sourceHealth.recordOutcome(
+                                item.sourceId(),
+                                item.receivedAt(),
+                                "REJECTED",
+                                0
+                        );
+                    }
+                    System.out.println(
+                            "Rejected UDP message: " + e.getMessage()
+                    );
                 }
 
-                // Save processing outcome to sources table.
-                if (item.sourceId() != null) {
-                    sourceHealth.recordOutcome(item.sourceId(), item.receivedAt(), outcome, sequence);
-                }
-            } catch (InterruptedException e) {
+            } catch(InterruptedException e){
                 // Continue until pending messages are processed.
                 if (!running && queue.isEmpty()) {
                     break;
                 }
-            } catch (Exception e) {
+            } catch(Exception e){
                 // Continue processing other messages.
                 System.err.println(
                         "Worker error: " + e.getMessage()
@@ -238,7 +244,6 @@ public class UDPReceiver {
         System.out.println("Dropped: " + droppedCount.get());
         System.out.println("Pending: " + queue.size());
     }
-
 
 
     public SourceHealthService getSourceHealth() {

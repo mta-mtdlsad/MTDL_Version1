@@ -232,7 +232,7 @@ export default function TrackCreate() {
                         onChange={(event) =>
                             setTrackNumber(event.target.value)
                         }
-                        placeholder="e.g. TRK10001"
+                        placeholder="e.g. TRK00001"
                     />
                 </label>
                 {errors.trackNumber && (

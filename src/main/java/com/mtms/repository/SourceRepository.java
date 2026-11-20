@@ -52,6 +52,7 @@ public interface SourceRepository extends CrudRepository<Source, Integer>, JpaSp
               :failure
             )
             ON CONFLICT (source_id) DO UPDATE SET
+              source_status = 'ACTIVE',
               first_seen = COALESCE(
                 Source.first_seen,
                 EXCLUDED.first_seen
@@ -88,4 +89,19 @@ public interface SourceRepository extends CrudRepository<Source, Integer>, JpaSp
             @Param("duplicate") int duplicate,
             @Param("failure") int failure
     );
+
+    @Modifying
+    @Transactional
+    @Query("""
+            
+            UPDATE Source s
+            
+            SET s.sourceStatus = 'ACTIVE'
+            
+            WHERE s.sourceId = :sourceId
+            
+            AND s.sourceStatus <> 'ACTIVE'
+            
+            """)
+    int markSourceActive(@Param("sourceId") String sourceId);
 }

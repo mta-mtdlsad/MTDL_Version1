@@ -51,7 +51,7 @@ function NearestTracks() {
     }, [fetchCurrentTracks, fetchNearestTracks]);
     return (
         <div className="dashboard-panel">
-            <div className="dashboard-scroll" style={{maxHeight: "350px"}}>
+            <div className="dashboard-scroll" style={{maxHeight: "300px"}}>
                 <div className="table-header">
                     <h2>Nearest Current Tracks</h2>
                     {/* TRACK SELECTION */}
@@ -83,10 +83,6 @@ function NearestTracks() {
                 ) : nearestTracks.length === 0 ? (
                     <p>No nearest tracks available.</p>
                 ) : (
-                    <div
-                        className="dashboard-scroll"
-                        style={{maxHeight: "350px"}}
-                    >
                         <table>
                             <thead>
                             <tr>
@@ -109,7 +105,6 @@ function NearestTracks() {
                             ))}
                             </tbody>
                         </table>
-                    </div>
                 )}
             </div>
         </div>

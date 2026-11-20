@@ -1,6 +1,7 @@
 import Card from './Card.jsx'
 import React, {useState} from "react";
 import {identityColors} from "../OperationalPicture/CurrentMap.jsx";
+import {PlatformBadge} from "../TrackBadges.jsx";
 
 export default function TrackFilter() {
     const [identity, setIdentity] = useState("");
@@ -114,7 +115,7 @@ export default function TrackFilter() {
                                     <td>{track.sourceId}</td>
                                     <td>{track.sequenceNumber}</td>
                                     <td>{track.trackNumber}</td>
-                                    <td>{track.trackType ?? "N/A"}</td>
+                                    <td><PlatformBadge value={track.trackType ?? track.platformType} /></td>
                                     <td>{track.latitude}</td>
                                     <td>{track.longitude}</td>
                                     <td>{track.speed}</td>

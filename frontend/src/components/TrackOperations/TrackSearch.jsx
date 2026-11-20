@@ -43,7 +43,7 @@ export default function TrackSearch() {
 
             <label>Track Number: &ensp; <br/>
                 <input type="text"
-                       placeholder={"e.g.TRK10001"}
+                       placeholder={"e.g.TRK00001"}
                        value={trackNumber}
                        onChange={(e) => setTrackNumber(e.target.value)}
                 />

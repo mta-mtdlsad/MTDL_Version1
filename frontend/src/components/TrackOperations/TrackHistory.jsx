@@ -2,6 +2,7 @@ import Card from './Card.jsx'
 import React, {useState } from 'react'
 import TrackReplay from "./TrackReplay.jsx";
 import {identityColors} from "../OperationalPicture/CurrentMap.jsx";
+import {PlatformBadge} from "../TrackBadges.jsx";
 
 export default function TrackHistory() {
 
@@ -50,7 +51,7 @@ export default function TrackHistory() {
             {/*user inputs - Start Time*/}
             <label>Track Number:&ensp;
                 <input type="text"
-                       placeholder={"e.g.TRK10001"}
+                       placeholder={"e.g.TRK00001"}
                        value={trackNumber}
                        onChange={(e) => setTrackNumber(e.target.value)}
                 />
@@ -111,7 +112,7 @@ export default function TrackHistory() {
                                     <td>{track.sourceId}</td>
                                     <td>{track.sequenceNumber}</td>
                                     <td>{track.trackNumber}</td>
-                                    <td>{track.trackType ?? "N/A"}</td>
+                                    <td><PlatformBadge value={track.trackType ?? track.platformType} /></td>
                                     <td>{track.latitude}</td>
                                     <td>{track.longitude}</td>
                                     <td>{track.speed}</td>
