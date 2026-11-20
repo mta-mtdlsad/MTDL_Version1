@@ -14,7 +14,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface SourceRepository extends CrudRepository<Source, Integer>, JpaSpecificationExecutor {
+public interface SourceRepository extends CrudRepository<Source, Integer>, JpaSpecificationExecutor<Source> {
     Optional<Source> findBySourceId(String id);
 
     // Update status (ACTIVE, STALE, DISCONNECTED)

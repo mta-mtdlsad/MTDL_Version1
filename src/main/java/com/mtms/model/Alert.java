@@ -19,16 +19,7 @@ public class Alert {
     LocalDateTime alertTime;
 
     // for JPA
-    public Alert() {
-    }
-
-    public Alert(int alertId, String trackNumber, String alertMessage, String alertSeverity, LocalDateTime alertTime) {
-        this.alertId = alertId;
-        this.trackNumber = trackNumber;
-        this.alertMessage = alertMessage;
-        this.alertSeverity = alertSeverity;
-        this.alertTime = alertTime;
-    }
+    public Alert() {}
 
     public Alert(String trackNumber, String alertMessage, String alertSeverity, LocalDateTime alertTime) {
         this.trackNumber = trackNumber;

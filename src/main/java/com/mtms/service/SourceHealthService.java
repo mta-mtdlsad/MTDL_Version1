@@ -2,13 +2,11 @@ package com.mtms.service;
 
 import com.mtms.model.Alert;
 import com.mtms.model.Source;
-import com.mtms.model.Track;
 import com.mtms.repository.AlertRepository;
 import com.mtms.repository.SourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

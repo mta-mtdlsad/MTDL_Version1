@@ -3,6 +3,12 @@ import Grid from '@mui/material/Grid';
 export default function AlertSummaryCard({summary}) {
     const total = summary?.totalAlerts ?? 0;
     const severity = summary?.severitySummary ?? {};
+    const eventColors = {
+        DUPLICATE: '#ec4899',
+        OUT_OF_ORDER: '#f59e0b',
+        REJECTED: '#ef4444',
+        SOURCE_HEALTH: '#a78bfa'
+    };
     const eventTypes = Object.entries(
         summary?.eventTypeSummary ?? {}
     );
@@ -124,12 +130,16 @@ export default function AlertSummaryCard({summary}) {
                         {name.replaceAll('_', ' ')}
 
                       </span>
-                                            <strong>{count}</strong>
+                                            <strong style={{
+                                                color: eventColors[name] ?? 'var(--accent)'
+                                            }}>
+                                                {count}
+                                            </strong>
                                         </div>
                                         {bar(
                                             count,
                                             total,
-                                            'var(--accent)'
+                                            eventColors[name] ?? 'var(--accent)'
                                         )}
                                     </div>
                                 ))}

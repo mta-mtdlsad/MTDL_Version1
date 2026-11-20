@@ -244,12 +244,8 @@ export default function AlertsDashboardSection() {
                     <Grid size={12}>
                         <AlertSummaryCard summary={summary}/>
                     </Grid>
-                    {/* TRACK STATISTICS */}
-                    <Grid size={{xs: 12, lg: 5}}>
-                        <TrackStatisticsCard stats={trackStats}/>
-                    </Grid>
                     {/* OVERALL ANALYTICS */}
-                    <Grid size={{xs: 12, lg: 7}}>
+                    <Grid size={12}>
                         <OverallAnalyticsCard
                             analytics={overallAnalytics}
                         />

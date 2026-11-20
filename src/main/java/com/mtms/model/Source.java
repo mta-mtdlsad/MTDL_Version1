@@ -21,9 +21,7 @@ public class Source {
     int duplicateCount;
     int processingFailureCount;
 
-    public Source(){
-
-    }
+    public Source(){}
 
     public Source(String sourceId, String sourceStatus, LocalDateTime firstSeen, LocalDateTime lastSeen, int highestSequence, int receivedCount, int acceptedCount, int rejectedCount, int duplicateCount, int processingFailureCount) {
         this.sourceId = sourceId;

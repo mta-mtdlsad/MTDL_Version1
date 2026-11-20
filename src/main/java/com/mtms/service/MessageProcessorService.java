@@ -30,7 +30,6 @@ public class MessageProcessorService {
         // FAILURE if track is null
         if (track == null) {
             processingResult = new ProcessingResult(Outcome.FAILURE, false);
-            //updateSource(track, processingResult);
             return processingResult;
         }
         try {
@@ -116,16 +115,5 @@ public class MessageProcessorService {
                 result.outcome().name(),
                 track.getSequenceNumber()
         );
-    }
-
-    // Compatibility with existing code expecting boolean.
-    public boolean process(Track track) {
-        return processDetailed(track).outcome() == Outcome.ACCEPTED;
-    }
-    public int getDuplicateCount() {
-        return duplicateCount;
-    }
-    public int getOutOfOrderCount() {
-        return outOfOrderCount;
     }
 }

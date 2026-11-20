@@ -20,7 +20,7 @@ public class SourceController {
     }
 
     @GetMapping("/list")
-    public List<Source> getAllsources(){
+    public List<Source> getAllSources(){
         return sources.getAllSources();
     }
 

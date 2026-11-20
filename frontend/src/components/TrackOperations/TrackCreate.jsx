@@ -14,6 +14,7 @@ export default function TrackCreate() {
     const [speed, setSpeed] = useState("");
     const [identityType, setIdentityType] = useState("");
     const [trackStatus, setTrackStatus] = useState("");
+    const [createdTime, setCreatedTime] = useState("");
 
     const [errors, setErrors] = useState({});
 
@@ -142,7 +143,7 @@ export default function TrackCreate() {
             speed: Number(speed),
             identityType: identityType.trim(),
             trackStatus: trackStatus.trim(),
-            createdTime: new Date().toISOString().slice(0,19)
+            createdTime: createdTime
         };
 
         try {
@@ -353,6 +354,13 @@ export default function TrackCreate() {
                 {errors.trackStatus && (
                     <p className="error">{errors.trackStatus}</p>
                 )}
+
+                <label>Date & Time</label>
+                    <input
+                        type="datetime-local"
+                        value={createdTime}
+                        onChange={(e) => setCreatedTime(e.target.value)}
+                    />
 
                 {/* SUBMIT BUTTON */}
                 <button

@@ -23,7 +23,7 @@ export default function OverallAnalyticsCard({analytics}) {
         {
             title: 'Duplicate',
             value: analytics?.duplicateCount ?? 0,
-            color: 'var(--unknown)'
+            color: '#ec4899'
         }
     ];
     return (

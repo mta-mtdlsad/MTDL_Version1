@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 
 @Service
 public class MessageParserService {
@@ -65,16 +64,6 @@ public class MessageParserService {
         ValidationResult result = new ValidationResult(message, "HIGH");
         saveAlert(trackNumber, result);
         throw new IllegalArgumentException(message);
-    }
-
-    // Save validation alerts using a Track.
-    private void saveAlert(Track track, ValidationResult result) {
-        try {
-            alert_service.createAlert(track, result);
-            System.out.println(result);
-        } catch (Exception e) {
-            System.err.println("Alert creation failed: " + e.getMessage());
-        }
     }
 
     // Save malformed alerts without a complete Track.

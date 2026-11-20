@@ -76,11 +76,6 @@ public class UDPReceiver {
                 return;
             }
             running = true;
-            // Register simulator sources.
-            // Keep these IDs consistent with the simulator.
-//            sourceHealth.registerSource("LINK-A");
-//            sourceHealth.registerSource("LINK-B");
-//            sourceHealth.registerSource("LINK-C");
 
             // Start source health monitoring.
             sourceHealth.startMonitoring();

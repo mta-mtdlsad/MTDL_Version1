@@ -2,7 +2,6 @@ package com.mtms.model;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 // Represents a single path containing 12 points
 public class GeoPath {

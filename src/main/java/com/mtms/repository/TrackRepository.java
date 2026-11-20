@@ -44,8 +44,7 @@ public interface TrackRepository extends JpaRepository<Track, Integer>, JpaSpeci
     List<Track> selectByTrackNumberAndTimeWindow(@Param("start") LocalDateTime start,
                                                  @Param("end") LocalDateTime end,
                                                  @Param("trackNumber") String trackNumber);
-
-
+    
     @Query(value = "SELECT " +
             "  t1.track_id AS t1_id, t1.source_id AS t1_source, t1.sequence_number AS t1_seq, t1.track_number AS t1_num, " +
             "  t1.latitude AS t1_lat, t1.longitude AS t1_lon, t1.speed AS t1_speed, t1.identity_type AS t1_id_type, " +
@@ -70,8 +69,6 @@ public interface TrackRepository extends JpaRepository<Track, Integer>, JpaSpeci
             "ORDER BY t1.created_time DESC, t1.track_id DESC", nativeQuery = true)
     List<Object[]> findCorrelatedTrackPairsRaw();
 
-
-
     // Selects the latest tracks view using window functions in native SQL
     @Query(value = "WITH RankedTracks AS (" +
             "  SELECT *, ROW_NUMBER() OVER(" +
@@ -80,29 +77,4 @@ public interface TrackRepository extends JpaRepository<Track, Integer>, JpaSpeci
             "  ) as row_num FROM track" +
             ") SELECT * FROM RankedTracks WHERE row_num = 1 ORDER BY created_time DESC", nativeQuery = true)
     List<Track> selectLatestTracksView();
-    @Query(value = "WITH LatestPerSource AS (" +
-            "  SELECT *, ROW_NUMBER() OVER(" +
-            "    PARTITION BY source_id " +
-            "    ORDER BY created_time DESC, sequence_number DESC" +
-            "  ) AS rn FROM track WHERE source_id IS NOT NULL" +
-            "), CurrentSources AS (" +
-            "  SELECT * FROM LatestPerSource WHERE rn = 1" +
-            ") " +
-            "SELECT t1.source_id AS source_id, " +
-            "       n.nearest_source_id AS nearest_source_id, " +
-            "       ROUND(CAST(n.dist AS NUMERIC), 3) AS distance_km " +
-            "FROM CurrentSources t1 " +
-            "CROSS JOIN LATERAL (" +
-            "  SELECT t2.source_id AS nearest_source_id, " +
-            "         (6371 * 2 * ASIN(SQRT(" +
-            "           POWER(SIN(RADIANS(t2.latitude - t1.latitude) / 2), 2) + " +
-            "           COS(RADIANS(t1.latitude)) * COS(RADIANS(t2.latitude)) * " +
-            "           POWER(SIN(RADIANS(t2.longitude - t1.longitude) / 2), 2)" +
-            "         ))) AS dist " +
-            "  FROM CurrentSources t2 " +
-            "  WHERE t1.source_id != t2.source_id " +
-            "  ORDER BY dist ASC LIMIT 1" +
-            ") n " +
-            "ORDER BY distance_km ASC, t1.source_id ASC", nativeQuery = true)
-    List<Object[]> selectNearestTracksWithDistanceRaw();
 }

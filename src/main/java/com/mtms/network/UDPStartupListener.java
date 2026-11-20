@@ -24,7 +24,7 @@ public class UDPStartupListener implements ServletContextListener {
     @Autowired
     private UDPReceiver receiver;
 
-    public List<GeoPath> allPaths;;
+    private List<GeoPath> allPaths;;
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
@@ -51,6 +51,7 @@ public class UDPStartupListener implements ServletContextListener {
         System.out.println("UDP Receiver stopped.");
     }
 
+    // Generates paths used for each time MTMSApplication is run
     protected void generatePaths() {
         double[] lat = {23.5, 25.5, 24.0};
         double[] lon = {54.5, 54.0, 54.0};
@@ -78,11 +79,11 @@ public class UDPStartupListener implements ServletContextListener {
                     12,
                     type[i]
             );
-            //sourcesAndPaths.put(sources[i], paths);
             allPaths.addAll(paths);
         }
         Collections.shuffle(allPaths);
     }
 
+    // Provides the generated paths
     public List<GeoPath> getPaths() {return allPaths;}
 }

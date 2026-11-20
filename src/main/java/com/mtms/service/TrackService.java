@@ -2,7 +2,6 @@ package com.mtms.service;
 
 import com.mtms.util.FilterParameters;
 import com.mtms.model.Track;
-import com.mtms.repository.SourceRepository;
 import com.mtms.repository.TrackRepository;
 import com.mtms.util.TrackSpecifications;
 import jakarta.transaction.Transactional;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -42,11 +40,6 @@ public class TrackService {
 
     }
 
-    // Returns Track based on given ID using TrackRepository
-    /*public Track findTrackById(int id) {
-        return track_repo.findById(id).get();
-    }*/
-
     // Returns Tracks based on given trackNumber using TrackRepository
     public List<Track> findTracksByNumber(String number) {
         return track_repo.findTracksByTrackNumber(number);
@@ -59,31 +52,10 @@ public class TrackService {
         return deleted > 0;
     }
 
-    // Returns List of track observations for a specific trackNumber and sourceId using TrackRepository
-    public List<Track> getAllTrackHistory(String trackNo, String sourceId) {
-        return track_repo.findTracksByTrackNumberAndSourceId(trackNo, sourceId);
-    }
-
     // Returns the highest sequenceNumber given a specific sourceId using TrackRepository
     public int getHighestSequence(String sourceId) {
         List<Track> listOfTracks = track_repo.findTracksBySourceId(sourceId);
         return listOfTracks.stream().mapToInt(Track::getSequenceNumber).max().orElse(0);
-    }
-
-    // Returns identityType counts using TrackRepository
-    public Map<String, Integer> getIdentityStatistics() {
-        String[] identityTypes = {"FRIEND", "HOSTILE", "NEUTRAL", "UNKNOWN"};
-        Map<String, Integer> statistics = new LinkedHashMap<>();
-        List<TrackRepository.IdentityTypeCount> results = track_repo.countByIdentityType();
-        for (TrackRepository.IdentityTypeCount result : results) {
-            statistics.put(result.getIdentityType(), result.getCount());
-        }
-        for(String type : identityTypes) {
-            if(!statistics.containsKey(type)) {
-                statistics.put(type, 0);
-            }
-        }
-        return statistics;
     }
 
     // Returns List of tracks based on specified filter parameters using TrackRepository

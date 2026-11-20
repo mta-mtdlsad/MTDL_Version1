@@ -49,9 +49,10 @@ function getEventType(alert) {
 }
 // Event type colours
 const eventColors = {
-    DUPLICATE: '#22c55e',
+    DUPLICATE: '#ec4899',
     'OUT OF ORDER': '#f59e0b',
-    REJECTED: '#ef4444'
+    REJECTED: '#ef4444',
+    'SOURCE HEALTH': '#a78bfa'
 };
 export default function AlertEventsCard({
                                             alerts = [],

@@ -7,7 +7,6 @@ import com.mtms.repository.AlertRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -18,8 +17,6 @@ import java.util.Map;
 public class AlertService {
     @Autowired
     private AlertRepository alert_repo;
-
-    // !!! Called from frontend !!!
 
     // Saves alert using AlertRepository
     public Alert saveAlert(Alert alert) {
@@ -51,24 +48,6 @@ public class AlertService {
     public void deleteById(Integer id) {
         alert_repo.deleteById(id);
     }
-
-    // Returns severityType counts using AlertRepository
-    public Map<String, Integer> getSeverityStatistics() {
-        String[] severityTypes = {"HIGH", "MEDIUM", "LOW"};
-        Map<String, Integer> statistics = new LinkedHashMap<>();
-        List<AlertRepository.SeverityTypeCount> results = alert_repo.countBySeverity();
-        for (AlertRepository.SeverityTypeCount result : results) {
-            statistics.put(result.getSeverityType(), result.getCount());
-        }
-        for(String type : severityTypes) {
-            if(!statistics.containsKey(type)) {
-                statistics.put(type, 0);
-            }
-        }
-        return statistics;
-    }
-
-    // !!! Called from backend !!!
 
     // CREATE: Alert associated with a Track
     public void createAlert(Track track, ValidationResult result) {
@@ -111,6 +90,3 @@ public class AlertService {
         saveAlert(alert);
     }
 }
-/*
- @Transactional ensures that related database operations are executed as a single transaction, committing all changes on success or rolling them back on failure.
-*/

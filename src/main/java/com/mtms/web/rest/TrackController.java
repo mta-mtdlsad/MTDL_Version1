@@ -66,12 +66,6 @@ public class TrackController {
         List<Track> filteredResults = trackService.filterTracks(filterParams);
         return ResponseEntity.ok(filteredResults);
     }
-/*
-    // Filters tracks dynamically based form
-    @GetMapping("/filter")
-    public List<Track> filterTracks(@ModelAttribute FilterParameters filterParams) {
-        return trackService.filterTracks(filterParams);
-    }*/
 
     @GetMapping("/history")
     public ResponseEntity<?> getTrackHistory(
@@ -109,6 +103,7 @@ public class TrackController {
             @RequestParam("sourceId") String sourceId,
             @RequestParam("sequenceNumber") int sequenceNumber,
             @RequestParam("trackNumber") String trackNumber,
+            @RequestParam("trackType") String trackType,
             @RequestParam("trackLatitude") double trackLatitude,
             @RequestParam("trackLongitude") double trackLongitude,
             @RequestParam("trackSpeed") double trackSpeed,
@@ -124,6 +119,7 @@ public class TrackController {
                 sourceId,
                 sequenceNumber,
                 trackNumber,
+                trackType,
                 trackLatitude,
                 trackLongitude,
                 trackSpeed,
