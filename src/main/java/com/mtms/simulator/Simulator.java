@@ -2,7 +2,6 @@ package com.mtms.simulator;
 
 import com.mtms.network.UDPSender;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
@@ -21,37 +20,31 @@ public class Simulator {
     protected Random random;
 
     // Initializes simulator based on selected settings then runs simulation
-    public void initializeSimulator(String scenario, int mode, long seed, int[] params) throws Exception {
+    public void initializeSimulator(String scenario, long seed, int sourceNum, int tracksPerSource) throws Exception {
         this.random = new Random(seed);
-        if(mode == 0) predefinedSimulation();
-        else {
-            validateParameters(scenario, mode, params);
-            getSourcesAndSequences(params);
-            generateWeightedSelectors(scenario, params);
-            simulationThread = new Thread(
-                    () -> runSimulation(mode, params),
-                    "multi-source-simulator"
-            );
-            startSimulation();
-        }
+        validateParameters(scenario, sourceNum, tracksPerSource);
+        getSourcesAndSequences(sourceNum);
+        generatePaths();
+        simulationThread = new Thread(
+                () -> runSimulation(scenario, sourceNum, tracksPerSource),
+                "multi-source-simulator"
+        );
+        startSimulation();
     }
 
-    // Sends predefined message, no random generation
-    protected void predefinedSimulation() throws Exception {}
-
     // Check the settings before creating the simulation
-    protected void validateParameters(String scenario, int mode, int[] params) {}
+    protected void validateParameters(String scenario, int sourceNum, int tracksPerSource) {
+    }
 
     // Retrieves sourceIds and their sequenceNumbers if any Sources already exist
     // Generates extra sourceIds + sequenceNumbers if needed
-    protected void getSourcesAndSequences(int[] params) throws SQLException {}
-
-    // Generates weighted selectors that are used to generate source, identity, and status
-    // based on scenario + random probabilities
-    protected void generateWeightedSelectors(String scenario, int[] params) {}
+    protected void getSourcesAndSequences(int sourceNum) throws SQLException {
+    }
+    protected void generatePaths() {}
 
     // Main loop for limited and continuous simulation
-    protected void runSimulation(int mode, int[] params) {}
+    protected void runSimulation(String scenario, int sourceNum, int tracksPerSource) {
+    }
 
     // Used to display simulation status
     public boolean isRunning() {

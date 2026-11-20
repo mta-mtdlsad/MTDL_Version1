@@ -1,156 +1,170 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import Grid from '@mui/material/Grid';
 import '../styles/App.css';
-import {
-    fetchAllAlerts,
-    fetchAlertsBySeverity,
-    fetchAlertSummary
-} from '../api/alertsApi';
+import {fetchAllAlerts} from '../api/alertsApi';
 import {fetchAllSources} from '../api/sourcesApi';
 import {fetchTrackStatistics} from '../api/statisticsApi';
-import {fetchOverallAnalytics} from '../api/analyticsApi';
-import {
-    fetchSimulationState,
-    controlSimulation
-} from '../api/simulationApi';
-import {
-    fetchCorrelations,
-    fetchNearestPairs
-} from '../api/correlationsApi';
-import SimulationControlCard from '../components/cards/SimulationControlCard.jsx';
 import AlertSummaryCard from '../components/cards/AlertSummaryCard.jsx';
 import TrackStatisticsCard from '../components/cards/TrackStatisticsCard.jsx';
 import OverallAnalyticsCard from '../components/cards/OverallAnalyticsCard.jsx';
-import CorrelationsCard from '../components/cards/CorrelationsCard.jsx';
 import AlertEventsCard from '../components/cards/AlertEventsCard.jsx';
 import SourceRegistryCard from '../components/cards/SourceRegistryCard.jsx';
 export default function AlertsDashboardSection() {
-    const [simState, setSimState] = useState('UNKNOWN');
-    const [simPending, setSimPending] = useState(false);
-    const [simFeedback, setSimFeedback] = useState(null);
     const [summary, setSummary] = useState(null);
     const [trackStats, setTrackStats] = useState(null);
     const [overallAnalytics, setOverallAnalytics] = useState(null);
-    const [correlations, setCorrelations] = useState([]);
-    const [nearestPairs, setNearestPairs] = useState([]);
     const [alerts, setAlerts] = useState([]);
     const [sources, setSources] = useState([]);
     const [selectedSeverity, setSelectedSeverity] = useState('ALL');
     const [loading, setLoading] = useState(true);
-    const [filtering, setFiltering] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+    const [lastUpdated, setLastUpdated] = useState(null);
     const [error, setError] = useState(null);
     // Fetch all dashboard data
-    const refreshDashboard = useCallback(async (severity) => {
-        const [
-            currentSimState,
-            summaryData,
-            statsData,
-            overallData,
-            correlationList,
-            nearestList,
-            alertList,
-            sourceList
-        ] = await Promise.all([
-            fetchSimulationState(),
-            fetchAlertSummary(),
+    const refreshDashboard = useCallback(async () => {
+        const results = await Promise.allSettled([
+            fetchAllAlerts(),
+            fetchAllSources(),
             fetchTrackStatistics(),
-            fetchOverallAnalytics(),
-            fetchCorrelations(),
-            fetchNearestPairs(),
-            severity === 'ALL'
-                ? fetchAllAlerts()
-                : fetchAlertsBySeverity(severity),
-            fetchAllSources()
+            fetch('/api/tracks/list').then(async response => {
+                if (!response.ok) {
+                    throw new Error(`Tracks: HTTP ${response.status}`);
+                }
+                return response.json();
+            })
         ]);
-        const nextState = String(currentSimState ?? 'UNKNOWN');
-        setSimState(previous => {
-            if (
-                String(previous).toUpperCase() === 'RUNNING' &&
-                nextState.toUpperCase() === 'STOPPED'
-            ) {
-                setSimFeedback('Simulation completed and stopped.');
-            }
-            return nextState;
-        });
-        setSummary(summaryData);
-        setTrackStats(statsData);
-        setOverallAnalytics(overallData);
-        setCorrelations(
-            Array.isArray(correlationList) ? correlationList : []
-        );
-        setNearestPairs(
-            Array.isArray(nearestList) ? nearestList : []
-        );
-        setAlerts(Array.isArray(alertList) ? alertList : []);
-        setSources(Array.isArray(sourceList) ? sourceList : []);
+        const [alertResult, sourceResult, statsResult, trackResult] = results;
+        const errors = [];
+        // Alert data and summary
+        if (alertResult.status === 'fulfilled') {
+            const alertData = Array.isArray(alertResult.value)
+                ? alertResult.value : [];
+            setAlerts(alertData);
+            const severitySummary = {
+                HIGH: 0,
+                MEDIUM: 0,
+                LOW: 0
+            };
+            const eventTypeSummary = {};
+            alertData.forEach(alert => {
+                const severity = String(
+                    alert.alertSeverity ?? ''
+                ).toUpperCase();
+                if (severity in severitySummary) {
+                    severitySummary[severity]++;
+                }
+                if (alert.eventType) {
+                    eventTypeSummary[alert.eventType] =
+                        (eventTypeSummary[alert.eventType] ?? 0) + 1;
+                }
+            });
+            setSummary({
+                totalAlerts: alertData.length,
+                severitySummary,
+                eventTypeSummary
+            });
+        } else {
+            errors.push('Alerts: ' + alertResult.reason.message);
+        }
+        let sourceData = [];
+        let trackData = [];
+        // Source registry
+        if (sourceResult.status === 'fulfilled') {
+            sourceData = Array.isArray(sourceResult.value)
+                ? sourceResult.value : [];
+            setSources(sourceData);
+        } else {
+            errors.push('Sources: ' + sourceResult.reason.message);
+        }
+        // Track statistics
+        if (statsResult.status === 'fulfilled') {
+            setTrackStats(statsResult.value);
+        } else {
+            errors.push('Statistics: ' + statsResult.reason.message);
+        }
+        // Track data
+        if (trackResult.status === 'fulfilled') {
+            trackData = Array.isArray(trackResult.value)
+                ? trackResult.value : [];
+        } else {
+            errors.push('Tracks: ' + trackResult.reason.message);
+        }
+        // Overall analytics
+        if (
+            sourceResult.status === 'fulfilled' &&
+            trackResult.status === 'fulfilled'
+        ) {
+            const sum = field => sourceData.reduce(
+                (total, source) =>
+                    total + (Number(source[field]) || 0), 0
+            );
+            const accepted = sum('acceptedCount');
+            const rejected = sum('rejectedCount');
+            const duplicate = sum('duplicateCount');
+            const failures = sum('processingFailureCount');
+            setOverallAnalytics({
+                totalProcessed: accepted + rejected + duplicate + failures,
+                acceptedCount: accepted,
+                rejectedCount: rejected,
+                duplicateCount: duplicate,
+                highSpeedTracks: trackData.filter(
+                    track => Number(track.speed) > 1000
+                )
+            });
+        }
+        setError(errors.length ? errors.join(' | ') : null);
+        setLastUpdated(new Date());
+        setLoading(false);
     }, []);
-    // Refresh automatically every 2 seconds
+    // Manual refresh without reloading the page
+    const handleRefresh = async () => {
+        setRefreshing(true);
+        try {
+            await refreshDashboard();
+        } catch (err) {
+            setError(err.message || 'Failed to refresh dashboard.');
+        } finally {
+            setRefreshing(false);
+        }
+    };
+    // Automatically refresh every 2 seconds
     useEffect(() => {
         let active = true;
         let busy = false;
-        async function load() {
-            if (busy) return;
+        const load = async () => {
+            if (!active || busy) return;
             busy = true;
             try {
-                await refreshDashboard(selectedSeverity);
-                if (active) setError(null);
+                await refreshDashboard();
             } catch (err) {
                 if (active) {
-                    setError(
-                        err.message ||
-                        'Network error while loading dashboard data.'
-                    );
+                    setError(err.message || 'Dashboard refresh failed.');
+                    setLoading(false);
                 }
             } finally {
-                if (active) setLoading(false);
                 busy = false;
             }
-        }
+        };
         load();
         const intervalId = setInterval(load, 2000);
         return () => {
             active = false;
             clearInterval(intervalId);
         };
-    }, [refreshDashboard, selectedSeverity]);
+    }, [refreshDashboard]);
     // Filter alerts by severity
-    const handleSelectSeverity = async (severity) => {
-        setSelectedSeverity(severity);
-        setFiltering(true);
-        setError(null);
-        try {
-            const data = severity === 'ALL'
-                ? await fetchAllAlerts()
-                : await fetchAlertsBySeverity(severity);
-            setAlerts(Array.isArray(data) ? data : []);
-        } catch (err) {
-            setError(err.message || 'Failed to filter alerts.');
-        } finally {
-            setFiltering(false);
-        }
-    };
-    // Start or stop simulation
-    const handleSimulationControl = async (action) => {
-        setSimPending(true);
-        setSimFeedback(null);
-        setError(null);
-        try {
-            const message = await controlSimulation(action);
-            setSimFeedback(message);
-            await refreshDashboard(selectedSeverity);
-        } catch (err) {
-            setError(err.message || 'Failed to control simulator.');
-        } finally {
-            setSimPending(false);
-        }
-    };
+    const filteredAlerts = selectedSeverity === 'ALL'
+        ? alerts
+        : alerts.filter(alert =>
+            String(alert.alertSeverity ?? '').toUpperCase()
+            === selectedSeverity
+        );
+    // Loading screen
     if (loading) {
         return (
             <div className="app-container">
                 <main className="app-content">
-                    <p className="page-subtitle" role="status">
-                        Loading Alerts and Source Health Dashboard...
-                    </p>
+                    <p>Loading Alerts and Source Health Dashboard...</p>
                 </main>
             </div>
         );
@@ -158,13 +172,32 @@ export default function AlertsDashboardSection() {
     return (
         <div className="app-container">
             <main className="app-content">
-                {/* HEADER AND SIMULATION CONTROLS */}
-                <SimulationControlCard
-                    simulationState={simState}
-                    isPending={simPending}
-                    feedbackMessage={simFeedback}
-                    onControl={handleSimulationControl}
-                />
+                {/* HEADER */}
+                <header className="app-content-header">
+                    <div>
+                        <h1 className="app-content-header-text">
+                            Alerts and Source Health Dashboard
+                        </h1>
+                    </div>
+                    <div className="header-actions">
+
+            <span className="last-updated">
+
+              {lastUpdated
+                  ? `Updated: ${lastUpdated.toLocaleTimeString()}`
+                  : 'Waiting for data'}
+
+            </span>
+                        <button
+                            className="app-content-headerButton"
+                            onClick={handleRefresh}
+                            disabled={refreshing}
+                        >
+                            {refreshing ? 'Refreshing...' : 'Refresh'}
+                        </button>
+                    </div>
+                </header>
+                {/* ERROR MESSAGE */}
                 {error && (
                     <div role="alert" className="error-message">
                         <strong>Error:</strong> {error}
@@ -175,7 +208,7 @@ export default function AlertsDashboardSection() {
                     <Grid size={12}>
                         <AlertSummaryCard summary={summary}/>
                     </Grid>
-                    {/* ROW 2: TRACKS AND ANALYTICS */}
+                    {/* ROW 2: TRACK STATISTICS AND ANALYTICS */}
                     <Grid size={{xs: 12, lg: 5}}>
                         <TrackStatisticsCard stats={trackStats}/>
                     </Grid>
@@ -184,14 +217,7 @@ export default function AlertsDashboardSection() {
                             analytics={overallAnalytics}
                         />
                     </Grid>
-                    {/* ROW 3: CORRELATIONS */}
-                    <Grid size={12}>
-                        <CorrelationsCard
-                            correlations={correlations}
-                            nearestPairs={nearestPairs}
-                        />
-                    </Grid>
-                    {/* ROW 4: SOURCE REGISTRY */}
+                    {/* ROW 3: SOURCE REGISTRY */}
                     <Grid size={12}>
                         <SourceRegistryCard
                             sources={sources}
@@ -199,13 +225,13 @@ export default function AlertsDashboardSection() {
                             error={null}
                         />
                     </Grid>
-                    {/* ROW 5: ALERT EVENTS */}
+                    {/* ROW 4: ALERT EVENTS */}
                     <Grid size={12}>
                         <AlertEventsCard
-                            alerts={alerts}
+                            alerts={filteredAlerts}
                             selectedSeverity={selectedSeverity}
-                            onSelectSeverity={handleSelectSeverity}
-                            filtering={filtering}
+                            onSelectSeverity={setSelectedSeverity}
+                            filtering={false}
                         />
                     </Grid>
                 </Grid>

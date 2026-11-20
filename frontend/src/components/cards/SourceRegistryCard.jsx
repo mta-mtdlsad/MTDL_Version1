@@ -87,10 +87,10 @@ export default function SourceRegistryCard({
                       </span>
                                     </td>
                                     <td>
-                                        {source.lastReceivedTime ?? 'Never'}
+                                        {source.lastSeen ?? 'Never'}
                                     </td>
                                     <td>
-                                        {source.latestSequence ?? '-'}
+                                        {source.highestSequence ?? '-'}
                                     </td>
                                     <td>
                                         {source.receivedCount ?? 0}

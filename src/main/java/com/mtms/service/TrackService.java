@@ -126,19 +126,27 @@ public class TrackService {
         return track_repo.findAll(spec, sort);
     }
 
-    // Returns any correlated tracks
+    // Returns any correlated tracks without repeating
+    // (if A is correlated with B, no need to return that B is correlated with A)
     public Map<Track, List<Track>> correlateTracks() {
         FilterParameters filterParams = new FilterParameters();
         filterParams.setStatus("ACTIVE");
         List<Track> allActiveTracks = filterTracks(filterParams);
         Map<Track, List<Track>> correlationMap = new HashMap<>();
+        List<Track> updatedActiveTracks = new ArrayList<>(allActiveTracks);
         List<Track> listOfTracks;
         for (Track track : allActiveTracks) {
-            listOfTracks = correlateTrack(track, allActiveTracks);
+            if (!updatedActiveTracks.contains(track)) continue;
+            listOfTracks = correlateTrack(track, updatedActiveTracks);
             if (!listOfTracks.isEmpty()) {
-                listOfTracks.add(track);
                 correlationMap.put(track, listOfTracks);
+                // Maybe should rethink, if both A and B are removed
+                // and C is correlated with B only, it will not show
+                for (Track correlatedTrack : listOfTracks)
+                    updatedActiveTracks.remove(correlatedTrack);
             }
+            updatedActiveTracks.remove(track);
+            if (updatedActiveTracks.isEmpty()) break;
         }
         return correlationMap;
     }
@@ -299,7 +307,6 @@ public class TrackService {
     public List<Track> getLatestTracksView() {
         return track_repo.selectLatestTracksView();
     }
-/*
     public List<Map<String, Object>> getNearestTracksWithDistance() {
         List<Object[]> rows = track_repo.selectNearestTracksWithDistanceRaw();
         List<Map<String, Object>> results = new ArrayList<>();
@@ -326,21 +333,56 @@ public class TrackService {
 
         return results;
 
-    }*/
-
-    // !!! Not used currently !!!
-
-    /*public List<Track> findTracksBySource(String source_id) {
-        return track_repo.findTracksBySourceId(source_id);
     }
 
-    public Boolean deleteTrack(int id) {
-        track_repo.deleteById(id);
-        if (findTrackById(id) == null) {
-            return true;
-        } else {
-            return false;
-        }
-    }*/
+    // Calculates the nearest distinct current track for each current track.
+    // AIR restricts both the selected track and its candidates to aircraft.
+    // Latest observations are identified by sourceId + trackNumber in the existing repository view.
+    public List<Map<String, Object>> getNearestCurrentTracks(boolean aircraftOnly) {
+        List<Track> current = track_repo.selectLatestTracksView().stream()
+                .filter(t -> t.getTrackNumber() != null && !t.getTrackNumber().isBlank())
+                .filter(t -> !aircraftOnly || "AIR".equalsIgnoreCase(t.getTrackType()) || "AIRCRAFT".equalsIgnoreCase(t.getTrackType()))
+                .toList();
 
+        List<Map<String, Object>> results = new ArrayList<>();
+        for (Track selected : current) {
+            Track nearest = null;
+            double minKm = Double.POSITIVE_INFINITY;
+            for (Track candidate : current) {
+                // Do not compare a track to itself or another source's report of the same track number.
+                if (selected == candidate || selected.getTrackNumber().equals(candidate.getTrackNumber())) {
+                    continue;
+                }
+                double km = haversineKm(selected.getLatitude(), selected.getLongitude(),
+                        candidate.getLatitude(), candidate.getLongitude());
+                if (km < minKm) {
+                    minKm = km;
+                    nearest = candidate;
+                }
+            }
+            if (nearest != null) {
+                Map<String, Object> item = new LinkedHashMap<>();
+                item.put("sourceId", selected.getSourceId());
+                item.put("trackNumber", selected.getTrackNumber());
+                item.put("trackType", selected.getTrackType());
+                item.put("nearestSourceId", nearest.getSourceId());
+                item.put("nearestTrackNumber", nearest.getTrackNumber());
+                item.put("nearestTrackType", nearest.getTrackType());
+                item.put("distanceKm", Math.round(minKm * 1000.0) / 1000.0);
+                results.add(item);
+            }
+        }
+        results.sort(Comparator.comparingDouble(r -> ((Number) r.get("distanceKm")).doubleValue()));
+        return results;
+    }
+
+    // Surface (great-circle) distance, in kilometres; altitude is not included.
+    private double haversineKm(double lat1, double lon1, double lat2, double lon2) {
+        double latDelta = Math.toRadians(lat2 - lat1);
+        double lonDelta = Math.toRadians(lon2 - lon1);
+        double a = Math.pow(Math.sin(latDelta / 2), 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.pow(Math.sin(lonDelta / 2), 2);
+        return 6371.0 * 2 * Math.asin(Math.sqrt(Math.min(1.0, a)));
+    }
 }

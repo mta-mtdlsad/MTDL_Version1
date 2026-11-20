@@ -1,6 +1,6 @@
 package com.mtms.web.rest;
 
-import com.mtms.simulator.TrackSimulatorV2;
+import com.mtms.simulator.TrackSimulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +12,7 @@ import java.util.Map;
 @RequestMapping("/api/simulator")
 public class SimulationController {
     @Autowired
-    private TrackSimulatorV2 simulator;
+    private TrackSimulator simulator;
 
     // Returns the current simulation state
     @GetMapping("/state")

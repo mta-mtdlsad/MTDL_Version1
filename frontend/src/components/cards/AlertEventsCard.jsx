@@ -107,8 +107,8 @@ export default function AlertEventsCard({
 
                     </span>
                                 </td>
-                                <td>
-                                    {alert.eventType ?? '-'}
+                                <td style={{whiteSpace: 'normal', minWidth: 240}}>
+                                    {alert.alertMessage ?? alert.message ?? '-'}
                                 </td>
                                 <td style={{
                                     whiteSpace: 'normal',

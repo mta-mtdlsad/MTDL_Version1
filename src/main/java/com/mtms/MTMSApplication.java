@@ -1,6 +1,5 @@
 package com.mtms;
 
-import com.mtms.simulator.TrackSimulator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;

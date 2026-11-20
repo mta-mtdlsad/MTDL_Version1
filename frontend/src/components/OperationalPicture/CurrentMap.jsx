@@ -10,34 +10,17 @@ import 'leaflet/dist/leaflet.css'
 import '../../styles/App.css'
 
 
-// Identity colours
-export const identityColors = {
-    FRIEND: '#22c55e',
-    HOSTILE: '#ef4444',
-    NEUTRAL: '#3b82f6',
-    UNKNOWN: '#f59e0b'
-};
-// Create custom marker
-function createTrackIcon(identity) {
-    const color = identityColors[identity];
-    return L.divIcon({
-        className: 'custom-track-icon',
-        html: `
-   <div class="track-marker"
-      style="background-color: ${color}">
-   </div>
-  `,
-        iconSize: [20, 20],
-        iconAnchor: [10, 10]
-    });
-}
+import { IDENTITY_COLOURS, PLATFORM_TYPES, createTrackIcon, platformIconDataUri, platformTypeLabel } from '../../utils/trackSymbology.js';
+
+export const identityColors = IDENTITY_COLOURS;
+
 function CurrentMap({ tracks = [] }) {
     return (
         <section className="dashboard-panel">
             <div className="map-header">
                 <h2>Current Track Locations</h2>
                 <span className="live-indicator">
-                                                ● Live Updates
+                                                â— Live Updates
                                             </span>
 
             </div>
@@ -53,7 +36,7 @@ function CurrentMap({ tracks = [] }) {
                             position={[
                                 track.latitude,
                                 track.longitude
-                            ]} icon={createTrackIcon(track.identityType)}>
+                            ]} icon={createTrackIcon(L, track.identityType, track.trackType)}>
                             <Popup>
                                 <div className="track-popup">
                                     <h3>Track {track.trackNumber}</h3>
@@ -65,6 +48,7 @@ function CurrentMap({ tracks = [] }) {
                                     <p><b>Latitude:</b> {track.latitude}</p>
                                     <p><b>Longitude:</b> {track.longitude}</p>
                                     <p><b>Speed:</b> {track.speed}</p>
+                                    <p><b>Platform Type:</b> {platformTypeLabel(track.trackType)}</p>
                                     <p><b>Identity:</b> {track.identityType}</p>
                                     <p><b>Status:</b> {track.trackStatus}</p>
                                 </div>
@@ -83,6 +67,14 @@ function CurrentMap({ tracks = [] }) {
                         </div>
                     )
                 )}
+            </div>
+            <div className="platform-legend" aria-label="Platform type symbology">
+                {PLATFORM_TYPES.map(type => (
+                    <div className="platform-legend-item" key={type}>
+                        <img src={platformIconDataUri(type)} alt="" />
+                        {platformTypeLabel(type)}
+                    </div>
+                ))}
             </div>
         </section>
     );

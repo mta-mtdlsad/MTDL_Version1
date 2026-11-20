@@ -152,14 +152,39 @@ public class TrackController {
         };
     }
 
+    @GetMapping(value = "/search", params = "!track_number")
+    public ModelAndView showSearchForm(){
+        return new ModelAndView("forward:/search-form.html");
+    }
+/*
+    @GetMapping(value = "/history", params = "!search")
+    public ModelAndView showHistoryForm(){
+        return new ModelAndView("forward:/search-trackNo-form.html");
+    }*/
+
+    @GetMapping(value = "/maintenance")
+    public ModelAndView showDeleteForm(){
+        return new ModelAndView("forward:/delete-form.html");
+    }
+
+
     @GetMapping("/latest")
     public List<Track> getLatestTracks() {
         return trackService.getLatestTracksView();
     }
 
-    /*@GetMapping("/nearest")
+    @GetMapping("/nearest")
     public List<Map<String, Object>> getNearestTracks() {
         return trackService.getNearestTracksWithDistance();
     }
-    */
+
+    // GET /api/tracks/nearest-tracks?type=ALL or type=AIR
+    @GetMapping("/nearest-tracks")
+    public ResponseEntity<List<Map<String, Object>>> getNearestCurrentTracks(
+            @RequestParam(defaultValue = "ALL") String type) {
+        if (!type.equalsIgnoreCase("ALL") && !type.equalsIgnoreCase("AIR")) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(trackService.getNearestCurrentTracks(type.equalsIgnoreCase("AIR")));
+    }
 }

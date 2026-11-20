@@ -80,7 +80,6 @@ public interface TrackRepository extends JpaRepository<Track, Integer>, JpaSpeci
             "  ) as row_num FROM track" +
             ") SELECT * FROM RankedTracks WHERE row_num = 1 ORDER BY created_time DESC", nativeQuery = true)
     List<Track> selectLatestTracksView();
-/*
     @Query(value = "WITH LatestPerSource AS (" +
             "  SELECT *, ROW_NUMBER() OVER(" +
             "    PARTITION BY source_id " +
@@ -105,5 +104,5 @@ public interface TrackRepository extends JpaRepository<Track, Integer>, JpaSpeci
             "  ORDER BY dist ASC LIMIT 1" +
             ") n " +
             "ORDER BY distance_km ASC, t1.source_id ASC", nativeQuery = true)
-    List<Object[]> selectNearestTracksWithDistanceRaw();*/
+    List<Object[]> selectNearestTracksWithDistanceRaw();
 }
