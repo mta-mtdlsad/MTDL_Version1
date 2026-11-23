@@ -3,6 +3,7 @@ package com.mtms.simulator;
 import com.mtms.model.GeoPath;
 import com.mtms.model.LatLonPoint;
 import com.mtms.service.PlatformGeofenceService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class RandomPathGenerator {
     private final PlatformGeofenceService platformGeofenceService;
     private final Random random;
 
+    @Autowired
     public RandomPathGenerator(PlatformGeofenceService platformGeofenceService) {
         this(platformGeofenceService, new Random());
     }

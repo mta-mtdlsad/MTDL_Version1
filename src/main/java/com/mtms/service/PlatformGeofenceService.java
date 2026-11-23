@@ -11,6 +11,7 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.locationtech.jts.geom.prep.PreparedGeometryFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,7 @@ public class PlatformGeofenceService {
 
     private final PreparedGeometry landGeometry;
 
+    @Autowired
     public PlatformGeofenceService(ObjectMapper objectMapper) {
         this.landGeometry = loadLandGeometry(objectMapper);
     }
