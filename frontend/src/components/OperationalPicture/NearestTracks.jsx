@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useCallback} from "react";
 import "../../styles/App.css";
+import {PlatformBadge} from "../TrackBadges.jsx";
 function NearestTracks() {
     const [currentTracks, setCurrentTracks] = useState([]);
     const [nearestTracks, setNearestTracks] = useState([]);
@@ -13,7 +14,11 @@ function NearestTracks() {
             throw new Error(`Failed to load current tracks: ${response.status}`);
         }
         const data = await response.json();
-        setCurrentTracks(Array.isArray(data) ? data : []);
+        setCurrentTracks(
+            Array.isArray(data) ?
+                data.sort((a, b) => a.trackNumber.localeCompare(b.trackNumber)) :
+                []
+        );
     }, []);
     // Fetch nearest tracks
     const fetchNearestTracks = useCallback(async () => {
@@ -51,7 +56,7 @@ function NearestTracks() {
     }, [fetchCurrentTracks, fetchNearestTracks]);
     return (
         <div className="dashboard-panel">
-            <div className="dashboard-scroll" style={{maxHeight: "293px"}}>
+            <div className="dashboard-scroll" style={{maxHeight: "300px"}}>
                 <div className="table-header">
                     <h2>Nearest Current Tracks</h2>
                     {/* TRACK SELECTION */}
@@ -97,9 +102,9 @@ function NearestTracks() {
                             {nearestTracks.map((track, index) => (
                                 <tr key={`${track.trackId}-${track.nearestTrackId}-${index}`}>
                                     <td>{track.trackNumber}</td>
-                                    <td>{track.trackType ?? "-"}</td>
+                                    <td><PlatformBadge value={track.trackType ?? track.platformType} /></td>
                                     <td>{track.nearestTrackNumber}</td>
-                                    <td>{track.nearestTrackType ?? "-"}</td>
+                                    <td><PlatformBadge value={track.nearestTrackType ?? track.platformType} /></td>
                                     <td>{track.distanceKm}</td>
                                 </tr>
                             ))}

@@ -64,6 +64,7 @@ export default function AlertEventsCard({
         <section
             className="dashboard-panel"
             aria-label="Alert Events List"
+            style={{maxHeight: "450px"}}
         >
             <div className="table-header">
                 <h2>

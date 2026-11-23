@@ -110,7 +110,6 @@ function OperationalPicture() {
                     {/* Row 1 */}
                     <Grid size={12}>
                         <Grid container spacing={3}>
-
                             {/* Column 1 */}
                             <Grid size={{xs: 12, md: 7}}>
                                 <CurrentMap tracks={tracks}/>

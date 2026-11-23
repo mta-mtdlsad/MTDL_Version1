@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
+/*
  * Applies platform-specific geographic checks against the bundled Natural Earth land mask.
  * Coordinates are WGS84 longitude/latitude as used by the UDP track messages.
  */
@@ -33,25 +33,47 @@ public class PlatformGeofenceService {
 
     private final PreparedGeometry landGeometry;
 
+    /*
+     * Initializes the service by loading and indexing the Natural Earth land mask GeoJSON file.
+     *
+     * @param objectMapper Jackson ObjectMapper used to parse the GeoJSON resource.
+     */
     @Autowired
     public PlatformGeofenceService(ObjectMapper objectMapper) {
         this.landGeometry = loadLandGeometry(objectMapper);
     }
 
+    /*
+     * Package-private constructor for unit testing with a custom JTS
+     *      Geometry instead of loading the full GeoJSON.
+     *
+     * @param landGeometry The JTS Geometry representing land areas.
+     */
     PlatformGeofenceService(Geometry landGeometry) {
         this.landGeometry = PreparedGeometryFactory.prepare(landGeometry);
     }
 
+    /*
+     * Checks whether a given GPS coordinate falls on land (including coastlines).
+     *
+     * @param latitude  Latitude in decimal degrees.
+     * @param longitude Longitude in decimal degrees.
+     * @return true if the coordinate is on land or a coastline, false if over water.
+     */
     public boolean isLand(double latitude, double longitude) {
         Point point = GEOMETRY_FACTORY.createPoint(new Coordinate(longitude, latitude));
         // covers() intentionally treats a coastline boundary as land.
         return landGeometry.covers(point);
     }
 
-    /**
-     * Returns whether the point agrees with a recognized platform type. AIR and UNKNOWN
-     * have no land/water restriction. The simulator separately enforces its configured
-     * radius for AIR tracks; live AIR tracks are not assigned an invented airspace limit.
+    /*
+     * Verifies whether a coordinate is geographically valid for the specified platform type
+     * (LAND requires land, SEA requires water, AIR and UNKNOWN are unrestricted).
+     *
+     * @param trackType The platform/track type string ("LAND", "SEA", "AIR").
+     * @param latitude  Latitude in decimal degrees.
+     * @param longitude Longitude in decimal degrees.
+     * @return true if the position is valid for the platform type, false otherwise.
      */
     public boolean isAllowedPoint(String trackType, double latitude, double longitude) {
         return switch (platformKind(trackType)) {
@@ -61,7 +83,17 @@ public class PlatformGeofenceService {
         };
     }
 
-    /** Checks the complete short route segment, sampling its great-circle arc at 1 km. */
+    /* Validates an entire great-circle route segment between
+     *      two coordinates by sampling points at 1 km intervals.
+     *
+     * @param trackType      The platform/track type string.
+     * @param startLatitude  Starting latitude in decimal degrees.
+     * @param startLongitude Starting longitude in decimal degrees.
+     * @param endLatitude    Ending latitude in decimal degrees.
+     * @param endLongitude   Ending longitude in decimal degrees.
+     * @return true if all sampled points along the route are valid
+     *      for the platform type, false if any point violates the geofence.
+     */
     public boolean isAllowedSegment(
             String trackType,
             double startLatitude,
@@ -86,6 +118,13 @@ public class PlatformGeofenceService {
         return true;
     }
 
+    /*
+     * Reads 'geodata/ne_10m_land.geojson' from the classpath and
+     *      builds an indexed JTS MultiPolygon.
+     *
+     * @param objectMapper Jackson ObjectMapper to parse JSON nodes.
+     * @return A PreparedGeometry containing all land polygons for fast spatial lookups.
+     */
     private PreparedGeometry loadLandGeometry(ObjectMapper objectMapper) {
         ClassPathResource resource = new ClassPathResource("geodata/ne_10m_land.geojson");
         try (InputStream input = resource.getInputStream()) {
@@ -113,6 +152,13 @@ public class PlatformGeofenceService {
         }
     }
 
+    /*
+     * Converts a GeoJSON polygon coordinate array
+     *      (outer shell + optional interior holes) into a JTS Polygon.
+     *
+     * @param ringsNode JsonNode array representing polygon rings.
+     * @return A constructed JTS Polygon.
+     */
     private Polygon createPolygon(JsonNode ringsNode) {
         if (!ringsNode.isArray() || ringsNode.isEmpty()) {
             throw new IllegalStateException("A land polygon has no boundary rings");
@@ -125,6 +171,12 @@ public class PlatformGeofenceService {
         return GEOMETRY_FACTORY.createPolygon(shell, holes);
     }
 
+    /*
+     * Converts a single GeoJSON coordinate array into a closed JTS LinearRing.
+     *
+     * @param coordinatesNode JsonNode array of [longitude, latitude] pairs.
+     * @return A closed JTS LinearRing.
+     */
     private LinearRing createRing(JsonNode coordinatesNode) {
         List<Coordinate> coordinates = new ArrayList<>();
         for (JsonNode coordinateNode : coordinatesNode) {
@@ -141,6 +193,13 @@ public class PlatformGeofenceService {
         return GEOMETRY_FACTORY.createLinearRing(coordinates.toArray(Coordinate[]::new));
     }
 
+    /*
+     * Normalizes raw track type strings (e.g., "SHIP", "GROUND_VEHICLE")
+     *      into a standard PlatformKind enum.
+     *
+     * @param value Raw track type string.
+     * @return Normalized PlatformKind (LAND, SEA, AIR, or UNKNOWN).
+     */
     private PlatformKind platformKind(String value) {
         String normalized = value == null ? "" : value.trim().toUpperCase(Locale.ROOT).replace('-', '_').replace(' ', '_');
         return switch (normalized) {
@@ -151,6 +210,16 @@ public class PlatformGeofenceService {
         };
     }
 
+    /*
+     * Calculates the great-circle distance in kilometers
+     *      between two coordinates using the Haversine formula.
+     *
+     * @param lat1 Latitude of start point.
+     * @param lon1 Longitude of start point.
+     * @param lat2 Latitude of end point.
+     * @param lon2 Longitude of end point.
+     * @return Distance in kilometers.
+     */
     private double haversineKm(double lat1, double lon1, double lat2, double lon2) {
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
@@ -160,6 +229,16 @@ public class PlatformGeofenceService {
         return 2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(Math.min(1, a)));
     }
 
+    /*
+     * Computes an intermediate GPS coordinate along the great-circle arc between two endpoints.
+     *
+     * @param lat1     Start latitude in degrees.
+     * @param lon1     Start longitude in degrees.
+     * @param lat2     End latitude in degrees.
+     * @param lon2     End longitude in degrees.
+     * @param fraction Position along the path from 0.0 (start) to 1.0 (end).
+     * @return JTS Coordinate containing (longitude, latitude) of the interpolated point.
+     */
     private Coordinate interpolateGreatCircle(double lat1, double lon1, double lat2, double lon2, double fraction) {
         if (fraction <= 0) return new Coordinate(lon1, lat1);
         if (fraction >= 1) return new Coordinate(lon2, lat2);

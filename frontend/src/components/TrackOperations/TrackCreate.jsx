@@ -197,7 +197,7 @@ export default function TrackCreate() {
                         onChange={(event) =>
                             setSourceId(event.target.value)
                         }
-                        placeholder="e.g. SRC_01"
+                        placeholder="e.g. LINK-A"
                     />
                 </label>
                 {errors.sourceId && (

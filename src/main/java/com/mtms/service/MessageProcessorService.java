@@ -22,6 +22,14 @@ public class MessageProcessorService {
     private int duplicateCount = 0;
     private int outOfOrderCount = 0;
 
+    /*
+     * Constructs MessageProcessorService with its required service dependencies.
+     *
+     * @param trackService        Service for persisting and querying Track records.
+     * @param alertService        Service for creating and saving Alerts.
+     * @param sourceHealthService Service for tracking source health and message counters.
+     * @param validationService   Service for validating Track fields and geofences.
+     */
     @Autowired
     public MessageProcessorService(
             TrackService trackService,
@@ -34,7 +42,14 @@ public class MessageProcessorService {
         this.validationService = validationService;
     }
 
-    // Process a validated Track.
+    /*
+     * Validates, checks sequence order, deduplicates, and saves a
+     *      parsed Track, updating source health metrics.
+     *
+     * @param track The parsed Track object to process.
+     * @return A ProcessingResult record containing the Outcome
+     *      (ACCEPTED, REJECTED, DUPLICATE, FAILURE) and whether it arrived out-of-order.
+     */
     public ProcessingResult processDetailed(Track track) {
         ProcessingResult processingResult;
         // FAILURE if track is null
@@ -106,7 +121,13 @@ public class MessageProcessorService {
         }
     }
 
-    // Create duplicate and out-of-order alerts.
+    /*
+     * Helper method to create and save a LOW-severity alert
+     *      for duplicate or out-of-order tracks.
+     *
+     * @param track   The Track that triggered the warning.
+     * @param message The alert description message.
+     */
     private void createAlert(Track track, String message) {
         ValidationResult result = new ValidationResult(message, "LOW");
         try {
@@ -117,7 +138,13 @@ public class MessageProcessorService {
         }
     }
 
-    // Updates source counters using SourceHealthService
+    /*
+     * Records the processing outcome and sequence number in
+     *      SourceHealthService for the track's source.
+     *
+     * @param track  The Track that was processed.
+     * @param result The ProcessingResult containing the outcome status.
+     */
     public void updateSource(Track track, ProcessingResult result) {
         sourceHealthService.recordOutcome(
                 track.getSourceId(),

@@ -21,12 +21,24 @@ public class ReportController {
     @Autowired
     private TrackService trackService;
 
-    // Returns any correlated tracks
+    /*
+     * Finds and groups active tracks from different sources that
+     *      likely represent the same object (/api/analytics/correlations).
+     *
+     * @return A Map pairing each correlated Track with a list of matching Track observations.
+     */
     @RequestMapping("/analytics/correlations")
     public Map<Track, List<Track>> getCorrelatedTracks() {
         return trackService.correlateTracks();
     }
 
+    /*
+     * Aggregates counts of all stored tracks broken down by
+     *      identity type (FRIEND, HOSTILE, NEUTRAL, UNKNOWN)
+     *      and operational status (ACTIVE, INACTIVE) (GET /api/statistics).
+     *
+     * @return A Map containing totalTracks and individual category counts.
+     */
     @GetMapping("/statistics")
     public Map<String, Object> getStatistics() {
         List<Track> allTracks = trackService.getAllTracks();

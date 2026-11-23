@@ -21,7 +21,13 @@ public class TrackService {
     @Autowired
     private TrackRepository track_repo;
 
-    // Saves track using TrackRepository and returns boolean for result
+    /*
+     * Saves a Track to the database only if no record with
+     *      the same sourceId and sequenceNumber already exists.
+     *
+     * @param track The Track entity to save.
+     * @return true if saved successfully, false if it was a duplicate.
+     */
     public boolean saveTrack(Track track) {
         boolean exists = track_repo.existsBySourceIdAndSequenceNumber(track.getSourceId(), track.getSequenceNumber());
         if (exists) {
@@ -32,7 +38,11 @@ public class TrackService {
         }
     }
 
-    // Returns List of all tracks using TrackRepository
+    /*
+     * Retrieves all Track entities from the database.
+     *
+     * @return A list of all Track entities.
+     */
     public List<Track> getAllTracks() {
         List<Track> listOfTracks = new ArrayList<>();
         track_repo.findAll().forEach(listOfTracks::add);
@@ -40,25 +50,47 @@ public class TrackService {
 
     }
 
-    // Returns Tracks based on given trackNumber using TrackRepository
+    /*
+     * Finds all track observations matching a specific track number.
+     *
+     * @param number The track number string to search for.
+     * @return A list of matching Track entities.
+     */
     public List<Track> findTracksByNumber(String number) {
         return track_repo.findTracksByTrackNumber(number);
     }
 
+    /*
+     * Deletes all track records matching a specific track number.
+     *
+     * @param number The track number string of records to delete.
+     * @return true if one or more records were deleted, false otherwise.
+     */
     @Transactional
-    // Deletes Tracks based on given trackNumber using TrackRepository
     public Boolean deleteTracksByTrackNumber(String number) {
         long deleted = track_repo.deleteAllByTrackNumber(number);
         return deleted > 0;
     }
 
-    // Returns the highest sequenceNumber given a specific sourceId using TrackRepository
+    /*
+     * Finds the highest sequence number recorded for a given source ID.
+     *
+     * @param sourceId The unique source identifier.
+     * @return The highest sequence number found, or 0 if no tracks exist for that source.
+     */
     public int getHighestSequence(String sourceId) {
         List<Track> listOfTracks = track_repo.findTracksBySourceId(sourceId);
         return listOfTracks.stream().mapToInt(Track::getSequenceNumber).max().orElse(0);
     }
 
-    // Returns List of tracks based on specified filter parameters using TrackRepository
+    /*
+     * Queries tracks using dynamic JPA Specifications and multi-field
+     *      sorting rules (defaults to trackId ascending).
+     *
+     * @param filterParams Object containing filter criteria and
+     *      sort directions (time, speed, trackNumber).
+     * @return A filtered and sorted list of Track entities.
+     */
     public List<Track> filterTracks(FilterParameters filterParams) {
         Specification<Track> spec = TrackSpecifications.filterTracks(filterParams);
         List<Order> orders = new ArrayList<>();
@@ -98,7 +130,13 @@ public class TrackService {
         return track_repo.findAll(spec, sort);
     }
 
-    // Returns any correlated tracks
+    /*
+     * Finds groups of ACTIVE tracks from different sources that
+     *      likely represent the same real-world object.
+     *
+     * @return A Map pairing each correlated active Track with
+     *      a list containing itself and its matching tracks.
+     */
     public Map<Track, List<Track>> correlateTracks() {
         FilterParameters filterParams = new FilterParameters();
         filterParams.setStatus("ACTIVE");
@@ -115,7 +153,16 @@ public class TrackService {
         return correlationMap;
     }
 
-    // Returns any correlated tracks in search_pool for a specific track
+    /*
+     * Finds tracks within a search pool that match a target
+     *      track's identity type, have a different source,
+     *      and fall within <=100 speed difference, <=30 seconds time
+     *      difference, and <=2 km distance.
+     *
+     * @param selected_track The reference Track to correlate against.
+     * @param search_pool    Optional list of candidate tracks to restrict the search to.
+     * @return A list of correlated Track entities.
+     */
     public List<Track> correlateTrack(Track selected_track, List<Track> search_pool) {
         Specification<Track> spec = TrackSpecifications.filterTracksCorrelation(
                 selected_track.getSourceId(),
@@ -143,7 +190,16 @@ public class TrackService {
         return listOfCorrelatedTracks;
     }
 
-    // Distance calculation (from lat,lon to km) for correlation
+    /*
+     * Calculates the great-circle distance in kilometers between
+     *      two GPS coordinates using the Haversine formula.
+     *
+     * @param lat1 Latitude of point 1 in degrees.
+     * @param lon1 Longitude of point 1 in degrees.
+     * @param lat2 Latitude of point 2 in degrees.
+     * @param lon2 Longitude of point 2 in degrees.
+     * @return Distance between the two coordinates in kilometers.
+     */
     public double calculate_distance(double lat1, double lon1, double lat2, double lon2) {
         final double EARTH_RADIUS_KM = 6371.0;
 
@@ -167,22 +223,52 @@ public class TrackService {
         return EARTH_RADIUS_KM * c;
     }
 
-
+    /*
+     * Retrieves historical track observations within a time window,
+     *      optionally filtered by track number.
+     *
+     * @param start       Start date-time string (accepts space or 'T' separator).
+     * @param end         End date-time string (accepts space or 'T' separator).
+     * @param trackNumber Optional track number filter (treated as null if empty).
+     * @return A list of matching historical Track entities.
+     */
     public List<Track> getTrackHistory(String start, String end, String trackNumber) {
         LocalDateTime startTime = parseFlexibleDateTime(start);
         LocalDateTime endTime = parseFlexibleDateTime(end);
         if (trackNumber.isEmpty()) trackNumber = null;
         return track_repo.selectByTrackNumberAndTimeWindow(startTime, endTime, trackNumber);
     }
+
+    /*
+     * Normalizes a date-time string by replacing spaces with 'T'
+     *      and parses it into a LocalDateTime.
+     *
+     * @param input Date-time string (e.g., "2026-01-01 12:00:00" or "2026-01-01T12:00:00").
+     * @return Parsed LocalDateTime object.
+     */
     private LocalDateTime parseFlexibleDateTime(String input) {
         String normalized = input.trim().replace(" ", "T");
         return LocalDateTime.parse(normalized);
     }
 
+    /*
+     * Retrieves only the single latest Track observation per (sourceId, trackNumber) pair.
+     *
+     * @return A list of the most recent Track entities.
+     */
     public List<Track> getLatestTracksView() {
         return track_repo.selectLatestTracksView();
     }
 
+    /*
+     * Finds the closest neighboring track (with a different track number) for each latest track
+     * and returns deduplicated pairs sorted by distance ascending.
+     *
+     * @param selectedTrackId Optional track ID string to restrict the
+     *      calculation to a single track (or null for all).
+     * @return A list of Maps containing metadata for each track,
+     *      its nearest neighbor, and distanceKm.
+     */
     public List<Map<String, Object>> getNearestUniqueTracks(String selectedTrackId) {
         List<Track> currentTracks = getLatestTracksView();
         // Remove tracks without a track number

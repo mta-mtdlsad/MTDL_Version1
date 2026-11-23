@@ -27,10 +27,21 @@ public class SourceHealthService {
     private volatile boolean running;
     private Thread monitorThread;
 
+    /*
+     * Retrieves a Source entity from the database by its unique source ID.
+     *
+     * @param id The unique source identifier.
+     * @return The matching Source entity.
+     */
     public Source findSourceById(String id) {
         return source_repo.findBySourceId(id).get();
     }
 
+    /*
+     * Retrieves all Source entities stored in the database.
+     *
+     * @return A list of all Source entities.
+     */
     public List<Source> getAllSources() {
         List<Source> listOfSources = new ArrayList<>();
         source_repo.findAll().forEach(listOfSources::add);
@@ -38,7 +49,11 @@ public class SourceHealthService {
 
     }
 
-    // Returns SourceIds and their Sequence number
+    /*
+     * Builds a lookup map of each source ID to its highest recorded sequence number.
+     *
+     * @return A Map where keys are source IDs and values are their highest sequence numbers.
+     */
     public Map<String, Long> getSourcesAndSequences(){
         List<Source> listOfSources = getAllSources();
         Map<String, Long> sourcesAndSequences = new HashMap<>();
@@ -55,6 +70,14 @@ public class SourceHealthService {
 
     // Register sources in memory and PostgreSQL.
     // Call during startup, not inside the UDP receive loop.
+    /*
+     * Ensures a source exists in the database and initializes
+     *      its in-memory health tracking state.
+     *
+     * @param sourceId The unique source identifier to register.
+     * @return true once the source is registered in DB and memory.
+     * @throws Exception if database access fails.
+     */
     public Boolean registerSource(String sourceId) throws Exception {
         Source saved = source_repo.findBySourceId(sourceId).orElseGet(() -> {
             Source source = new Source();
@@ -71,6 +94,13 @@ public class SourceHealthService {
 
     // Called as soon as a valid source ID is received.
     // No database access here.
+    /*
+     * Updates a source's in-memory timestamp and marks it ACTIVE
+     *      immediately upon packet arrival (no DB call).
+     *
+     * @param sourceId   The unique source identifier.
+     * @param receivedAt The timestamp when the packet arrived.
+     */
     public void recordReceived(String sourceId, LocalDateTime receivedAt) {
         SourceState state = states.computeIfAbsent(
                 sourceId, id -> new SourceState()
@@ -79,7 +109,14 @@ public class SourceHealthService {
         state.status = "ACTIVE";
     }
 
-    // Calculate status using receive time.
+    /*
+     * Determines a source's health status based on elapsed seconds
+     *      since its last received message
+     * (<=15s: ACTIVE, <=60s: STALE, >60s: DISCONNECTED, null: NOT SEEN).
+     *
+     * @param state The in-memory SourceState to evaluate.
+     * @return The calculated status string.
+     */
     private String calculateStatus(SourceState state) {
         if (state.lastReceived == null) {
             return "NOT SEEN";
@@ -97,7 +134,10 @@ public class SourceHealthService {
         return "DISCONNECTED";
     }
 
-    // Check source health every second.
+    /*
+     * Evaluates all tracked sources in memory, updates the database if a status changed,
+     * and generates a MEDIUM or HIGH alert if a source becomes STALE or DISCONNECTED.
+     */
     public void checkHealth() {
         for (Map.Entry<String, SourceState> entry : states.entrySet()) {
             String sourceId = entry.getKey();
@@ -130,7 +170,13 @@ public class SourceHealthService {
         }
     }
 
-    // Save a health Alert in the existing alerts table.
+    /*
+     * Creates and saves an alert when a source degrades
+     *      to STALE (MEDIUM) or DISCONNECTED (HIGH).
+     *
+     * @param sourceId The unique source identifier.
+     * @param status   The degraded status string ("STALE" or "DISCONNECTED").
+     */
     private void createHealthAlert(String sourceId, String status) {
         String severity = status.equals("STALE") ? "MEDIUM" : "HIGH";
         Alert alert = new Alert(
@@ -145,7 +191,9 @@ public class SourceHealthService {
         }
     }
 
-    // Start background monitoring.
+    /*
+     * Starts a background thread that runs checkHealth() once every second.
+     */
     public synchronized void startMonitoring() {
         if (running) {return;
         }
@@ -167,7 +215,9 @@ public class SourceHealthService {
         monitorThread.start();
     }
 
-    // Stop the monitoring thread.
+    /*
+     * Stops the background health monitoring thread and waits for it to terminate.
+     */
     public void stopMonitoring() {
         running = false;
         if (monitorThread != null) {
@@ -180,7 +230,10 @@ public class SourceHealthService {
         }
     }
 
-    // Display persisted source information.
+    /*
+     * Prints all persisted Source records and their current
+     *      health metrics to standard output.
+     */
     public void printSourceStatus(){
         System.out.println("\n===== SOURCE HEALTH =====");
         for (Source source : getAllSources()) {
@@ -188,6 +241,16 @@ public class SourceHealthService {
         }
     }
 
+    /*
+     * Updates database counters and in-memory state for a source
+     *      based on a message processing outcome.
+     *
+     * @param sourceId   The unique source identifier.
+     * @param receivedAt The timestamp when the message was received.
+     * @param outcome    Must be "ACCEPTED", "REJECTED", "DUPLICATE", or "FAILURE".
+     * @param sequence   The sequence number of the processed message.
+     * @throws IllegalArgumentException if outcome is not one of the four allowed values.
+     */
     public void recordOutcome(
             String sourceId,
             LocalDateTime receivedAt,

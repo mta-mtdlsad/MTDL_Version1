@@ -13,7 +13,17 @@ public class MessageParserService {
     @Autowired
     private AlertService alert_service;
 
-    // Returns Track if message isn't malformed
+    /*
+     * Parses a pipe-delimited ('|') raw message string of
+     *      10 fields into a Track object.
+     * Triggers a HIGH-severity alert and throws
+     *      IllegalArgumentException if the format is invalid.
+     *
+     * @param message The raw incoming message string.
+     * @return A populated Track object if parsing succeeds.
+     * @throws IllegalArgumentException if the message is empty,
+     *      missing fields, or has unparseable numbers/dates.
+     */
     public Track parse(String message) {
         // Check empty messages.
         if (message == null || message.isBlank()) {
@@ -59,14 +69,26 @@ public class MessageParserService {
         return track;
     }
 
-    // Create an alert for malformed messages.
+    /*
+     * Helper method that logs a HIGH-severity alert for
+     *      a malformed message and throws an exception.
+     *
+     * @param trackNumber The extracted track number if available, or null.
+     * @param message     The error description for the alert and exception.
+     */
     private void rejectMalformed(String trackNumber, String message) {
         ValidationResult result = new ValidationResult(message, "HIGH");
         saveAlert(trackNumber, result);
         throw new IllegalArgumentException(message);
     }
 
-    // Save malformed alerts without a complete Track.
+    /*
+     * Safely persists a malformed-message alert via AlertService,
+     *      catching and logging any DB errors.
+     *
+     * @param trackNumber The track number associated with the alert (can be null).
+     * @param result      The ValidationResult describing the error.
+     */
     private void saveAlert(String trackNumber, ValidationResult result) {
         try {
             alert_service.createAlert(trackNumber, result);

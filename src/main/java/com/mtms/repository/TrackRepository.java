@@ -12,14 +12,45 @@ import java.util.*;
 
 @Repository
 public interface TrackRepository extends JpaRepository<Track, Integer>, JpaSpecificationExecutor<Track> {
+    /*
+     * Retrieves all tracks matching a specific track number.
+     *
+     * @param track_number The unique identifier string of the track.
+     * @return A list of matching Track entities (empty if none found).
+     */
     List<Track> findTracksByTrackNumber(String track_number);
 
+    /*
+     * Retrieves all tracks reported by a specific data source.
+     *
+     * @param sourceId The identifier of the source system/sensor.
+     * @return A list of Track entities originating from the given source.
+     */
     List<Track> findTracksBySourceId(String sourceId);
 
+    /*
+     * Retrieves all tracks matching both a specific track number and source ID.
+     *
+     * @param track_number The unique identifier string of the track.
+     * @param source_id    The identifier of the source system/sensor.
+     * @return A list of Track entities matching both criteria.
+     */
     List<Track> findTracksByTrackNumberAndSourceId(String track_number, String source_id);
 
+    /*
+     * Deletes all track records associated with a given track number.
+     *
+     * @param trackNumber The track number of the records to delete.
+     * @return The total number of deleted records.
+     */
     long deleteAllByTrackNumber(String trackNumber);
 
+    /*
+     * Groups all tracks by their identity type and counts how many belong to each category.
+     *
+     * @return A list of IdentityTypeCount projections containing each identity
+     *      type and its total count.
+     */
     @Query("SELECT t.identityType AS identityType, COUNT(t) AS count FROM Track t GROUP BY t.identityType")
     List<IdentityTypeCount> countByIdentityType();
 
@@ -30,8 +61,24 @@ public interface TrackRepository extends JpaRepository<Track, Integer>, JpaSpeci
         Integer getCount();
     }
 
+    /*
+     * Checks whether a track record already exists for a given source ID
+     *      and sequence number (used for duplicate detection).
+     *
+     * @param sourceId       The identifier of the source system/sensor.
+     * @param sequenceNumber The message sequence number from that source.
+     * @return true if a matching record exists, false otherwise.
+     */
     boolean existsBySourceIdAndSequenceNumber(String sourceId, int sequenceNumber);
 
+    /*
+     * Retrieves all tracks created within a specified time range,
+     *      sorted chronologically by creation time and track ID.
+     *
+     * @param startTime The start of the time range (inclusive).
+     * @param endTime   The end of the time range (inclusive).
+     * @return A sorted list of Track entities created within the timeframe.
+     */
     @Query("""
               SELECT t FROM Track t
               WHERE t.createdTime BETWEEN :startTime AND :endTime
@@ -39,12 +86,28 @@ public interface TrackRepository extends JpaRepository<Track, Integer>, JpaSpeci
             """)
     List<Track> getAllTracksTimeframe(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 
-    // Selects tracks within a specific time window and track number
+    /*
+     * Retrieves tracks within a specific time window,
+     *      optionally filtered by a specific track number.
+     *
+     * @param start       The start of the time window (inclusive).
+     * @param end         The end of the time window (inclusive).
+     * @param trackNumber The track number to filter by, or null
+     *      to return all tracks in the time window.
+     * @return A sorted list of matching Track entities.
+     */
     @Query("SELECT t FROM Track t WHERE (:trackNumber IS NULL OR t.trackNumber = :trackNumber) AND t.createdTime BETWEEN :start AND :end ORDER BY t.createdTime ASC, t.trackId ASC")
     List<Track> selectByTrackNumberAndTimeWindow(@Param("start") LocalDateTime start,
                                                  @Param("end") LocalDateTime end,
                                                  @Param("trackNumber") String trackNumber);
-    
+
+    /*
+     * Finds pairs of tracks from different sources reported within 30 seconds
+     *      and 2.0 km of each other using the Haversine formula.
+     *
+     * @return A list of Object[] rows, each containing fields for track 1,
+     *      fields for track 2, calculated distance_km, and time_diff_sec.
+     */
     @Query(value = "SELECT " +
             "  t1.track_id AS t1_id, t1.source_id AS t1_source, t1.sequence_number AS t1_seq, t1.track_number AS t1_num, " +
             "  t1.latitude AS t1_lat, t1.longitude AS t1_lon, t1.speed AS t1_speed, t1.identity_type AS t1_id_type, " +
@@ -69,7 +132,12 @@ public interface TrackRepository extends JpaRepository<Track, Integer>, JpaSpeci
             "ORDER BY t1.created_time DESC, t1.track_id DESC", nativeQuery = true)
     List<Object[]> findCorrelatedTrackPairsRaw();
 
-    // Selects the latest tracks view using window functions in native SQL
+    /*
+     * Retrieves only the single most recent Track record for
+     *      each unique (source_id, track_number) combination.
+     *
+     * @return A list of the latest Track entities ordered by creation time descending.
+     */
     @Query(value = "WITH RankedTracks AS (" +
             "  SELECT *, ROW_NUMBER() OVER(" +
             "    PARTITION BY source_id, track_number " +

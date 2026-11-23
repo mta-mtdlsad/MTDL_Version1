@@ -652,7 +652,7 @@ select:focus {
 .track-marker { width:28px; height:28px; }
 .replay-track-marker { width:32px; height:32px; border-width:3px; }
 .track-marker svg, .replay-track-marker svg { display:block; width:19px; height:19px; fill:#fff; }
-.replay-track-marker svg { width:22px; height:22px; }
+.replay-track-marker svg { width:25px; height:25px; }
 .platform-legend { display:flex; justify-content:center; flex-wrap:wrap; gap:14px; margin-top:8px; }
 .platform-legend-item { display:flex; align-items:center; gap:6px; color:var(--muted); font-size:12px; font-weight:600; }
 .platform-legend-item img { width:19px; height:19px; object-fit:contain; }

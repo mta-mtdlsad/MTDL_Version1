@@ -5,10 +5,11 @@ import {fetchAllAlerts} from '../api/alertsApi';
 import {fetchAllSources} from '../api/sourcesApi';
 import {fetchTrackStatistics} from '../api/statisticsApi';
 import AlertSummaryCard from '../components/cards/AlertSummaryCard.jsx';
-import TrackStatisticsCard from '../components/cards/TrackStatisticsCard.jsx';
-import OverallAnalyticsCard from '../components/cards/OverallAnalyticsCard.jsx';
+import SpeedAnalyticsCard from '../components/cards/SpeedAnalyticsCard.jsx';
+import UDPAnalyticsCard from '../components/cards/UDPAnalyticsCard.jsx';
 import AlertEventsCard from '../components/cards/AlertEventsCard.jsx';
 import SourceRegistryCard from '../components/cards/SourceRegistryCard.jsx';
+
 // Classify alerts into three event types
 function getEventType(alert) {
     const message = String(
@@ -240,32 +241,43 @@ export default function AlertsDashboardSection() {
                     </div>
                 )}
                 <Grid container spacing={3}>
-                    {/* ALERT SUMMARY */}
                     <Grid size={12}>
-                        <AlertSummaryCard summary={summary}/>
+                        <Grid container spacing={3}>
+                            <Grid size={{xs: 12, md: 5}}>
+                                {/* ALERT SUMMARY */}
+                                <AlertSummaryCard
+                                    summary={summary}
+                                    analytics={overallAnalytics}
+                                />
+                            </Grid>
+                            <Grid size={{xs: 12, md: 7}}>
+                                {/* SOURCE REGISTRY */}
+                                <SourceRegistryCard
+                                    sources={sources}
+                                    loading={false}
+                                    error={null}
+                                />
+                            </Grid>
+                        </Grid>
                     </Grid>
-                    {/* OVERALL ANALYTICS */}
                     <Grid size={12}>
-                        <OverallAnalyticsCard
-                            analytics={overallAnalytics}
-                        />
-                    </Grid>
-                    {/* SOURCE REGISTRY */}
-                    <Grid size={12}>
-                        <SourceRegistryCard
-                            sources={sources}
-                            loading={false}
-                            error={null}
-                        />
-                    </Grid>
-                    {/* ALERT EVENTS */}
-                    <Grid size={12}>
-                        <AlertEventsCard
-                            alerts={filteredAlerts}
-                            selectedSeverity={selectedSeverity}
-                            onSelectSeverity={setSelectedSeverity}
-                            filtering={false}
-                        />
+                        <Grid container spacing={3}>
+                            <Grid size={{xs: 12, md: 6}}>
+                                {/* ALERT EVENTS */}
+                                <AlertEventsCard
+                                    alerts={filteredAlerts}
+                                    selectedSeverity={selectedSeverity}
+                                    onSelectSeverity={setSelectedSeverity}
+                                    filtering={false}
+                                />
+                            </Grid>
+                            <Grid size={{xs: 12, md: 6}}>
+                                {/* SPEED ANALYTICS */}
+                                <SpeedAnalyticsCard
+                                    analytics={overallAnalytics}
+                                />
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
             </main>

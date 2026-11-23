@@ -14,25 +14,44 @@ public class AlertController {
     @Autowired
     private AlertService alertService;
 
-    // CREATE: POST /api/alerts
+    /*
+     * Creates and saves a new Alert from the JSON request body (POST /api/alerts).
+     *
+     * @param alert The Alert entity parsed from the request payload.
+     * @return The saved Alert entity including its generated ID.
+     */
     @PostMapping
     public Alert createAlert(@RequestBody Alert alert) {
         return alertService.saveAlert(alert);
     }
 
-    // READ: GET /api/alerts
+    /*
+     * Retrieves all alerts ordered chronologically from oldest to newest (GET /api/alerts/list).
+     *
+     * @return A list of all Alert entities.
+     */
     @GetMapping("/list")
     public List<Alert> getAllAlerts() {
         return alertService.getAlerts();
     }
 
-    // READ: GET /api/alerts/1
+    /*
+     * Retrieves a single alert by its primary key ID (GET /api/alerts/{id}).
+     *
+     * @param id The ID of the alert to look up.
+     * @return 200 OK with the Alert if found, or 404 Not Found if it does not exist.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Alert> getAlertById(@PathVariable Integer id) {
         return alertService.findById(id);
     }
 
-    // DELETE: DELETE /api/alerts/1
+    /*
+     * Deletes an existing alert by its primary key ID (DELETE /api/alerts/{id}).
+     *
+     * @param id The ID of the alert to delete.
+     * @return 204 No Content if deleted successfully, or 404 Not Found if the alert does not exist.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAlert(
             @PathVariable Integer id) {

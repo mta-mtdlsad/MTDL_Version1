@@ -25,8 +25,11 @@ export default function SourceRegistryCard({
             aria-label="UDP Source Registry"
         >
             <h2>
-                UDP Source Registry ({sources.length})
+                UDP Source Registry
             </h2>
+            <h3 style={{fontSize: "16px"}}>
+                Number of Sources: {sources.length}
+            </h3>
             {loading ? (
                 <p role="status">
                     Loading UDP sources...
@@ -44,7 +47,7 @@ export default function SourceRegistryCard({
                 <div
                     className="dashboard-scroll"
                     style={{
-                        maxHeight: 300,
+                        maxHeight: 293,
                         overflowY: 'auto'
                     }}
                 >
