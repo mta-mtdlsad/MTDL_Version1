@@ -642,16 +642,21 @@ select:focus {
 }
 /*  platform symbology: identity colour + white SVG platform icon */
 .track-marker, .replay-track-marker {
-    width: 30px; height: 30px; border: 2px solid #fff; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    box-sizing: border-box;
+    box-sizing: content-box;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 2px solid #fff;
 }
-.replay-track-marker { width: 34px; height: 34px; }
-.track-marker svg, .replay-track-marker svg { display: block; width: 19px; height: 19px; fill: #fff; }
-.replay-track-marker svg { width: 22px; height: 22px; }
-.platform-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; margin-top: 8px; }
-.platform-legend-item { display: flex; align-items: center; gap: 6px; color: var(--muted, #64748b); font-size: 12px; font-weight: 600; }
-.platform-legend-item img { width: 19px; height: 19px; object-fit: contain; background: #64748b; border-radius: 50%; padding: 2px; box-sizing: content-box; }
+
+.track-marker { width:28px; height:28px; }
+.replay-track-marker { width:32px; height:32px; border-width:3px; }
+.track-marker svg, .replay-track-marker svg { display:block; width:19px; height:19px; fill:#fff; }
+.replay-track-marker svg { width:22px; height:22px; }
+.platform-legend { display:flex; justify-content:center; flex-wrap:wrap; gap:14px; margin-top:8px; }
+.platform-legend-item { display:flex; align-items:center; gap:6px; color:var(--muted); font-size:12px; font-weight:600; }
+.platform-legend-item img { width:19px; height:19px; object-fit:contain; }
+.replay-platform-label { flex-basis:100%; text-align:center; font-size:10px; font-weight:600; }
 
 /* Track Type SVG symbols in track tables only; no identity styling changes */
 .table-platform-badge { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }

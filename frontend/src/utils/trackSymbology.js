@@ -47,7 +47,7 @@ export function createTrackIcon(Leaflet, identity, platformType, replay = false)
     const size = replay ? 34 : 30;
     return Leaflet.divIcon({
         className: replay ? "replay-marker-wrapper" : "custom-track-icon",
-        html: `<div class="${markerClass}" style="background:${colour};box-shadow:0 0 0 4px ${colour}33,0 2px 8px #0006"><svg viewBox="0 0 36 36" aria-hidden="true">${svg}</svg></div>`,
+        html: `<div class="${markerClass}" style="background:${colour};box-shadow:0 0 0 4px ${colour}33,0 2px 8px #0006"><svg viewBox="0 0 42 42" aria-hidden="true">${svg}</svg></div>`,
         iconSize: [size, size],
         iconAnchor: [size / 2, size / 2],
     });

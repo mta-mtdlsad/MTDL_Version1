@@ -118,7 +118,7 @@ function OperationalPicture() {
 
                             {/* Column 2 */}
                             <Grid size={{xs: 12, md: 2}}>
-                                <Grid container spacing={3}>
+                                <Grid container spacing={5}>
                                     <Grid size={{sm: 6, xs: 12, md: 6, lg: 12}}>
                                         {/* TOTAL TRACKS */}
                                         <section className="total-tracks-card">
