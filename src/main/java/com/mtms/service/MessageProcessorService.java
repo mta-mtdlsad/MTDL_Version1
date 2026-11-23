@@ -14,15 +14,25 @@ public class MessageProcessorService {
     public enum Outcome {ACCEPTED, REJECTED, DUPLICATE, FAILURE}
     public record ProcessingResult(Outcome outcome, boolean outOfOrder) {}
 
-    @Autowired
-    private TrackService trackService;
-    @Autowired
-    private AlertService alertService;
-    @Autowired
-    private SourceHealthService sourceHealthService;
+    private final TrackService trackService;
+    private final AlertService alertService;
+    private final SourceHealthService sourceHealthService;
+    private final ValidationService validationService;
     // Counters.
     private int duplicateCount = 0;
     private int outOfOrderCount = 0;
+
+    @Autowired
+    public MessageProcessorService(
+            TrackService trackService,
+            AlertService alertService,
+            SourceHealthService sourceHealthService,
+            ValidationService validationService) {
+        this.trackService = trackService;
+        this.alertService = alertService;
+        this.sourceHealthService = sourceHealthService;
+        this.validationService = validationService;
+    }
 
     // Process a validated Track.
     public ProcessingResult processDetailed(Track track) {
@@ -34,7 +44,7 @@ public class MessageProcessorService {
         }
         try {
             // STEP 1: Validate the track first
-            List<ValidationResult> errors = ValidationService.validateTrack(track);
+            List<ValidationResult> errors = validationService.validateTrack(track);
             if (!errors.isEmpty()) {
                 // Create an alert for each validation error
                 for (ValidationResult error : errors) {

@@ -9,8 +9,14 @@ import java.util.List;
 
 @Service
 public class ValidationService {
+    private final PlatformGeofenceService platformGeofenceService;
+
+    public ValidationService(PlatformGeofenceService platformGeofenceService) {
+        this.platformGeofenceService = platformGeofenceService;
+    }
+
     // 1. Source ID: 2 to 30 permitted characters.
-    public static ValidationResult validateSourceId(Track track){
+    public ValidationResult validateSourceId(Track track){
         String sourceId = track.getSourceId();
         if(sourceId == null || !sourceId.matches("[A-Za-z0-9_-]{2,30}")){
             return new ValidationResult("Invalid source_id: not matching [A-Za-z0-9_-]{2,30}", "LOW");
@@ -19,7 +25,7 @@ public class ValidationService {
     }
 
     // 2. Sequence Number: greater than 0
-    public static ValidationResult validateSequenceNumber(Track track){
+    public ValidationResult validateSequenceNumber(Track track){
         if (track.getSequenceNumber()<= 0) {
             return new ValidationResult("Invalid sequence number: is negative", "MEDIUM");
         }
@@ -27,7 +33,7 @@ public class ValidationService {
     }
 
     // 3. Track number: keep the existing minimum length.
-    public static ValidationResult validateTrackNumber(Track track) {
+    public ValidationResult validateTrackNumber(Track track) {
         String number = track.getTrackNumber();
         if (number == null || number.length() < 5) {
             return new ValidationResult(
@@ -39,7 +45,7 @@ public class ValidationService {
     }
 
     // 4. Latitude: -90 to 90 degrees.
-    public static ValidationResult validateLatitude(Track track) {
+    public ValidationResult validateLatitude(Track track) {
         double latitude = track.getLatitude();
         if (!Double.isFinite(latitude) || latitude < -90 || latitude > 90) {
             return new ValidationResult(
@@ -51,7 +57,7 @@ public class ValidationService {
     }
 
     // 5. Longitude: -180 to 180 degrees.
-    public static ValidationResult validateLongitude(Track track) {
+    public ValidationResult validateLongitude(Track track) {
         double longitude = track.getLongitude();
         if (!Double.isFinite(longitude) || longitude < -180 || longitude > 180) {
             return new ValidationResult(
@@ -63,7 +69,7 @@ public class ValidationService {
     }
 
     // 6. Speed: greater than 0 and at most 2000.
-    public static ValidationResult validateSpeed(Track track) {
+    public ValidationResult validateSpeed(Track track) {
         double speed = track.getSpeed();
         if (!Double.isFinite(speed) || speed <= 0 || speed > 2000) {
             return new ValidationResult(
@@ -75,7 +81,7 @@ public class ValidationService {
     }
 
     // 7. Identity must match an allowed value.
-    public static ValidationResult validateIdentityType(Track track) {
+    public ValidationResult validateIdentityType(Track track) {
         String identity = track.getIdentityType();
         if (!List.of("FRIEND", "HOSTILE", "NEUTRAL", "UNKNOWN").contains(identity)) {
             return new ValidationResult(
@@ -87,7 +93,7 @@ public class ValidationService {
     }
 
     // 8. Status must be ACTIVE or INACTIVE.
-    public static ValidationResult validateTrackStatus(Track track) {
+    public ValidationResult validateTrackStatus(Track track) {
         String status = track.getTrackStatus();
         if (!List.of("ACTIVE", "INACTIVE").contains(status)) {
             return new ValidationResult(
@@ -99,7 +105,7 @@ public class ValidationService {
     }
 
     // 9. Observation time must exist.
-    public static ValidationResult validateCreatedTime(Track track) {
+    public ValidationResult validateCreatedTime(Track track) {
         if (track.getCreatedTime() == null) {
             return new ValidationResult( "Observation time is missing",  "MEDIUM"
             );
@@ -108,7 +114,33 @@ public class ValidationService {
     }
 
     // Validate every field and collect all errors.
-    public static List<ValidationResult> validateTrack(Track track) {
+    public ValidationResult validatePlatformPosition(Track track) {
+        if (!Double.isFinite(track.getLatitude()) || track.getLatitude() < -90 || track.getLatitude() > 90
+                || !Double.isFinite(track.getLongitude()) || track.getLongitude() < -180 || track.getLongitude() > 180) {
+            return null;
+        }
+        String trackType = track.getTrackType();
+        String normalizedType = trackType == null ? "" : trackType.trim().toUpperCase().replace('-', '_').replace(' ', '_');
+        if (normalizedType.isEmpty() || normalizedType.equals("UNKNOWN")
+                || normalizedType.equals("AIR") || normalizedType.equals("AIRCRAFT")
+                || normalizedType.equals("AERIAL") || normalizedType.equals("PLANE")) {
+            // The application has no authoritative airspace polygon or altitude field.
+            return null;
+        }
+        if (!platformGeofenceService.isAllowedPoint(trackType, track.getLatitude(), track.getLongitude())) {
+            String expectedArea = switch (normalizedType) {
+                case "LAND", "LAND_VEHICLE", "GROUND_VEHICLE", "VEHICLE" -> "land";
+                case "SEA", "SHIP", "VESSEL", "MARITIME", "BOAT" -> "water";
+                default -> null;
+            };
+            if (expectedArea != null) {
+                return new ValidationResult("Track position does not match platform type; expected " + expectedArea, "HIGH");
+            }
+        }
+        return null;
+    }
+
+    public List<ValidationResult> validateTrack(Track track) {
         List<ValidationResult> errors = new ArrayList<>();
 
         // Include all nine checks.
@@ -121,7 +153,8 @@ public class ValidationService {
                 validateSpeed(track),
                 validateIdentityType(track),
                 validateTrackStatus(track),
-                validateCreatedTime(track)
+                validateCreatedTime(track),
+                validatePlatformPosition(track)
         };
 
         // Add only failed validation results.

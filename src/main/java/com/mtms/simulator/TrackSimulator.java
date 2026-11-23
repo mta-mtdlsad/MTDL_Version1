@@ -161,7 +161,6 @@ public class TrackSimulator extends Simulator {
 
         if((sequence < 33) && (random.nextInt(5) == 1)){
             identity = "UNKNOWN";
-            trackType = "UNKNOWN";
         }
 
         // Timestamp of the simulated observation.

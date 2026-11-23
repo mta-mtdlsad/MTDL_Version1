@@ -15,9 +15,9 @@ const platformLabels = {
 };
 
 const platformSvg = {
-    SHIP: '<path d="M4 22h28l-4 8a3 3 0 0 1-2.7 1.7H10.7A3 3 0 0 1 8 30z"/><path d="M11 20V13h8v7m2 0v-5h6v5M14 10h5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
-    AIRCRAFT: '<path d="M18 2l3 12 11 6v3l-11-2v8l5 3v2l-8-2-8 2v-2l5-3v-8L4 23v-3l11-6z"/>',
-    LAND_VEHICLE: '<path d="M5 13h16l5 5h5a2 2 0 0 1 2 2v8H4v-9a6 6 0 0 1 1-6zm3 3-2 5h13l-4-5z"/><circle cx="10" cy="29" r="3"/><circle cx="26" cy="29" r="3"/>',
+    SHIP: '<path d="M4 22h28l-4.1 8.1a3.2 3.2 0 0 1-2.9 1.8H11a3.2 3.2 0 0 1-2.9-1.8z"/><path d="M11 20V11h12v9m3 0v-6h4v6M15 8h4v3h-4z"/><path d="M7 34c2.2-1.6 4.4-1.6 6.6 0 2.2-1.6 4.4-1.6 6.6 0 2.2-1.6 4.4-1.6 6.6 0" fill="none" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round"/>',
+    AIRCRAFT: '<path d="M18 2.2c1.5 0 2.5 1.3 2.8 3.1l1.6 9.2 10.2 6.1v3.2l-10-2.7.1 7.2 4.5 3.4v2.1L18 32l-9.2 1.8v-2.1l4.5-3.4.1-7.2-10 2.7v-3.2l10.2-6.1 1.6-9.2c.3-1.8 1.3-3.1 2.8-3.1z"/>',
+    LAND_VEHICLE: '<path d="M5 13h16.5c1.6 0 2.7.6 3.7 1.8l3.5 4.2h2.1c1.2 0 2.2 1 2.2 2.2V28H3v-8.2c0-2.7.6-4.8 2-6.8zm3 3-2 5h17l-4-5z"/><circle cx="10" cy="28" r="4"/><circle cx="27" cy="28" r="4"/><circle cx="10" cy="28" r="1.5" fill="#0f172a"/><circle cx="27" cy="28" r="1.5" fill="#0f172a"/>',
     UNKNOWN: '<circle cx="18" cy="18" r="12" fill="none" stroke="#fff" stroke-width="3"/><path d="M18 10v9m0 5v1" stroke="#fff" stroke-width="3" stroke-linecap="round"/>',
 };
 

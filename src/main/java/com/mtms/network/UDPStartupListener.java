@@ -23,6 +23,8 @@ public class UDPStartupListener implements ServletContextListener {
     private AlertService alertService;
     @Autowired
     private UDPReceiver receiver;
+    @Autowired
+    private RandomPathGenerator pathGenerator;
 
     private List<GeoPath> allPaths;;
 
@@ -69,7 +71,6 @@ public class UDPStartupListener implements ServletContextListener {
                 numOfPaths = 30;
                 radiusKm = 150;
             }
-            RandomPathGenerator pathGenerator = new RandomPathGenerator();
             List<GeoPath> paths = pathGenerator.generateRandomPaths(
                     lat[i],
                     lon[i],
