@@ -1,8 +1,7 @@
 package com.mtms.network;
 
-import com.mtms.model.GeoPath;
+import com.mtms.domain.GeoPath;
 import com.mtms.simulator.RandomPathGenerator;
-import com.mtms.service.AlertService;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

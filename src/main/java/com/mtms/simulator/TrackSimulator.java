@@ -1,7 +1,7 @@
 package com.mtms.simulator;
 
-import com.mtms.model.GeoPath;
-import com.mtms.model.LatLonPoint;
+import com.mtms.domain.GeoPath;
+import com.mtms.domain.LatLonPoint;
 import com.mtms.service.SourceHealthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

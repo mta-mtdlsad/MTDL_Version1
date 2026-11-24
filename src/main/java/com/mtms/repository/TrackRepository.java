@@ -1,6 +1,6 @@
 package com.mtms.repository;
 
-import com.mtms.model.Track;
+import com.mtms.domain.Track;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

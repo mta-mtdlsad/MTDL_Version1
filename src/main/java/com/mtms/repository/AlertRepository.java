@@ -1,6 +1,6 @@
 package com.mtms.repository;
 
-import com.mtms.model.Alert;
+import com.mtms.domain.Alert;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

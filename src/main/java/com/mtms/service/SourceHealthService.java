@@ -1,7 +1,7 @@
 package com.mtms.service;
 
-import com.mtms.model.Alert;
-import com.mtms.model.Source;
+import com.mtms.domain.Alert;
+import com.mtms.domain.Source;
 import com.mtms.repository.AlertRepository;
 import com.mtms.repository.SourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.mtms.web.rest;
 
-import com.mtms.model.Source;
+import com.mtms.domain.Source;
 import com.mtms.service.SourceHealthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

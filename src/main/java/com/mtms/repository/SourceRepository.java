@@ -1,6 +1,6 @@
 package com.mtms.repository;
 
-import com.mtms.model.Source;
+import com.mtms.domain.Source;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;

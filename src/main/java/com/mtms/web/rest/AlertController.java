@@ -1,6 +1,6 @@
 package com.mtms.web.rest;
 
-import com.mtms.model.Alert;
+import com.mtms.domain.Alert;
 import com.mtms.service.AlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

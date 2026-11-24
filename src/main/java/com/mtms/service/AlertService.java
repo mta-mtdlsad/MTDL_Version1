@@ -1,7 +1,7 @@
 package com.mtms.service;
 
-import com.mtms.model.Alert;
-import com.mtms.model.Track;
+import com.mtms.domain.Alert;
+import com.mtms.domain.Track;
 import com.mtms.util.ValidationResult;
 import com.mtms.repository.AlertRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AlertService {

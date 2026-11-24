@@ -1,7 +1,7 @@
 package com.mtms.service;
 
 import com.mtms.util.FilterParameters;
-import com.mtms.model.Track;
+import com.mtms.domain.Track;
 import com.mtms.repository.TrackRepository;
 import com.mtms.util.TrackSpecifications;
 import jakarta.transaction.Transactional;

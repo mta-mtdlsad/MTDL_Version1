@@ -1,4 +1,4 @@
-package com.mtms.model;
+package com.mtms.domain;
 
 import java.util.Locale;
 

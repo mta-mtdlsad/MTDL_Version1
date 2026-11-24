@@ -1,7 +1,6 @@
 package com.mtms.util;
 
-import com.mtms.util.FilterParameters;
-import com.mtms.model.Track;
+import com.mtms.domain.Track;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;

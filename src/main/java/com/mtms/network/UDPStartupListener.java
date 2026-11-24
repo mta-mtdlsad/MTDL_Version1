@@ -1,14 +1,12 @@
 package com.mtms.network;
 
-import com.mtms.model.GeoPath;
+import com.mtms.domain.GeoPath;
 import com.mtms.simulator.RandomPathGenerator;
 import com.mtms.util.ValidationResult;
 import com.mtms.service.AlertService;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
-import jakarta.servlet.annotation.WebListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package com.mtms.web.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mtms.model.Track;
+import com.mtms.domain.Track;
 import com.mtms.service.MessageProcessorService;
 import com.mtms.service.TrackService;
 import org.junit.jupiter.api.Test;

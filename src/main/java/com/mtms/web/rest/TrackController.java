@@ -1,6 +1,6 @@
 package com.mtms.web.rest;
 import com.mtms.util.FilterParameters;
-import com.mtms.model.Track;
+import com.mtms.domain.Track;
 import com.mtms.service.MessageProcessorService;
 import com.mtms.service.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;

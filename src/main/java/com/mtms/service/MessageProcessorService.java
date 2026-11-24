@@ -1,6 +1,6 @@
 package com.mtms.service;
 
-import com.mtms.model.Track;
+import com.mtms.domain.Track;
 import com.mtms.util.ValidationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

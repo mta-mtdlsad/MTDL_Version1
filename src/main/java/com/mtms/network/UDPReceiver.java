@@ -1,6 +1,6 @@
 package com.mtms.network;
 
-import com.mtms.model.Track;
+import com.mtms.domain.Track;
 import com.mtms.service.MessageParserService;
 import com.mtms.service.MessageProcessorService;
 import com.mtms.service.SourceHealthService;

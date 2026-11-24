@@ -1,4 +1,4 @@
-package com.mtms.model;
+package com.mtms.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
